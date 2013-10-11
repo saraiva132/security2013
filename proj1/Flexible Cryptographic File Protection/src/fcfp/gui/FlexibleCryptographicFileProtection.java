@@ -5,7 +5,7 @@ import fcfp.pp.PPEngine;
 /**
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 2.0
+ * @version 2.1
  */
 public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
 
@@ -42,6 +42,7 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         jpegFilePathLabel.setEnabled(false);
         jpegFilePathTextField.setEnabled(false);
         jpegFilePathButton.setEnabled(false);
+        useRealNameRadioButton.setEnabled(false);
         ppEngine = PPEngine.getInstance();
         loadPPs();
     }
@@ -73,6 +74,7 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         originalFilePathButton = new javax.swing.JButton();
         newFileNameLabel = new javax.swing.JLabel();
         newFilenameTextField = new javax.swing.JTextField();
+        useRealNameRadioButton = new javax.swing.JRadioButton();
         steganographyPanel = new javax.swing.JPanel();
         jpegFilePathLabel = new javax.swing.JLabel();
         jpegFilePathTextField = new javax.swing.JTextField();
@@ -191,6 +193,13 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
 
         newFileNameLabel.setText("New File Name");
 
+        useRealNameRadioButton.setText("Use Real Name");
+        useRealNameRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                useRealNameRadioButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
         contentPanel.setLayout(contentPanelLayout);
         contentPanelLayout.setHorizontalGroup(
@@ -205,7 +214,9 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
                     .addComponent(originalFilePathTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                     .addComponent(newFilenameTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(originalFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(originalFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(useRealNameRadioButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         contentPanelLayout.setVerticalGroup(
@@ -219,7 +230,8 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(newFileNameLabel)
-                    .addComponent(newFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(newFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(useRealNameRadioButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -458,6 +470,8 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     }//GEN-LAST:event_reloadPPsButtonActionPerformed
 
     private void cypherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cypherRadioButtonActionPerformed
+        newFileNameLabel.setEnabled(true);
+        newFilenameTextField.setEnabled(true);
         dummyContentRadioButton.setEnabled(true);
         if (dummyContentRadioButton.isSelected()) {
             dummyFilePathTextField.setEnabled(true);
@@ -477,10 +491,18 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         integrityPPLabel.setEnabled(true);
         integrityComboBox.setEnabled(true);
         reloadPPsButton.setEnabled(true);
+        useRealNameRadioButton.setEnabled(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_cypherRadioButtonActionPerformed
 
     private void decypherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decypherRadioButtonActionPerformed
+        if (useRealNameRadioButton.isSelected()) {
+            newFileNameLabel.setEnabled(false);
+            newFilenameTextField.setEnabled(false);
+        } else {
+            newFileNameLabel.setEnabled(true);
+            newFilenameTextField.setEnabled(true);
+        }
         dummyContentRadioButton.setEnabled(false);
         dummyFilePathLabel.setEnabled(false);
         dummyFilePathTextField.setEnabled(false);
@@ -496,12 +518,24 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         integrityPPLabel.setEnabled(false);
         integrityComboBox.setEnabled(false);
         reloadPPsButton.setEnabled(false);
+        useRealNameRadioButton.setEnabled(true);
         // TODO add your handling code here:
     }//GEN-LAST:event_decypherRadioButtonActionPerformed
 
     private void cypherAndDecypherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cypherAndDecypherButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cypherAndDecypherButtonActionPerformed
+
+    private void useRealNameRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_useRealNameRadioButtonActionPerformed
+        if (useRealNameRadioButton.isSelected()) {
+            newFileNameLabel.setEnabled(false);
+            newFilenameTextField.setEnabled(false);
+        } else {
+            newFileNameLabel.setEnabled(true);
+            newFilenameTextField.setEnabled(true);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_useRealNameRadioButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -567,5 +601,6 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     private javax.swing.JButton reloadPPsButton;
     private javax.swing.JPanel steganographyPanel;
     private javax.swing.JRadioButton steganographyRadioButton;
+    private javax.swing.JRadioButton useRealNameRadioButton;
     // End of variables declaration//GEN-END:variables
 }
