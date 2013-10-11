@@ -5,26 +5,27 @@ import fcfp.pp.PPEngine;
 /**
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 1.0
+ * @version 2.0
  */
 public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
 
     private PPEngine ppEngine;
 
     /**
-     *
+     * Load all EcryptionPP and IntegrityPP located in the system plugins
+     * folder.
      */
     private void loadPPs() {
 
-        cypherButton.setEnabled(false);
+        cypherAndDecypherButton.setEnabled(false);
         ppEngine.loadPPs();
         encryptionComboBox.setModel(new javax.swing.DefaultComboBoxModel(ppEngine.getEncryptionPPNames().toArray()));
         integrityComboBox.setModel(new javax.swing.DefaultComboBoxModel(ppEngine.getIntegrityPPNames().toArray()));
 
         if (ppEngine.hasEncryptionPPs() && ppEngine.hasIntegrityPPs()) {
-            cypherButton.setEnabled(true);
+            cypherAndDecypherButton.setEnabled(true);
         } else {
-            cypherButton.setEnabled(false);
+            cypherAndDecypherButton.setEnabled(false);
         }
     }
 
@@ -34,6 +35,13 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     public FlexibleCryptographicFileProtection() {
 
         initComponents();
+        cypherRadioButton.setSelected(true);
+        dummyFilePathTextField.setEnabled(false);
+        dummyFilePathLabel.setEnabled(false);
+        dummyFilePathButton.setEnabled(false);
+        jpegFilePathLabel.setEnabled(false);
+        jpegFilePathTextField.setEnabled(false);
+        jpegFilePathButton.setEnabled(false);
         ppEngine = PPEngine.getInstance();
         loadPPs();
     }
@@ -47,27 +55,38 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel4 = new javax.swing.JPanel();
+        buttonGroup = new javax.swing.ButtonGroup();
+        ppPanel = new javax.swing.JPanel();
         integrityComboBox = new javax.swing.JComboBox();
         encryptionComboBox = new javax.swing.JComboBox();
-        encryptionLabel = new javax.swing.JLabel();
-        integrityLabel = new javax.swing.JLabel();
-        ppInstallButton = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        decypherButton = new javax.swing.JButton();
-        cypherButton = new javax.swing.JButton();
-        keyPasswordField = new javax.swing.JPasswordField();
+        encryptionPPLabel = new javax.swing.JLabel();
+        integrityPPLabel = new javax.swing.JLabel();
+        reloadPPsButton = new javax.swing.JButton();
+        keyPanel = new javax.swing.JPanel();
+        keyTextField = new javax.swing.JPasswordField();
         keyLabel = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        importLabel = new javax.swing.JLabel();
-        importTextField = new javax.swing.JTextField();
-        fileOpenButton = new javax.swing.JButton();
-        exportLabel = new javax.swing.JLabel();
-        exportTextField = new javax.swing.JTextField();
-        jPanel2 = new javax.swing.JPanel();
-        containerLabel = new javax.swing.JLabel();
-        containerTextField = new javax.swing.JTextField();
-        openContainerButton = new javax.swing.JButton();
+        dummyKeyLabel = new javax.swing.JLabel();
+        dummyKeyTextField = new javax.swing.JTextField();
+        contentPanel = new javax.swing.JPanel();
+        originalFilePathLabel = new javax.swing.JLabel();
+        originalFilePathTextField = new javax.swing.JTextField();
+        originalFilePathButton = new javax.swing.JButton();
+        newFileNameLabel = new javax.swing.JLabel();
+        newFilenameTextField = new javax.swing.JTextField();
+        steganographyPanel = new javax.swing.JPanel();
+        jpegFilePathLabel = new javax.swing.JLabel();
+        jpegFilePathTextField = new javax.swing.JTextField();
+        steganographyRadioButton = new javax.swing.JRadioButton();
+        jpegFilePathButton = new javax.swing.JButton();
+        cypherModePanel = new javax.swing.JPanel();
+        cypherRadioButton = new javax.swing.JRadioButton();
+        decypherRadioButton = new javax.swing.JRadioButton();
+        cypherAndDecypherButton = new javax.swing.JButton();
+        dummyContentPanel = new javax.swing.JPanel();
+        dummyFilePathLabel = new javax.swing.JLabel();
+        dummyFilePathTextField = new javax.swing.JTextField();
+        dummyFilePathButton = new javax.swing.JButton();
+        dummyContentRadioButton = new javax.swing.JRadioButton();
         fcfpMenuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         OptionMenu = new javax.swing.JMenu();
@@ -77,176 +96,274 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         setName("fcfpFrame"); // NOI18N
         setResizable(false);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        ppPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        encryptionLabel.setText("Encryption PP");
+        encryptionPPLabel.setText("Encryption PP");
 
-        integrityLabel.setText("Integrity PP");
+        integrityPPLabel.setText("Integrity PP");
 
-        ppInstallButton.setText("Install");
-        ppInstallButton.addActionListener(new java.awt.event.ActionListener() {
+        reloadPPsButton.setText("Reload PPs");
+        reloadPPsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ppInstallButtonActionPerformed(evt);
+                reloadPPsButtonActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout ppPanelLayout = new javax.swing.GroupLayout(ppPanel);
+        ppPanel.setLayout(ppPanelLayout);
+        ppPanelLayout.setHorizontalGroup(
+            ppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ppPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(integrityLabel)
-                    .addComponent(encryptionLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(encryptionComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, 123, Short.MAX_VALUE)
-                    .addComponent(integrityComboBox, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(86, Short.MAX_VALUE)
-                .addComponent(ppInstallButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(ppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ppPanelLayout.createSequentialGroup()
+                        .addComponent(encryptionPPLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(encryptionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ppPanelLayout.createSequentialGroup()
+                        .addComponent(integrityPPLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(integrityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(reloadPPsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18))
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        ppPanelLayout.setVerticalGroup(
+            ppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ppPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(ppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(encryptionComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(encryptionLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(encryptionPPLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ppPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(integrityPPLabel)
                     .addComponent(integrityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(integrityLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(ppInstallButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(reloadPPsButton))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        decypherButton.setText("Decypher");
-        decypherButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                decypherButtonActionPerformed(evt);
-            }
-        });
-
-        cypherButton.setText("Cypher");
-        cypherButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cypherButtonActionPerformed(evt);
-            }
-        });
+        keyPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         keyLabel.setText("Key");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(keyLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(cypherButton, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(decypherButton, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(keyPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        dummyKeyLabel.setText("Dummy Key");
+
+        javax.swing.GroupLayout keyPanelLayout = new javax.swing.GroupLayout(keyPanel);
+        keyPanel.setLayout(keyPanelLayout);
+        keyPanelLayout.setHorizontalGroup(
+            keyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(keyPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(keyPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(keyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(keyLabel)
+                    .addComponent(dummyKeyLabel))
+                .addGap(9, 9, 9)
+                .addGroup(keyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dummyKeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        keyPanelLayout.setVerticalGroup(
+            keyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, keyPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(keyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(keyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(keyLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(decypherButton)
-                    .addComponent(cypherButton))
+                .addGroup(keyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dummyKeyTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dummyKeyLabel))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        contentPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        importLabel.setText("Import Path");
+        originalFilePathLabel.setText("Original File Path");
 
-        fileOpenButton.setText("Open File");
+        originalFilePathButton.setText("Open File");
+        originalFilePathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                originalFilePathButtonActionPerformed(evt);
+            }
+        });
 
-        exportLabel.setText("Export Name");
+        newFileNameLabel.setText("New File Name");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout contentPanelLayout = new javax.swing.GroupLayout(contentPanel);
+        contentPanel.setLayout(contentPanelLayout);
+        contentPanelLayout.setHorizontalGroup(
+            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contentPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(importLabel)
-                            .addComponent(exportLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(exportTextField)
-                            .addComponent(importTextField)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(fileOpenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(importLabel)
-                    .addComponent(importTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(exportTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(exportLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(fileOpenButton)
-                .addContainerGap())
-        );
-
-        jPanel2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        containerLabel.setText("Container");
-
-        openContainerButton.setText("Open File");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(openContainerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(containerLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(containerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(containerLabel)
-                    .addComponent(containerTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(originalFilePathLabel)
+                    .addComponent(newFileNameLabel))
+                .addGap(14, 14, 14)
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(originalFilePathTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
+                    .addComponent(newFilenameTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(openContainerButton)
+                .addComponent(originalFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        contentPanelLayout.setVerticalGroup(
+            contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(contentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(originalFilePathLabel)
+                    .addComponent(originalFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(originalFilePathButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(contentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(newFileNameLabel)
+                    .addComponent(newFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        steganographyPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        jpegFilePathLabel.setText("JPEG File Path");
+
+        steganographyRadioButton.setText("Steganography");
+        steganographyRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                steganographyRadioButtonActionPerformed(evt);
+            }
+        });
+
+        jpegFilePathButton.setText("Open File");
+        jpegFilePathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jpegFilePathButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout steganographyPanelLayout = new javax.swing.GroupLayout(steganographyPanel);
+        steganographyPanel.setLayout(steganographyPanelLayout);
+        steganographyPanelLayout.setHorizontalGroup(
+            steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(steganographyPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(steganographyPanelLayout.createSequentialGroup()
+                        .addComponent(jpegFilePathLabel)
+                        .addGap(28, 28, 28)
+                        .addComponent(jpegFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jpegFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(steganographyRadioButton))
+                .addContainerGap(13, Short.MAX_VALUE))
+        );
+        steganographyPanelLayout.setVerticalGroup(
+            steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(steganographyPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(steganographyRadioButton)
+                .addGap(3, 3, 3)
+                .addGroup(steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jpegFilePathLabel)
+                    .addComponent(jpegFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jpegFilePathButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        cypherModePanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        buttonGroup.add(cypherRadioButton);
+        cypherRadioButton.setText("Cypher");
+        cypherRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cypherRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup.add(decypherRadioButton);
+        decypherRadioButton.setText("Decypher");
+        decypherRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                decypherRadioButtonActionPerformed(evt);
+            }
+        });
+
+        cypherAndDecypherButton.setText("Start");
+        cypherAndDecypherButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cypherAndDecypherButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cypherModePanelLayout = new javax.swing.GroupLayout(cypherModePanel);
+        cypherModePanel.setLayout(cypherModePanelLayout);
+        cypherModePanelLayout.setHorizontalGroup(
+            cypherModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cypherModePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cypherRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(decypherRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cypherAndDecypherButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        cypherModePanelLayout.setVerticalGroup(
+            cypherModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cypherModePanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(cypherModePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cypherRadioButton)
+                    .addComponent(decypherRadioButton)
+                    .addComponent(cypherAndDecypherButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        dummyContentPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        dummyFilePathLabel.setText("Dummy File Path");
+
+        dummyFilePathButton.setText("Open File");
+        dummyFilePathButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dummyFilePathButtonActionPerformed(evt);
+            }
+        });
+
+        dummyContentRadioButton.setText("Dummy Content");
+        dummyContentRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dummyContentRadioButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout dummyContentPanelLayout = new javax.swing.GroupLayout(dummyContentPanel);
+        dummyContentPanel.setLayout(dummyContentPanelLayout);
+        dummyContentPanelLayout.setHorizontalGroup(
+            dummyContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dummyContentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(dummyContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dummyContentRadioButton)
+                    .addGroup(dummyContentPanelLayout.createSequentialGroup()
+                        .addComponent(dummyFilePathLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(dummyFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dummyFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+        dummyContentPanelLayout.setVerticalGroup(
+            dummyContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(dummyContentPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(dummyContentRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(dummyContentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dummyFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dummyFilePathButton)
+                    .addComponent(dummyFilePathLabel))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         fileMenu.setText("File");
@@ -264,43 +381,127 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(steganographyPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(contentPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(dummyContentPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(cypherModePanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(keyPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ppPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(contentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(dummyContentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(steganographyPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(ppPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(keyPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cypherModePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cypherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cypherButtonActionPerformed
+    private void originalFilePathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_originalFilePathButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cypherButtonActionPerformed
+    }//GEN-LAST:event_originalFilePathButtonActionPerformed
 
-    private void decypherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decypherButtonActionPerformed
+    private void dummyContentRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dummyContentRadioButtonActionPerformed
+        if (dummyContentRadioButton.isSelected()) {
+            dummyFilePathTextField.setEnabled(true);
+            dummyFilePathLabel.setEnabled(true);
+            dummyFilePathButton.setEnabled(true);
+        } else {
+            dummyFilePathTextField.setEnabled(false);
+            dummyFilePathLabel.setEnabled(false);
+            dummyFilePathButton.setEnabled(false);
+        }
         // TODO add your handling code here:
-    }//GEN-LAST:event_decypherButtonActionPerformed
+    }//GEN-LAST:event_dummyContentRadioButtonActionPerformed
 
-    private void ppInstallButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ppInstallButtonActionPerformed
-        loadPPs();
-    }//GEN-LAST:event_ppInstallButtonActionPerformed
+    private void dummyFilePathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dummyFilePathButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_dummyFilePathButtonActionPerformed
+
+    private void steganographyRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_steganographyRadioButtonActionPerformed
+        if (steganographyRadioButton.isSelected()) {
+            jpegFilePathTextField.setEnabled(true);
+            jpegFilePathLabel.setEnabled(true);
+            jpegFilePathButton.setEnabled(true);
+        } else {
+            jpegFilePathTextField.setEnabled(false);
+            jpegFilePathLabel.setEnabled(false);
+            jpegFilePathButton.setEnabled(false);
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_steganographyRadioButtonActionPerformed
+
+    private void jpegFilePathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jpegFilePathButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jpegFilePathButtonActionPerformed
+
+    private void reloadPPsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadPPsButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_reloadPPsButtonActionPerformed
+
+    private void cypherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cypherRadioButtonActionPerformed
+        dummyContentRadioButton.setEnabled(true);
+        if (dummyContentRadioButton.isSelected()) {
+            dummyFilePathTextField.setEnabled(true);
+            dummyFilePathLabel.setEnabled(true);
+            dummyFilePathButton.setEnabled(true);
+        }
+        steganographyRadioButton.setEnabled(true);
+        if (steganographyRadioButton.isSelected()) {
+            jpegFilePathTextField.setEnabled(true);
+            jpegFilePathLabel.setEnabled(true);
+            jpegFilePathButton.setEnabled(true);
+        }
+        dummyKeyLabel.setEnabled(true);
+        dummyKeyTextField.setEnabled(true);
+        encryptionPPLabel.setEnabled(false);
+        encryptionComboBox.setEnabled(true);
+        integrityPPLabel.setEnabled(true);
+        integrityComboBox.setEnabled(true);
+        reloadPPsButton.setEnabled(true);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cypherRadioButtonActionPerformed
+
+    private void decypherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decypherRadioButtonActionPerformed
+        dummyContentRadioButton.setEnabled(false);
+        dummyFilePathLabel.setEnabled(false);
+        dummyFilePathTextField.setEnabled(false);
+        dummyFilePathButton.setEnabled(false);
+        steganographyRadioButton.setEnabled(false);
+        jpegFilePathTextField.setEnabled(false);
+        jpegFilePathLabel.setEnabled(false);
+        jpegFilePathButton.setEnabled(false);
+        dummyKeyLabel.setEnabled(false);
+        dummyKeyTextField.setEnabled(false);
+        encryptionPPLabel.setEnabled(false);
+        encryptionComboBox.setEnabled(false);
+        integrityPPLabel.setEnabled(false);
+        integrityComboBox.setEnabled(false);
+        reloadPPsButton.setEnabled(false);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_decypherRadioButtonActionPerformed
+
+    private void cypherAndDecypherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cypherAndDecypherButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cypherAndDecypherButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -332,28 +533,39 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu OptionMenu;
-    private javax.swing.JLabel containerLabel;
-    private javax.swing.JTextField containerTextField;
-    private javax.swing.JButton cypherButton;
-    private javax.swing.JButton decypherButton;
+    private javax.swing.ButtonGroup buttonGroup;
+    private javax.swing.JPanel contentPanel;
+    private javax.swing.JButton cypherAndDecypherButton;
+    private javax.swing.JPanel cypherModePanel;
+    private javax.swing.JRadioButton cypherRadioButton;
+    private javax.swing.JRadioButton decypherRadioButton;
+    private javax.swing.JPanel dummyContentPanel;
+    private javax.swing.JRadioButton dummyContentRadioButton;
+    private javax.swing.JButton dummyFilePathButton;
+    private javax.swing.JLabel dummyFilePathLabel;
+    private javax.swing.JTextField dummyFilePathTextField;
+    private javax.swing.JLabel dummyKeyLabel;
+    private javax.swing.JTextField dummyKeyTextField;
     private javax.swing.JComboBox encryptionComboBox;
-    private javax.swing.JLabel encryptionLabel;
-    private javax.swing.JLabel exportLabel;
-    private javax.swing.JTextField exportTextField;
+    private javax.swing.JLabel encryptionPPLabel;
     private javax.swing.JMenuBar fcfpMenuBar;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JButton fileOpenButton;
-    private javax.swing.JLabel importLabel;
-    private javax.swing.JTextField importTextField;
     private javax.swing.JComboBox integrityComboBox;
-    private javax.swing.JLabel integrityLabel;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
+    private javax.swing.JLabel integrityPPLabel;
+    private javax.swing.JButton jpegFilePathButton;
+    private javax.swing.JLabel jpegFilePathLabel;
+    private javax.swing.JTextField jpegFilePathTextField;
     private javax.swing.JLabel keyLabel;
-    private javax.swing.JPasswordField keyPasswordField;
-    private javax.swing.JButton openContainerButton;
-    private javax.swing.JButton ppInstallButton;
+    private javax.swing.JPanel keyPanel;
+    private javax.swing.JPasswordField keyTextField;
+    private javax.swing.JLabel newFileNameLabel;
+    private javax.swing.JTextField newFilenameTextField;
+    private javax.swing.JButton originalFilePathButton;
+    private javax.swing.JLabel originalFilePathLabel;
+    private javax.swing.JTextField originalFilePathTextField;
+    private javax.swing.JPanel ppPanel;
+    private javax.swing.JButton reloadPPsButton;
+    private javax.swing.JPanel steganographyPanel;
+    private javax.swing.JRadioButton steganographyRadioButton;
     // End of variables declaration//GEN-END:variables
 }
