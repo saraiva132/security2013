@@ -39,9 +39,9 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         dummyFilePathTextField.setEnabled(false);
         dummyFilePathLabel.setEnabled(false);
         dummyFilePathButton.setEnabled(false);
-        jpegFilePathLabel.setEnabled(false);
-        jpegFilePathTextField.setEnabled(false);
-        jpegFilePathButton.setEnabled(false);
+        pngFilePathLabel.setEnabled(false);
+        pngFilePathTextField.setEnabled(false);
+        pngFilePathButton.setEnabled(false);
         useRealNameRadioButton.setEnabled(false);
         ppEngine = PPEngine.getInstance();
         loadPPs();
@@ -76,10 +76,10 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         newFilenameTextField = new javax.swing.JTextField();
         useRealNameRadioButton = new javax.swing.JRadioButton();
         steganographyPanel = new javax.swing.JPanel();
-        jpegFilePathLabel = new javax.swing.JLabel();
-        jpegFilePathTextField = new javax.swing.JTextField();
+        pngFilePathLabel = new javax.swing.JLabel();
+        pngFilePathTextField = new javax.swing.JTextField();
         steganographyRadioButton = new javax.swing.JRadioButton();
-        jpegFilePathButton = new javax.swing.JButton();
+        pngFilePathButton = new javax.swing.JButton();
         cypherModePanel = new javax.swing.JPanel();
         cypherRadioButton = new javax.swing.JRadioButton();
         decypherRadioButton = new javax.swing.JRadioButton();
@@ -237,7 +237,7 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
 
         steganographyPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        jpegFilePathLabel.setText("JPEG File Path");
+        pngFilePathLabel.setText("PNG File Path");
 
         steganographyRadioButton.setText("Steganography");
         steganographyRadioButton.addActionListener(new java.awt.event.ActionListener() {
@@ -246,10 +246,10 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
             }
         });
 
-        jpegFilePathButton.setText("Open File");
-        jpegFilePathButton.addActionListener(new java.awt.event.ActionListener() {
+        pngFilePathButton.setText("Open File");
+        pngFilePathButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jpegFilePathButtonActionPerformed(evt);
+                pngFilePathButtonActionPerformed(evt);
             }
         });
 
@@ -261,13 +261,13 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(steganographyPanelLayout.createSequentialGroup()
-                        .addComponent(jpegFilePathLabel)
+                        .addComponent(pngFilePathLabel)
                         .addGap(28, 28, 28)
-                        .addComponent(jpegFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(pngFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jpegFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pngFilePathButton, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(steganographyRadioButton))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         steganographyPanelLayout.setVerticalGroup(
             steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -276,9 +276,9 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
                 .addComponent(steganographyRadioButton)
                 .addGap(3, 3, 3)
                 .addGroup(steganographyPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jpegFilePathLabel)
-                    .addComponent(jpegFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jpegFilePathButton))
+                    .addComponent(pngFilePathLabel)
+                    .addComponent(pngFilePathTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pngFilePathButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -450,20 +450,20 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
 
     private void steganographyRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_steganographyRadioButtonActionPerformed
         if (steganographyRadioButton.isSelected()) {
-            jpegFilePathTextField.setEnabled(true);
-            jpegFilePathLabel.setEnabled(true);
-            jpegFilePathButton.setEnabled(true);
+            pngFilePathTextField.setEnabled(true);
+            pngFilePathLabel.setEnabled(true);
+            pngFilePathButton.setEnabled(true);
         } else {
-            jpegFilePathTextField.setEnabled(false);
-            jpegFilePathLabel.setEnabled(false);
-            jpegFilePathButton.setEnabled(false);
+            pngFilePathTextField.setEnabled(false);
+            pngFilePathLabel.setEnabled(false);
+            pngFilePathButton.setEnabled(false);
         }
         // TODO add your handling code here:
     }//GEN-LAST:event_steganographyRadioButtonActionPerformed
 
-    private void jpegFilePathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jpegFilePathButtonActionPerformed
+    private void pngFilePathButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pngFilePathButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jpegFilePathButtonActionPerformed
+    }//GEN-LAST:event_pngFilePathButtonActionPerformed
 
     private void reloadPPsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadPPsButtonActionPerformed
         // TODO add your handling code here:
@@ -480,9 +480,9 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         }
         steganographyRadioButton.setEnabled(true);
         if (steganographyRadioButton.isSelected()) {
-            jpegFilePathTextField.setEnabled(true);
-            jpegFilePathLabel.setEnabled(true);
-            jpegFilePathButton.setEnabled(true);
+            pngFilePathTextField.setEnabled(true);
+            pngFilePathLabel.setEnabled(true);
+            pngFilePathButton.setEnabled(true);
         }
         dummyKeyLabel.setEnabled(true);
         dummyKeyTextField.setEnabled(true);
@@ -508,9 +508,9 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         dummyFilePathTextField.setEnabled(false);
         dummyFilePathButton.setEnabled(false);
         steganographyRadioButton.setEnabled(false);
-        jpegFilePathTextField.setEnabled(false);
-        jpegFilePathLabel.setEnabled(false);
-        jpegFilePathButton.setEnabled(false);
+        pngFilePathTextField.setEnabled(false);
+        pngFilePathLabel.setEnabled(false);
+        pngFilePathButton.setEnabled(false);
         dummyKeyLabel.setEnabled(false);
         dummyKeyTextField.setEnabled(false);
         encryptionPPLabel.setEnabled(false);
@@ -586,9 +586,6 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JComboBox integrityComboBox;
     private javax.swing.JLabel integrityPPLabel;
-    private javax.swing.JButton jpegFilePathButton;
-    private javax.swing.JLabel jpegFilePathLabel;
-    private javax.swing.JTextField jpegFilePathTextField;
     private javax.swing.JLabel keyLabel;
     private javax.swing.JPanel keyPanel;
     private javax.swing.JPasswordField keyTextField;
@@ -597,6 +594,9 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     private javax.swing.JButton originalFilePathButton;
     private javax.swing.JLabel originalFilePathLabel;
     private javax.swing.JTextField originalFilePathTextField;
+    private javax.swing.JButton pngFilePathButton;
+    private javax.swing.JLabel pngFilePathLabel;
+    private javax.swing.JTextField pngFilePathTextField;
     private javax.swing.JPanel ppPanel;
     private javax.swing.JButton reloadPPsButton;
     private javax.swing.JPanel steganographyPanel;

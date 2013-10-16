@@ -330,15 +330,15 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Component id="jpegFilePathLabel" min="-2" max="-2" attributes="0"/>
+                          <Component id="pngFilePathLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
-                          <Component id="jpegFilePathTextField" min="-2" pref="314" max="-2" attributes="0"/>
+                          <Component id="pngFilePathTextField" min="-2" pref="314" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jpegFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
+                          <Component id="pngFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                       <Component id="steganographyRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="13" max="32767" attributes="0"/>
+                  <EmptySpace pref="17" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -349,9 +349,9 @@
                   <Component id="steganographyRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jpegFilePathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jpegFilePathTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jpegFilePathButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pngFilePathLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pngFilePathTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="pngFilePathButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -359,12 +359,12 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JLabel" name="jpegFilePathLabel">
+        <Component class="javax.swing.JLabel" name="pngFilePathLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="JPEG File Path"/>
+            <Property name="text" type="java.lang.String" value="PNG File Path"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jpegFilePathTextField">
+        <Component class="javax.swing.JTextField" name="pngFilePathTextField">
         </Component>
         <Component class="javax.swing.JRadioButton" name="steganographyRadioButton">
           <Properties>
@@ -374,12 +374,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="steganographyRadioButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jpegFilePathButton">
+        <Component class="javax.swing.JButton" name="pngFilePathButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Open File"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jpegFilePathButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="pngFilePathButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
