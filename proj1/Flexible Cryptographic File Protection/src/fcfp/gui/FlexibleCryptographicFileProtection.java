@@ -466,7 +466,7 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
     }//GEN-LAST:event_pngFilePathButtonActionPerformed
 
     private void reloadPPsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadPPsButtonActionPerformed
-        ppEngine.loadPPs();
+        loadPPs();
     }//GEN-LAST:event_reloadPPsButtonActionPerformed
 
     private void cypherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cypherRadioButtonActionPerformed
