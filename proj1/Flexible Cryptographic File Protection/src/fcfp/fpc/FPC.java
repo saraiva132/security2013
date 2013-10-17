@@ -8,13 +8,10 @@ import fcfp.pp.EncryptionPP;
 import fcfp.pp.IntegrityPP;
 import fcfp.pp.PPDecompressor;
 import fcfp.pp.ProtectionPluginException;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -63,11 +60,11 @@ public class FPC {
             PPDecompressor dec = PPDecompressor.getInstance();
             encryption = dec.decompressEncryptionPP(PPencName,unzip.getEntry(0));
             byte [] content = unzip.getEntry(2);
-            encryption.decypher(unzip.getEntry(1), key);
+            encryption.decipher(unzip.getEntry(1), key);
             Header header = new Header(unzip.getEntry(1));
             if(!header.checksum())
                 return;
-            encryption.decypher(content, key);
+            encryption.decipher(content, key);
                UnZip UnzipDummy;
                UnZip UnzipContent; 
                
@@ -92,13 +89,11 @@ public class FPC {
             {
                System.out.println("DummyContent:"); 
                System.out.println("Ficheiro não encontrado. De certeza que o caminho está certo?");
-               return;
             } 
             catch (IOException ex) 
             {
                System.out.println("DummyContent:"); 
                System.out.println("Erro a criar o zip. O ficheiro pode estar comprometido");
-               return;
             }
             
             

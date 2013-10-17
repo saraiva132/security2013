@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 /**
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 1.1
+ * @version 1.2
  */
 public class PPEngineTest {
 
@@ -34,8 +34,8 @@ public class PPEngineTest {
         byte[] key = {0, 1, 6, 2, 3, 4};
         byte[] cpy = new byte[msg.length];
         System.arraycopy(msg, 0, cpy, 0, cpy.length);
-        xor.cypher(cpy, key);
-        xor.decypher(cpy, key);
+        xor.cipher(cpy, key);
+        xor.decipher(cpy, key);
         assertArrayEquals(msg, cpy);
     }
 }

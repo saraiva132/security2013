@@ -11,10 +11,10 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="OptionMenu">
+        <Menu class="javax.swing.JMenu" name="aboutMenu">
           <Properties>
+            <Property name="text" type="java.lang.String" value="About"/>
             <Property name="actionCommand" type="java.lang.String" value="Option"/>
-            <Property name="label" type="java.lang.String" value="Options"/>
           </Properties>
         </Menu>
       </SubComponents>
@@ -48,24 +48,22 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="steganographyPanel" alignment="1" max="32767" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="contentPanel" max="32767" attributes="0"/>
-                      <Component id="dummyContentPanel" alignment="1" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="steganographyPanel" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="cypherModePanel" alignment="0" max="32767" attributes="0"/>
+                          <Component id="cipherModePanel" alignment="0" max="32767" attributes="0"/>
                           <Component id="keyPanel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="ppPanel" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="dummyContentPanel" max="32767" attributes="0"/>
+                  <Component id="contentPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -84,7 +82,7 @@
                   <Component id="keyPanel" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="cypherModePanel" min="-2" max="-2" attributes="0"/>
+              <Component id="cipherModePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -106,20 +104,17 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="encryptionPPLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="encryptionComboBox" min="-2" pref="105" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Component id="integrityPPLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="integrityComboBox" min="-2" pref="105" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="encryptionPPLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="integrityPPLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="integrityComboBox" max="32767" attributes="0"/>
+                      <Component id="encryptionComboBox" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="reloadPPsButton" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -185,10 +180,10 @@
                       <Component id="keyLabel" min="-2" max="-2" attributes="0"/>
                       <Component id="dummyKeyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="keyTextField" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
                       <Component id="dummyKeyTextField" min="-2" pref="132" max="-2" attributes="0"/>
+                      <Component id="keyTextField" min="-2" pref="132" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -217,12 +212,12 @@
         </Component>
         <Component class="javax.swing.JLabel" name="keyLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Key"/>
+            <Property name="text" type="java.lang.String" value="Password"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="dummyKeyLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dummy Key"/>
+            <Property name="text" type="java.lang.String" value="Dummy Pass"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="dummyKeyTextField">
@@ -306,11 +301,9 @@
         </Component>
         <Component class="javax.swing.JRadioButton" name="useRealNameRadioButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Use Real Name"/>
+            <Property name="text" type="java.lang.String" value="Original Name"/>
+            <Property name="actionCommand" type="java.lang.String" value="Real Name"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="useRealNameRadioButtonActionPerformed"/>
-          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -331,14 +324,17 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="pngFilePathLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Component id="pngFilePathTextField" min="-2" pref="314" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pngFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="steganographyRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="steganographyRadioButton" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace pref="17" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -384,7 +380,7 @@
         </Component>
       </SubComponents>
     </Container>
-    <Container class="javax.swing.JPanel" name="cypherModePanel">
+    <Container class="javax.swing.JPanel" name="cipherModePanel">
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -398,11 +394,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cypherRadioButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="cipherRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="decypherRadioButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="decipherRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cypherAndDecypherButton" max="32767" attributes="0"/>
+                  <Component id="cipherAndDecipherButton" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -412,9 +408,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="cypherRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="decypherRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cypherAndDecypherButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cipherRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="decipherRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="cipherAndDecipherButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -422,34 +418,34 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JRadioButton" name="cypherRadioButton">
+        <Component class="javax.swing.JRadioButton" name="cipherRadioButton">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Cypher"/>
+            <Property name="text" type="java.lang.String" value="Cipher"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cypherRadioButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cipherRadioButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JRadioButton" name="decypherRadioButton">
+        <Component class="javax.swing.JRadioButton" name="decipherRadioButton">
           <Properties>
             <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
               <ComponentRef name="buttonGroup"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Decypher"/>
+            <Property name="text" type="java.lang.String" value="Decipher"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="decypherRadioButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="decipherRadioButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="cypherAndDecypherButton">
+        <Component class="javax.swing.JButton" name="cipherAndDecipherButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Start"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cypherAndDecypherButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cipherAndDecipherButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
@@ -478,7 +474,7 @@
                           <Component id="dummyFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace pref="11" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
