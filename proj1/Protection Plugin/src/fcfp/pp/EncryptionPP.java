@@ -15,7 +15,7 @@ public interface EncryptionPP {
      * @param key cypher key.
      * @throws ProtectionPluginException when something went wrong.
      */
-    void cypher(byte[] msg, byte[] key) throws ProtectionPluginException;
+    void cipher(byte[] msg, byte[] key) throws ProtectionPluginException;
 
     /**
      * Decypher algorithm's header.
@@ -24,5 +24,5 @@ public interface EncryptionPP {
      * @param key decypher key.
      * @throws ProtectionPluginException when something went wrong.
      */
-    void decypher(byte[] msg, byte[] key) throws ProtectionPluginException;
+    void decipher(byte[] msg, byte[] key) throws ProtectionPluginException;
 }
