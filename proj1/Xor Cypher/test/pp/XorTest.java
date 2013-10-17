@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 1.0
+ * @version 1.1
  */
 public class XorTest {
 
@@ -23,7 +23,7 @@ public class XorTest {
         byte[] key = {0, 1, 6, 2, 3, 4};
         byte[] cpyMsg = new byte[msg.length];
         System.arraycopy(msg, 0, cpyMsg, 0, cpyMsg.length);
-        pp.cypher(cpyMsg, key);
+        pp.cipher(cpyMsg, key);
         Assert.assertThat(msg, IsNot.not(IsEqual.equalTo(cpyMsg)));
     }
 
@@ -37,8 +37,8 @@ public class XorTest {
         byte[] key = {0, 1, 6, 2, 3, 4};
         byte[] cpyMsg = new byte[msg.length];
         System.arraycopy(msg, 0, cpyMsg, 0, cpyMsg.length);
-        pp.cypher(cpyMsg, key);
-        pp.decypher(cpyMsg, key);
+        pp.cipher(cpyMsg, key);
+        pp.decipher(cpyMsg, key);
         assertArrayEquals(msg, cpyMsg);
     }
 
@@ -52,8 +52,8 @@ public class XorTest {
         byte[] key = {0, 1, 6, 2, 3, 4};
         byte[] cpyMsg = new byte[msg.length];
         System.arraycopy(msg, 0, cpyMsg, 0, cpyMsg.length);
-        pp.cypher(cpyMsg, key);
-        pp.decypher(cpyMsg, key);
+        pp.cipher(cpyMsg, key);
+        pp.decipher(cpyMsg, key);
         assertArrayEquals(msg, cpyMsg);
     }
 
@@ -67,8 +67,8 @@ public class XorTest {
         byte[] key = {0, 1, 6, 2, 3, 4, 3, 2, 6, 4};
         byte[] cpyMsg = new byte[msg.length];
         System.arraycopy(msg, 0, cpyMsg, 0, cpyMsg.length);
-        pp.cypher(cpyMsg, key);
-        pp.decypher(cpyMsg, key);
+        pp.cipher(cpyMsg, key);
+        pp.decipher(cpyMsg, key);
         assertArrayEquals(msg, cpyMsg);
     }
 
@@ -80,7 +80,7 @@ public class XorTest {
         Xor pp = new Xor();
         byte[] msg = {0, 1, 2, 3, 4, 5, 6, 7};
         byte[] key = {0, 1, 2, 3, 4, 5, 6, 7};
-        pp.cypher(msg, key);
+        pp.cipher(msg, key);
         assertArrayEquals(msg, new byte[]{0, 0, 0, 0, 0, 0, 0, 0});
     }
 }

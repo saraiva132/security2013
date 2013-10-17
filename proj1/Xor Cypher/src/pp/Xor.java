@@ -5,12 +5,12 @@ import fcfp.pp.EncryptionPP;
 /**
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 1.0
+ * @version 1.1
  */
 public class Xor implements EncryptionPP {
 
     @Override
-    public void cypher(byte[] msg, byte[] key) {
+    public void cipher(byte[] msg, byte[] key) {
 
         for (int i = 0; i < msg.length; i++) {
             msg[i] ^= key[i % key.length];
@@ -18,8 +18,8 @@ public class Xor implements EncryptionPP {
     }
 
     @Override
-    public void decypher(byte[] msg, byte[] key) {
+    public void decipher(byte[] msg, byte[] key) {
 
-        cypher(msg, key);
+        cipher(msg, key);
     }
 }
