@@ -5,6 +5,7 @@
 package fcfp.fpc;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
 
 /**
  *
@@ -22,21 +24,29 @@ public class UnZip {
 
     private List<byte[]> fileList;
     private File zip;
-
-
-    public UnZip(String source) {
-        this.zip = new File(source);
+    private String output;
+    
+    
+    public UnZip(String source)
+    {
+        File zip = new File(source);
     }
     
-    public UnZip(byte [] toUnzip) throws FileNotFoundException, IOException
-    {
+    public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
+        this.output = output;
+        try (FileOutputStream out = new FileOutputStream(zip)) {
+            out.write(toUnzip);
+        }
+    }
+
+    public UnZip(byte[] toUnzip) throws FileNotFoundException, IOException {
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
     }
 
     void run() {
-    unZipIt(zip);
+        unZipIt(zip);
     }
 
     /**
@@ -69,14 +79,34 @@ public class UnZip {
             ex.printStackTrace();
         }
     }
-    
-    public byte [] getEntry(int i)
-    {
+
+    public void writeZip() throws FileNotFoundException, IOException {
+        byte[] buffer = new byte[1024];
+        ZipInputStream zis;
+        zis = new ZipInputStream(new FileInputStream(zip));
+        ZipEntry ze = zis.getNextEntry();
+        FileOutputStream fos = new FileOutputStream(output + ze.getName());
+        int len;
+        while ((len = zis.read(buffer)) > 0) {
+            fos.write(buffer);
+        }
+        fos.flush();
+        fos.close();
+
+        if (zis != null) {
+            try {
+                zis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public byte[] getEntry(int i) {
         return fileList.get(i);
     }
-    
-    public int getSize()
-    {
+
+    public int getSize() {
         return fileList.size();
     }
 }

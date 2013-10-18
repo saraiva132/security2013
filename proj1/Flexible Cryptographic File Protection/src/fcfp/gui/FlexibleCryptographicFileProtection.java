@@ -1,9 +1,16 @@
 package fcfp.gui;
 
+import fcfp.fpc.FPC;
 import fcfp.pp.PPEngine;
+import fcfp.pp.ProtectionPluginException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Main window of the application.
+ *
  * @author Simão Paulo Rato Alves Reis
  * @author Rafael Saraiva Figueiredo
  * @version 2.2
@@ -516,6 +523,35 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
 
     private void cipherAndDecipherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cipherAndDecipherButtonActionPerformed
         // TODO add your handling code here:
+
+        if (!(newFilenameTextField.getText().compareTo("") == 0) && !(originalFilePathTextField.getText().compareTo("") == 0)) {
+            FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), keyTextField.getSelectedText().getBytes());
+            if (cipherRadioButton.isSelected()) {
+                if (dummyContentRadioButton.isSelected()) {
+                    fpc.setDummy(dummyFilePathLabel.getText(), dummyKeyTextField.getSelectedText().getBytes());
+                }
+                if (steganographyRadioButton.isSelected()) {
+                    fpc.setStega(pngFilePathLabel.getText());
+                }
+                if (useRealNameRadioButton.isSelected()) {
+                }
+                fpc.setPPenc(encryptionPPLabel.getText());
+                fpc.setPPint(integrityPPLabel.getText());
+            } else if (decipherRadioButton.isSelected()) {
+
+                    try {
+                        fpc.DeCipher();
+                    } catch (ProtectionPluginException | ClassNotFoundException | InstantiationException | IllegalAccessException  | IOException ex) {
+                       //erro ao decifrar somewhere... melhorar    
+                    }
+               
+            } else {
+                //Não escolheu opção!?
+            }
+        } else {
+            //POPUP paths  
+        }
+
     }//GEN-LAST:event_cipherAndDecipherButtonActionPerformed
 
     /**
