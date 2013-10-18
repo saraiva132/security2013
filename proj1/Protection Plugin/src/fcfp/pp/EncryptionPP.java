@@ -4,7 +4,7 @@ package fcfp.pp;
  * Generic cypher/decypher protection plugin header.
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 1.0
+ * @version 1.1
  */
 public interface EncryptionPP {
 
@@ -15,7 +15,7 @@ public interface EncryptionPP {
      * @param key cypher key.
      * @throws ProtectionPluginException when something went wrong.
      */
-    void cipher(byte[] msg, byte[] key) throws ProtectionPluginException;
+    byte[] cipher(byte[] msg, byte[] key) throws ProtectionPluginException;
 
     /**
      * Decypher algorithm's header.
@@ -24,5 +24,5 @@ public interface EncryptionPP {
      * @param key decypher key.
      * @throws ProtectionPluginException when something went wrong.
      */
-    void decipher(byte[] msg, byte[] key) throws ProtectionPluginException;
+    byte[] decipher(byte[] msg, byte[] key) throws ProtectionPluginException;
 }
