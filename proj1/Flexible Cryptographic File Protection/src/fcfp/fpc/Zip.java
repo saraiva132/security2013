@@ -47,9 +47,9 @@ public class Zip {
 
             System.out.println("Output to Zip : " + output);
             //Enquanto houver ficheiros para escrever no zip
-
+            int i=0;
             for (File file : this.fields) {
-                ZipEntry ze = new ZipEntry("random");
+                ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
                 FileInputStream in =
                         new FileInputStream(file);

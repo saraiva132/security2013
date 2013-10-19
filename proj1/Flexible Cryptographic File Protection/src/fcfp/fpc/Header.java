@@ -22,12 +22,12 @@ public class Header {
         byte [] temp1 = new byte[8];
         byte [] temp2  = new byte[4];
         
-        System.arraycopy(temp1, 0, header, 0,7);
-        System.arraycopy(temp2, 0, header, 8, 11);
-        System.arraycopy(verification, 0, header, 12, 15);
-        padPos = temp1[0] + (temp1[1] << 8) + (temp1[2]) << 16 + (temp1[3] << 24) + (temp1[4] << 32) +(temp1[5] << 40) + (temp1[6] << 48) + (temp1[7]) << 56;
+        System.arraycopy(header, 0, temp1, 0, 8);
+        System.arraycopy(header, 8, temp2, 0, 4);
+        System.arraycopy(header, 12, verification,0, 4);
+        padPos = temp1[0] + ((long)temp1[1] << 8) + ((long)temp1[2]) << 16 + ((long)temp1[3] << 24) + ((long)temp1[4] << 32) +((long)temp1[5] << 40) + ((long)temp1[6] << 48) + ((long)temp1[7]) << 56;
           checksum = temp2[0] + (temp2[1] << 8) + (temp2[2]) << 16 + (temp2[3]) << 24;
-        System.arraycopy(Mac, 0, header,16, header.length);
+        System.arraycopy(header, 16, Mac,0, header.length-16);
 
     }
     
@@ -56,10 +56,10 @@ public class Header {
           temp2[2] =  (byte)(checksum >> 16 | 0x000f);
            temp2[3] =  (byte)(checksum >> 24| 0x000f); 
         byte [] temp = new byte[temp1.length + temp2.length + Mac.length + verification.length];   
-        System.arraycopy(temp, 0, temp1, 0, 7);
-        System.arraycopy(temp, 0, temp2, 8, 11);
-        System.arraycopy(temp, 0, verification, 12, 15);
-        System.arraycopy(temp, 0, Mac, 16, 15 + Mac.length);
+        System.arraycopy(temp1, 0,temp ,0, temp1.length);
+        System.arraycopy(temp2, 0, temp, temp1.length, temp2.length);
+        System.arraycopy(verification, 0, temp,temp1.length+temp2.length,verification.length);
+        System.arraycopy(Mac, 0, temp, temp1.length+temp2.length+verification.length,Mac.length);
         return temp;
     }
     

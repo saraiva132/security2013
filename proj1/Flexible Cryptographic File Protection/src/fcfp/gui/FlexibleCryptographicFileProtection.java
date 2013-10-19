@@ -525,19 +525,20 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         if (!(newFilenameTextField.getText().compareTo("") == 0) && !(originalFilePathTextField.getText().compareTo("") == 0)) {
-            FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), keyTextField.getSelectedText().getBytes());
+            FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
             if (cipherRadioButton.isSelected()) {
                 if (dummyContentRadioButton.isSelected()) {
-                    fpc.setDummy(dummyFilePathLabel.getText(), dummyKeyTextField.getSelectedText().getBytes());
+                    fpc.setDummy(dummyFilePathLabel.getText(), dummyKeyTextField.getText().getBytes());
                 }
                 if (steganographyRadioButton.isSelected()) {
                     fpc.setStega(pngFilePathLabel.getText());
                 }
                 if (useRealNameRadioButton.isSelected()) {
                 }
-                fpc.setPPenc(encryptionPPLabel.getText());
-                fpc.setPPint(integrityPPLabel.getText());
-                
+                fpc.setPPenc(encryptionComboBox.getSelectedItem().toString());
+                fpc.setPPint(integrityComboBox.getSelectedItem().toString());
+                fpc.CipherStartUP();
+                fpc.Cipher();
             } else if (decipherRadioButton.isSelected()) {
 
                     try {
