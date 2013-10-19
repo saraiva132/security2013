@@ -25,7 +25,7 @@ public class HMacSHA1 implements IntegrityPP {
         byte[] hmsg = SHA1.hash(new String(imsg)).getBytes();
         byte[] okey = new byte[key.length];
         for (int i = 0; i < okey.length; i++) {
-            okey[i] = (byte) (key[i] ^ ipad);
+            okey[i] = (byte) (key[i] ^ opad);
         }
         byte[] omsg = new byte[hmsg.length + okey.length];
         System.arraycopy(okey, 0, omsg, 0, okey.length);
