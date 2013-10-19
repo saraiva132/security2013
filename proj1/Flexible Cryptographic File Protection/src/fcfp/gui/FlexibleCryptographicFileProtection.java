@@ -537,6 +537,7 @@ public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
                 }
                 fpc.setPPenc(encryptionPPLabel.getText());
                 fpc.setPPint(integrityPPLabel.getText());
+                
             } else if (decipherRadioButton.isSelected()) {
 
                     try {
