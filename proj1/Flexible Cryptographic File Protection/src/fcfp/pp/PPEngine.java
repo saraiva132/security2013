@@ -145,6 +145,8 @@ public class PPEngine {
         Object ppInstance; // A protection plugin instance.
         InputStream is; // a generic inputstream.
         byte[] data; // a class file serialization.
+        int offset;
+        int numRead;
 
         // Query to the system's protection plugin folder entries.
         ppsFolder = new File("plugins");
@@ -203,7 +205,11 @@ public class PPEngine {
                                     // get the class serialization
                                     is = ppJar.getInputStream(entry);
                                     data = new byte[is.available()];
-                                    is.read(data, 0, data.length);
+                                    offset = 0;
+                                    numRead = 0;
+                                    while (offset < data.length && (numRead = is.read(data, offset, data.length - offset)) >= 0) {
+                                        offset += numRead;
+                                    }
                                 } catch (IOException ex) {
                                     System.out.println(ex);
                                     continue;
