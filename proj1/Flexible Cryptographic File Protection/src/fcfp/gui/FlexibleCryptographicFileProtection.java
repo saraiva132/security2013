@@ -1,12 +1,9 @@
-package fcfp.gui;
+ package fcfp.gui;
 
 import fcfp.fpc.FPC;
 import fcfp.pp.PPEngine;
 import fcfp.pp.ProtectionPluginException;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main window of the application.

@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -22,16 +23,17 @@ import java.util.zip.ZipInputStream;
  */
 public class UnZip {
 
-    private List<byte[]> fileList;
+    private List<byte[]> fileList = new ArrayList<>();
+    private List<String> fileName = new ArrayList<>();
     private File zip;
     private String output;
-    
-    
-    public UnZip(String source)
-    {
+    private String source;
+
+    public UnZip(String source) {
         File zip = new File(source);
+        this.source = source;
     }
-    
+
     public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
         this.output = output;
         try (FileOutputStream out = new FileOutputStream(zip)) {
@@ -61,11 +63,12 @@ public class UnZip {
         InputStream in = null;
         try {
             //get the zip file content
-            ZipFile zip = new ZipFile(zipIt);
+            ZipFile zip = new ZipFile(source);
             //get the zipped file list entry
             Enumeration<? extends ZipEntry> oi = zip.entries();
             while (oi.hasMoreElements()) {
                 final ZipEntry ze = oi.nextElement();
+                fileName.add(ze.getName());
                 in = zip.getInputStream(ze);
                 buffer = new byte[in.available()];
                 in.read(buffer);
@@ -104,6 +107,10 @@ public class UnZip {
 
     public byte[] getEntry(int i) {
         return fileList.get(i);
+    }
+
+    public String getName(int i) {
+        return fileName.get(i);
     }
 
     public int getSize() {

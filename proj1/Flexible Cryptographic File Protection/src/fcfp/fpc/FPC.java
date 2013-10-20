@@ -86,8 +86,8 @@ public class FPC {
 
     public void Cipher(){
         try {
-            Zip zip1 = toZip("files/zip1", file1, PPEngine.getInstance().getIntegrityPPSerialization(PPintName));
-            Zip zip2 = toZip("files/zip2", file2, PPEngine.getInstance().getIntegrityPPSerialization(PPintName));
+            Zip zip1 = toZip(PPintName,"files/zip1", file1, PPEngine.getInstance().getIntegrityPPSerialization(PPintName));
+            Zip zip2 = toZip(PPintName,"files/zip2", file2, PPEngine.getInstance().getIntegrityPPSerialization(PPintName));
         } catch (FileNotFoundException ex) {
            System.out.println("Problema a ler os zips do content! Zips não encontrados.");
            return;
@@ -159,7 +159,7 @@ public class FPC {
             System.out.println("Não conseguiu encriptar os Headers!");
         }
         try {
-            Zip zipFinal = toZip("files/"+output, PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
+            Zip zipFinal = toZip(PPencName,"files/"+output, PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
         } catch (FileNotFoundException ex) {
               System.out.println("Não conseguiu criar o zip de output!!");
         } catch (IOException ex) {
@@ -171,7 +171,7 @@ public class FPC {
     public void DeCipher() throws ProtectionPluginException, ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException, IOException {
         UnZip unzip = new UnZip(source);
         unzip.run();
-        encryption = PPDecompressor.getInstance().decompressEncryptionPP(PPencName, unzip.getEntry(0));
+        encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
         byte[] content = unzip.getEntry(3);
         encryption.decipher(unzip.getEntry(1), key);
         encryption.decipher(unzip.getEntry(2), key);
@@ -198,7 +198,7 @@ public class FPC {
             Unzip = new UnZip(output, Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos() - 1));
             Unzip.run();
         }
-        integrity = PPDecompressor.getInstance().decompressIntegrityPP(PPintName, Unzip.getEntry(0));
+        integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));
         if (header.getMac() == integrity.sign(Unzip.getEntry(1), key)) {
             Unzip.writeZip();
             System.out.println("Great Success");
@@ -206,13 +206,16 @@ public class FPC {
         }
     }
 
-    public Zip toZip(String outs, byte[]... oi) throws FileNotFoundException, IOException {
-        List<File> fields = new ArrayList<File>();
+    public Zip toZip(String name,String outs, byte[]... oi) throws FileNotFoundException, IOException {
+        List<File> fields = new ArrayList<>();
         File zip;  
         int i = 0;
         for (byte[] b : oi) {
+            if(i==0)
+                zip = new File(name);
+            else
+                zip = new File("d4e1t5r"+i);
             i++;
-            zip = new File(outs+i);
             try (FileOutputStream out = new FileOutputStream(zip)) {
                 out.write(b);
             }
@@ -234,7 +237,7 @@ public class FPC {
         //int pad = (int) ((int) contentToPad.length * randomValue);
         byte[] padData = new byte[length - offset];
         new Random().nextBytes(padData);
-        System.arraycopy(padData, 0, contentToPad, offset, length);
+        System.arraycopy(padData, 0, contentToPad, offset, length-offset);
     }
 
     public byte[] getDummy(int size) {
