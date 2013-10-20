@@ -29,13 +29,13 @@ public class PPEngineTest {
         System.out.println("encryptionPP");
         PPEngine ppEngine = PPEngine.getInstance();
         ppEngine.loadPPs();
-        EncryptionPP xor = ppEngine.getEncryptionPP("pp.Xor");
+        EncryptionPP des = ppEngine.getEncryptionPP("pp.DES");
         byte[] msg = {0, 1, 2, 3, 4, 5, 6, 7};
-        byte[] key = {0, 1, 6, 2, 3, 4};
+        byte[] key = {0, 1, 6, 2, 3, 4, 6, 7};
         byte[] cpy = new byte[msg.length];
         System.arraycopy(msg, 0, cpy, 0, cpy.length);
-        xor.cipher(cpy, key);
-        xor.decipher(cpy, key);
+        des.cipher(cpy, key);
+        des.decipher(cpy, key);
         assertArrayEquals(msg, cpy);
     }
 }
