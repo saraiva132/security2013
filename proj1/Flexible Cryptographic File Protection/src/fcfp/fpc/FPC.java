@@ -138,14 +138,12 @@ public class FPC {
         }
 
         byte[] toEnc = new byte[zipToEnc1.length + zipToEnc2.length];
-        pad(zipToEnc1, offset1, zipToEnc1.length);
-        pad(zipToEnc2, offset2, zipToEnc2.length);
+        Pad.fill(zipToEnc1, offset1, zipToEnc1.length);
+        Pad.fill(zipToEnc2, offset2, zipToEnc2.length);
         System.arraycopy(zipToEnc1, 0, toEnc, 0, zipToEnc1.length);
         System.arraycopy(zipToEnc2, 0, toEnc, zipToEnc1.length, zipToEnc2.length);
         head1 = new Header((long) offset1, macReal);
         head2 = new Header((long) offset2, macDummy);
-        head1.setChecksum();
-        head2.setChecksum();
         try {
             encryption.cipher(toEnc, key);
         } catch (ProtectionPluginException ex) {
@@ -235,18 +233,6 @@ public class FPC {
         return zipit;
     }
 
-    public void pad(byte[] contentToPad, int offset, int length) {
-        if (length > contentToPad.length) {
-            throw new ArrayIndexOutOfBoundsException();
-        }
-        Random r = new Random();
-        //Pad tem que ter um valor pseudo-aleatorio entre 5% e 15% do content(talvez meter menos??)
-        //double randomValue = 0.05 + (0.15 - 0.05) * r.nextDouble();
-        //int pad = (int) ((int) contentToPad.length * randomValue);
-        byte[] padData = new byte[length - offset];
-        new Random().nextBytes(padData);
-        System.arraycopy(padData, 0, contentToPad, offset, length-offset);
-    }
 
     public byte[] getDummy(int size) {
         byte[] dummyContent = new byte[size];
