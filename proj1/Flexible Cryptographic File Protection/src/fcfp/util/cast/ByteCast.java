@@ -33,7 +33,7 @@ public class ByteCast {
      */
     public static long byteArray2Long(byte[] data) {
         long num = 0;
-        for (int i = 0; i < Long.SIZE; i++) {
+        for (int i = 0; i < Byte.SIZE; i++) {
             num += (data[i] << (i << 3));
         }
         return num;
