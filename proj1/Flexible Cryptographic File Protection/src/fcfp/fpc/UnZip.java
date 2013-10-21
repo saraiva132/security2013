@@ -30,18 +30,20 @@ public class UnZip {
     private String source;
 
     public UnZip(String source) {
-        File zip = new File(source);
+        this.zip = new File(source);
         this.source = source;
     }
 
     public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
         this.output = output;
+        this.zip = new File("cocozadas");
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
     }
 
     public UnZip(byte[] toUnzip) throws FileNotFoundException, IOException {
+        this.zip = new File("cocozadas");
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
@@ -63,20 +65,19 @@ public class UnZip {
         InputStream in = null;
         try {
             System.out.println("Unzipping Content!..");
-            //get the zip file content
-            ZipFile zip = new ZipFile(source);
-            //get the zipped file list entry
-            Enumeration<? extends ZipEntry> oi = zip.entries();
-            while (oi.hasMoreElements()) {
-                final ZipEntry ze = oi.nextElement();
-                fileName.add(ze.getName());
-                in = zip.getInputStream(ze);
-                buffer = new byte[in.available()];
-                in.read(buffer);
-                fileList.add(buffer);
+            System.out.println(zip==null);
+            try (ZipFile zipFile = new ZipFile(zip)) {
+                Enumeration<? extends ZipEntry> oi = zipFile.entries();
+                while (oi.hasMoreElements()) {
+                    final ZipEntry ze = oi.nextElement();
+                    fileName.add(ze.getName());
+                    in = zipFile.getInputStream(ze);
+                    buffer = new byte[in.available()];
+                    in.read(buffer);
+                    fileList.add(buffer);
+                }
+                in.close();
             }
-            in.close();
-            zip.close();
             System.out.println("Done");
 
         } catch (IOException ex) {

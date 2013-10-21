@@ -113,6 +113,7 @@ public class FPC {
             try {
                 zipToEnc1 = new byte[getOffset(offset1 = in.available())];
                 int len;
+                System.out.println("Tamanho: " + zipToEnc1.length + " . PadPos: " + offset1);
                 while ((len = in.read(zipToEnc1)) > 0) {
                     in.read(zipToEnc1, 0, len);
                 }
@@ -198,10 +199,11 @@ public class FPC {
         UnZip Unzip;
         System.out.println("Choosing Content to Unzip...");
         if (identity) {
-            Unzip = new UnZip(output, Arrays.copyOfRange(content, 0, (int) header.getPadPos() - 1));
+            System.out.println("Tamanho: " + content.length/2 + " . PadPos: " + header.getPadPos());
+            Unzip = new UnZip("files/" + output, Arrays.copyOfRange(content, 0, (int) header.getPadPos()));
             Unzip.run();
         } else {
-            Unzip = new UnZip(output, Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos() - 1));
+            Unzip = new UnZip("files/"+output, Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()));
             Unzip.run();
         }
         integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));

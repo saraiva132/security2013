@@ -70,11 +70,7 @@ public class Header {
         long temp;
         temp = setChecksum();
         System.out.println(temp + " : " + checksum + " JustToCheck: PadPos - " + padPos + " why not mac: - " + mac.length);
-        if (temp == checksum) {
-            return true;
-        } else {
-            return false;
-        }
+        return temp == checksum;
     }
 
     public byte[] getMac() {
