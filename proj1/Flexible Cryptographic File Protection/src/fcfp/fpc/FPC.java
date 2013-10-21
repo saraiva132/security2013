@@ -151,8 +151,8 @@ public class FPC {
            System.out.println("Não conseguiu encriptar os Zips!");
            return;  
         }
-        byte[] encHead1 = head1.getHeader();
-        byte[] encHead2 = head2.getHeader();
+        byte[] encHead1 = head1.getStream();
+        byte[] encHead2 = head2.getStream();
         try {
             encryption.cipher(encHead1, key);
             encryption.cipher(encHead2, dummyKey);
