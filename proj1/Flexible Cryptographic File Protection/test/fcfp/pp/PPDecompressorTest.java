@@ -1,13 +1,8 @@
 package fcfp.pp;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -16,7 +11,8 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Simão
+ * @author Simão Paulo Rato Alves Reis
+ * @version 1.1
  */
 public class PPDecompressorTest {
 
