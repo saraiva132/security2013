@@ -1,5 +1,6 @@
 package fcfp.png;
 
+import fcfp.util.cast.ByteCast;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -47,7 +48,7 @@ public class BufferedPNG {
         byte[] content = new byte[(int) msg.length()];
         FileInputStream fileInputStream = new FileInputStream(msg);
         fileInputStream.read(content);
-        byte length[] = bitConversion(content.length);
+        byte length[] = ByteCast.long2ByteArray(content.length);
         LessSignificantBit.encode(paint, length, 0);
         LessSignificantBit.encode(paint, content, Long.SIZE);
         File file = new File(outPath);
@@ -110,24 +111,5 @@ public class BufferedPNG {
         WritableRaster raster = image.getRaster();
         DataBufferByte buffer = (DataBufferByte) raster.getDataBuffer();
         return buffer.getData();
-    }
-
-    /**
-     * Convert a long number to a byte array with Long.SIZE / BYTE.size;
-     *
-     * @param num the number to convert.
-     * @return the byte array representing the long number.
-     */
-    private byte[] bitConversion(long num) {
-        byte[] data = new byte[Byte.SIZE];
-        data[7] = (byte) ((num & 0xFF00000000000000L) >>> 56);
-        data[6] = (byte) ((num & 0x00FF000000000000L) >>> 48);
-        data[5] = (byte) ((num & 0x0000FF0000000000L) >>> 40);
-        data[4] = (byte) ((num & 0x000000FF00000000L) >>> 32);
-        data[3] = (byte) ((num & 0x00000000FF000000) >>> 24);
-        data[2] = (byte) ((num & 0x0000000000FF0000) >>> 16);
-        data[1] = (byte) ((num & 0x000000000000FF00) >>> 8);
-        data[0] = (byte) ((num & 0x00000000000000FF));
-        return data;
     }
 }
