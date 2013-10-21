@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -40,7 +38,7 @@ public class FPC {
     private String PPencName;
     private String PPintName;
     private byte[] file1, file2;
-    Header head1, head2;
+    private Header head1, head2;
     private int offset1, offset2;
 
     public FPC(String source, String output, byte[] key) {
@@ -206,11 +204,13 @@ public class FPC {
             Unzip = new UnZip("files/"+output, Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()));
             Unzip.run();
         }
+         Unzip.writeZip();
         integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));
         if (header.getMac() == integrity.sign(Unzip.getEntry(1), key)) {
             Unzip.writeZip();
             System.out.println("Great Success");
         } else {
+            System.out.println("OMG: MAC NÂO SE VERIFICA");
         }
     }
 

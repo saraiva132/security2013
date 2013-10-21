@@ -65,11 +65,12 @@ public class UnZip {
         InputStream in = null;
         try {
             System.out.println("Unzipping Content!..");
-            System.out.println(zip==null);
+            System.out.println(zip == null);
             try (ZipFile zipFile = new ZipFile(zip)) {
                 Enumeration<? extends ZipEntry> oi = zipFile.entries();
                 while (oi.hasMoreElements()) {
                     final ZipEntry ze = oi.nextElement();
+                    System.out.println("addingtoZip: " + ze.getName());
                     fileName.add(ze.getName());
                     in = zipFile.getInputStream(ze);
                     buffer = new byte[in.available()];
@@ -90,21 +91,25 @@ public class UnZip {
         ZipInputStream zis;
         zis = new ZipInputStream(new FileInputStream(zip));
         ZipEntry ze = zis.getNextEntry();
-        FileOutputStream fos = new FileOutputStream(output + ze.getName());
-        int len;
-        while ((len = zis.read(buffer)) > 0) {
-            fos.write(buffer);
-        }
-        fos.flush();
-        fos.close();
-
-        if (zis != null) {
-            try {
-                zis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        while (ze != null) {
+          
+            FileOutputStream fos = new FileOutputStream(ze.getName());
+            int len;
+            while ((len = zis.read(buffer)) > 0) {
+                fos.write(buffer);
             }
+            fos.flush();
+            fos.close();
+             ze = zis.getNextEntry();
         }
+            if (zis != null) {
+                try {
+                    zis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        
     }
 
     public byte[] getEntry(int i) {
