@@ -5,7 +5,6 @@
 package fcfp.fpc;
 
 import fcfp.util.cast.ByteCast;
-import java.util.Random;
 import java.util.zip.CRC32;
 
 /**
@@ -30,8 +29,8 @@ public class Header {
         System.arraycopy(header, padPosStream.length + checksumStream.length, padding, 0, padding.length);
         mac = new byte[header.length - padPosStream.length - checksumStream.length - padding.length];
         System.arraycopy(header, padPosStream.length + checksumStream.length + padding.length, mac, 0, header.length - padPosStream.length - checksumStream.length - padding.length);
-        System.out.println("pasPos: " + padPosStream[3] + padPosStream[2] + padPosStream[1] + padPosStream[0]);
-        System.out.println("checksum: " + checksumStream[3] + checksumStream[2] + checksumStream[1] + checksumStream[0]);
+        System.out.println("padPos: " +padPos);
+        System.out.println("checksum: " + checksum);
     }
 
     public Header(long padPos, byte[] mac) {
@@ -51,7 +50,7 @@ public class Header {
         System.arraycopy(checksumStream, 0, header, padPosStream.length, checksumStream.length);
         System.arraycopy(padding, 0, header, padPosStream.length + checksumStream.length, padding.length);
         System.arraycopy(mac, 0, header, padPosStream.length + checksumStream.length + padding.length, mac.length);
-        System.out.println("pasPos: " + padPosStream[3] + padPosStream[2] + padPosStream[1] + padPosStream[0]);
+        System.out.println("padPos: " + padPosStream[3] + padPosStream[2] + padPosStream[1] + padPosStream[0]);
         System.out.println("checksum: " + checksumStream[3] + checksumStream[2] + checksumStream[1] + checksumStream[0]);
         return header;
     }
