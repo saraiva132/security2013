@@ -154,7 +154,8 @@ public class AES implements EncryptionPP {
         byte[][] tmp = new byte[state.length][state[0].length];
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < Nb; col++) {
-                tmp[row][col] = (byte) (sbox[(state[row][col] & 0x000000ff)] & 0xff);
+                //tmp[row][col] = (byte) (sbox[(state[row][col] & 0x000000ff)] & 0xff);
+                tmp[row][col] = (byte) (inv_sbox[(state[row][col] & 0x000000ff)] & 0xff);
             }
         }
 
@@ -164,7 +165,8 @@ public class AES implements EncryptionPP {
     private static byte[][] InvSubBytes(byte[][] state) {
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < Nb; col++) {
-                state[row][col] = (byte) (inv_sbox[(state[row][col] & 0x000000ff)] & 0xff);
+                //state[row][col] = (byte) (inv_sbox[(state[row][col] & 0x000000ff)] & 0xff);
+                state[row][col] = (byte) (sbox[(state[row][col] & 0x000000ff)] & 0xff);
             }
         }
 
@@ -176,7 +178,8 @@ public class AES implements EncryptionPP {
         byte[] t = new byte[4];
         for (int r = 1; r < 4; r++) {
             for (int c = 0; c < Nb; c++) {
-                t[c] = state[r][(c + r) % Nb];
+                //t[c] = state[r][(c + r) % Nb];
+                t[c] = state[r][(c + r + 1) % Nb];
             }
             System.arraycopy(t, 0, state[r], 0, Nb);
         }
@@ -188,7 +191,8 @@ public class AES implements EncryptionPP {
         byte[] t = new byte[4];
         for (int r = 1; r < 4; r++) {
             for (int c = 0; c < Nb; c++) {
-                t[(c + r) % Nb] = state[r][c];
+                //t[(c + r) % Nb] = state[r][c];
+                t[(c + r + 1) % Nb] = state[r][c];
             }
             System.arraycopy(t, 0, state[r], 0, Nb);
         }
