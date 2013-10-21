@@ -48,7 +48,7 @@ public class UnZip {
     }
 
     void run() {
-        unZipIt(zip);
+        unZipIt();
     }
 
     /**
@@ -57,7 +57,7 @@ public class UnZip {
      * @param zipFile input zip file
      * @param output zip file output folder
      */
-    private void unZipIt(File zipIt) {
+    private void unZipIt() {
 
         byte[] buffer;
         InputStream in = null;

@@ -160,6 +160,7 @@ public class FPC {
         }
         try {
             Zip zipFinal = toZip(PPencName,"files/"+output, PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
+            System.out.println(PPEngine.getInstance().getEncryptionPPSerialization(PPencName).length);
         } catch (FileNotFoundException ex) {
               System.out.println("Não conseguiu criar o zip de output!!");
         } catch (IOException ex) {
@@ -171,6 +172,7 @@ public class FPC {
     public void DeCipher() throws ProtectionPluginException, ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException, IOException {
         UnZip unzip = new UnZip(source);
         unzip.run();
+        System.out.println(unzip.getEntry(0).length);
         encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
         byte[] content = unzip.getEntry(3);
         encryption.decipher(unzip.getEntry(1), key);
