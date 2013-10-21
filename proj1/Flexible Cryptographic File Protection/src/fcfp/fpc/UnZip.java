@@ -62,6 +62,7 @@ public class UnZip {
         byte[] buffer;
         InputStream in = null;
         try {
+            System.out.println("Unzipping Content!..");
             //get the zip file content
             ZipFile zip = new ZipFile(source);
             //get the zipped file list entry

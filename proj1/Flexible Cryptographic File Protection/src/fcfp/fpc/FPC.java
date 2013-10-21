@@ -144,6 +144,8 @@ public class FPC {
         System.arraycopy(zipToEnc2, 0, toEnc, zipToEnc1.length, zipToEnc2.length);
         head1 = new Header((long) offset1, macReal);
         head2 = new Header((long) offset2, macDummy);
+        head1.setChecksum();
+        head2.setChecksum();
         try {
             encryption.cipher(toEnc, key);
         } catch (ProtectionPluginException ex) {
@@ -179,20 +181,24 @@ public class FPC {
         encryption.decipher(unzip.getEntry(2), key);
         head1 = new Header(unzip.getEntry(1));
         head2 = new Header(unzip.getEntry(2));
+        System.out.println("Headers createad....");
         encryption.decipher(content, key);
         if (head1.checksum()) {
+            System.out.println("Header Content Checksum GOOD");
             DecipherZip(head1, content, true);
         } else if (head2.checksum()) {
+             System.out.println("Header Dummy Checksum GOOD");
             DecipherZip(head2, content, false);
         } else {
-            return;
+            System.out.println("Headers Checksum BOTH WRONG");
+            System.exit(0);
         }
 
     }
 
     private void DecipherZip(Header header, byte[] content, boolean identity) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, ProtectionPluginException {
         UnZip Unzip;
-
+        System.out.println("Choosing Content to Unzip...");
         if (identity) {
             Unzip = new UnZip(output, Arrays.copyOfRange(content, 0, (int) header.getPadPos() - 1));
             Unzip.run();
