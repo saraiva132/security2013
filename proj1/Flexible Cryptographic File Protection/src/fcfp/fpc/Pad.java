@@ -19,9 +19,6 @@ public class Pad {
             throw new ArrayIndexOutOfBoundsException();
         }
         Random r = new Random();
-        //Pad tem que ter um valor pseudo-aleatorio entre 5% e 15% do content(talvez meter menos??)
-        //double randomValue = 0.05 + (0.15 - 0.05) * r.nextDouble();
-        //int pad = (int) ((int) contentToPad.length * randomValue);
         byte[] padData = new byte[length - offset];
         new Random().nextBytes(padData);
         System.arraycopy(padData, 0, contentToPad, offset, length-offset);
