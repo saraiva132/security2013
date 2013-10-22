@@ -9,7 +9,7 @@ package fcfp.pp;
 public interface EncryptionPP {
 
     /**
-     * Cypher algorithm's header.
+     * Cipher algorithm's header.
      *
      * @param msg message to be encrypted.
      * @param key cypher key.
@@ -18,7 +18,7 @@ public interface EncryptionPP {
     byte[] cipher(byte[] msg, byte[] key) throws ProtectionPluginException;
 
     /**
-     * Decypher algorithm's header.
+     * Decipher algorithm's header.
      *
      * @param msg message to be decrypted.
      * @param key decypher key.
