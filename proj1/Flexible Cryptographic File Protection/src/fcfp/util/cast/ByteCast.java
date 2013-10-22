@@ -5,12 +5,10 @@ import java.nio.ByteBuffer;
 /**
  *
  * @author Simão Paulo Rato Alves Reis
- * @version 1.0
+ * @version 1.1
  */
 public class ByteCast {
-
-    private static final int bytesPerLong = Long.SIZE / Byte.SIZE;
-
+    
     /**
      * Convert a long number to a byte array with Long.SIZE / BYTE.size;
      *

@@ -11,9 +11,9 @@
             <Property name="text" type="java.lang.String" value="File"/>
           </Properties>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="aboutMenu">
+        <Menu class="javax.swing.JMenu" name="helpMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" value="About"/>
+            <Property name="text" type="java.lang.String" value="Help"/>
             <Property name="actionCommand" type="java.lang.String" value="Option"/>
           </Properties>
         </Menu>
@@ -50,8 +50,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="steganographyPanel" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="contentPanel" pref="547" max="32767" attributes="0"/>
+                  <Component id="dummyContentPanel" alignment="0" pref="547" max="32767" attributes="0"/>
+                  <Component id="steganographyPanel" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                           <Component id="cipherModePanel" alignment="0" max="32767" attributes="0"/>
@@ -60,10 +62,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="ppPanel" max="32767" attributes="0"/>
                   </Group>
-                  <Component id="dummyContentPanel" max="32767" attributes="0"/>
-                  <Component id="contentPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
-              <EmptySpace min="9" pref="9" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -107,14 +107,14 @@
                       <Component id="encryptionPPLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="integrityPPLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="integrityComboBox" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="integrityComboBox" pref="108" max="32767" attributes="0"/>
                       <Component id="encryptionComboBox" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="reloadPPsButton" min="-2" pref="100" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -132,7 +132,7 @@
                       <Component id="integrityComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="reloadPPsButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -181,9 +181,9 @@
                       <Component id="dummyKeyLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="dummyKeyTextField" min="-2" pref="132" max="-2" attributes="0"/>
-                      <Component id="keyTextField" min="-2" pref="132" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="keyTextField" pref="132" max="32767" attributes="0"/>
+                      <Component id="dummyKeyTextField" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -197,12 +197,12 @@
                       <Component id="keyTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="keyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="dummyKeyTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="dummyKeyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -217,10 +217,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="dummyKeyLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dummy Pass"/>
+            <Property name="text" type="java.lang.String" value="Hidden Pass"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="dummyKeyTextField">
+        <Component class="javax.swing.JPasswordField" name="dummyKeyTextField">
         </Component>
       </SubComponents>
     </Container>
@@ -239,19 +239,21 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="originalFilePathLabel" min="-2" max="-2" attributes="0"/>
-                      <Component id="newFileNameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="originalFilePathLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="1" attributes="0">
+                          <Component id="newFileNameLabel" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="originalFilePathTextField" pref="316" max="32767" attributes="0"/>
-                      <Component id="newFilenameTextField" max="32767" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="newFilenameTextField" pref="332" max="32767" attributes="0"/>
+                      <Component id="originalFilePathTextField" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="originalFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
-                      <Component id="useRealNameRadioButton" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="originalFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -265,11 +267,10 @@
                       <Component id="originalFilePathTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="originalFilePathButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="newFileNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="newFilenameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="useRealNameRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="newFileNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -279,7 +280,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="originalFilePathLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Original File Path"/>
+            <Property name="text" type="java.lang.String" value="File Path"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="originalFilePathTextField">
@@ -294,16 +295,10 @@
         </Component>
         <Component class="javax.swing.JLabel" name="newFileNameLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="New File Name"/>
+            <Property name="text" type="java.lang.String" value="Container Name"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="newFilenameTextField">
-        </Component>
-        <Component class="javax.swing.JRadioButton" name="useRealNameRadioButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Original Name"/>
-            <Property name="actionCommand" type="java.lang.String" value="Real Name"/>
-          </Properties>
         </Component>
       </SubComponents>
     </Container>
@@ -322,10 +317,10 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Component id="pngFilePathLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="pngFilePathTextField" min="-2" pref="314" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="pngFilePathTextField" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="pngFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
@@ -398,7 +393,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="decipherRadioButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cipherAndDecipherButton" max="32767" attributes="0"/>
+                  <Component id="cipherAndDecipherButton" pref="74" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -465,16 +460,16 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="dummyContentRadioButton" min="-2" max="-2" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
+                      <Group type="102" attributes="0">
                           <Component id="dummyFilePathLabel" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="dummyFilePathTextField" min="-2" pref="312" max="-2" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <Component id="dummyFilePathTextField" min="-2" pref="332" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="dummyFilePathButton" min="-2" pref="100" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="dummyContentRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="38" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -497,7 +492,7 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="dummyFilePathLabel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dummy File Path"/>
+            <Property name="text" type="java.lang.String" value="Hidden File Path"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="dummyFilePathTextField">
@@ -512,7 +507,7 @@
         </Component>
         <Component class="javax.swing.JRadioButton" name="dummyContentRadioButton">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dummy Content"/>
+            <Property name="text" type="java.lang.String" value="Hidden Content"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dummyContentRadioButtonActionPerformed"/>
