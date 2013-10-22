@@ -101,6 +101,9 @@ public class FlexibleCryptographicFileProtection extends JFrame {
                 if (!file.exists()) {
                     JOptionPane.showMessageDialog(new JFrame(), "The selected PNG image doesn't exist.", "Error", JOptionPane.ERROR_MESSAGE);
                     return false;
+                } else if (!file.getName().toLowerCase().endsWith(".png")) {
+                    JOptionPane.showMessageDialog(new JFrame(), "The selected file must be a *.png file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
                 }
             }
         }
@@ -124,7 +127,10 @@ public class FlexibleCryptographicFileProtection extends JFrame {
             if (!file.exists()) {
                 JOptionPane.showMessageDialog(new JFrame(), "The selected file doesn't exist.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
-            }
+            } else if (!file.getName().toLowerCase().endsWith(".png") && !file.getName().toLowerCase().endsWith(".zip")) {
+                    JOptionPane.showMessageDialog(new JFrame(), "The selected file must be a *.png or *.zip file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
         }
 
         String password = new String(keyTextField.getPassword());
@@ -166,7 +172,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
         about.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(new JFrame(), "(c)2013 Simão Reis & Rafael Figueiredo.", "About", JOptionPane.PLAIN_MESSAGE);
+                JOptionPane.showMessageDialog(new JFrame(), "©2013 Simão Reis & Rafael Figueiredo.", "About", JOptionPane.PLAIN_MESSAGE);
             }
         });
         helpMenu.add(about);
