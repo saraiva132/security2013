@@ -61,7 +61,7 @@ public class UnZip {
      */
     private void unZipIt() {
 
-        byte[] buffer;
+        byte[] bufToAdd;
         InputStream in = null;
         try {
             System.out.println("Unzipping Content!..");
@@ -73,8 +73,14 @@ public class UnZip {
                     System.out.println("addingtoZip: " + ze.getName());
                     fileName.add(ze.getName());
                     in = zipFile.getInputStream(ze);
-                    buffer = new byte[in.available()];
-                    in.read(buffer);
+                    bufToAdd = new byte[in.available()];
+                    int len=0;
+                    int offset=0;
+                    byte [] buffer = new byte[in.available()];
+                    while(offset < buffer.length && (len = in.read(buffer, offset, buffer   .length - offset)) >= 0)
+                    {
+                        offset+=len;
+                    }
                     fileList.add(buffer);
                 }
                 in.close();
@@ -87,30 +93,47 @@ public class UnZip {
     }
 
     public void writeZip() throws FileNotFoundException, IOException {
+        
+       /* File folder = new File(output);
+    	if(!folder.exists()){
+    		folder.mkdir();
+    	}
+        
         byte[] buffer = new byte[1024];
-        ZipInputStream zis;
-        zis = new ZipInputStream(new FileInputStream(zip));
+        FileOutputStream zos = new FileOutputStream(output);
+        InputStream in = null;
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zip));
         ZipEntry ze = zis.getNextEntry();
-        while (ze != null) {
-          
-            FileOutputStream fos = new FileOutputStream(ze.getName());
+        while(ze != null)
+        {
+           String fileName = ze.getName();
+           File newFile = new File(output + File.separator + fileName);
+ 
+           System.out.println("file unzip : "+ newFile.getAbsoluteFile());
+ 
+            FileOutputStream fos = new FileOutputStream(newFile);             
+ 
             int len;
             while ((len = zis.read(buffer)) > 0) {
-                fos.write(buffer);
+       		fos.write(buffer, 0, len);
             }
-            fos.flush();
-            fos.close();
-             ze = zis.getNextEntry();
-        }
-            if (zis != null) {
-                try {
-                    zis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+ 
+            fos.close();   
+            ze = zis.getNextEntry();
+        }*/
         
-    }
+        FileOutputStream zos = null;
+        int i = 0;
+        while(i < fileList.size())
+        {
+            zos = new FileOutputStream(output+fileName.get(i));
+            zos.write(fileList.get(i),0,fileList.get(i).length);
+            zos.close();
+            i++;
+        }
+       
+        }
+    
 
     public byte[] getEntry(int i) {
         return fileList.get(i);

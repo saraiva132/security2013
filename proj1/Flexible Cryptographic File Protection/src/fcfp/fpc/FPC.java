@@ -51,7 +51,7 @@ public class FPC {
         try {
             FileInputStream in = new FileInputStream(source);
             try {
-                file1 = new byte[getOffset(offset1 = in.available())];
+                file1 = new byte[in.available()];
                 int len;
                 while ((len = in.read(file1)) > 0) {
                     in.read(file1, 0, len);
@@ -84,8 +84,8 @@ public class FPC {
 
     public void Cipher(){
         try {
-            Zip zip1 = toZip(PPintName,"files/zip1", file1, PPEngine.getInstance().getIntegrityPPSerialization(PPintName));
-            Zip zip2 = toZip(PPintName,"files/zip2", file2, PPEngine.getInstance().getIntegrityPPSerialization(PPintName));
+            Zip zip1 = toZip(PPintName,"files/zip1",PPEngine.getInstance().getIntegrityPPSerialization(PPintName),file1);
+            Zip zip2 = toZip(PPintName,"files/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName),file2);
         } catch (FileNotFoundException ex) {
            System.out.println("Problema a ler os zips do content! Zips não encontrados.");
            return;
@@ -209,7 +209,7 @@ public class FPC {
         if (header.getMac() == integrity.sign(Unzip.getEntry(1), key)) {
             Unzip.writeZip();
             System.out.println("Great Success");
-        } else {
+        } else {    
             System.out.println("OMG: MAC NÂO SE VERIFICA");
         }
     }
