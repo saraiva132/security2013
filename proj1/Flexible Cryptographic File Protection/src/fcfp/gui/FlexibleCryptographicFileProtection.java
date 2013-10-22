@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  * @author Rafael Saraiva Figueiredo
  * @version 3.0
  */
-public class FlexibleCryptographicFileProtection extends javax.swing.JFrame {
+public class FlexibleCryptographicFileProtection extends JFrame {
 
     private PPEngine ppEngine;
 
