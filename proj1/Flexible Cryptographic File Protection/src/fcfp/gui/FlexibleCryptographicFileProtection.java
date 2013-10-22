@@ -128,15 +128,20 @@ public class FlexibleCryptographicFileProtection extends JFrame {
                 JOptionPane.showMessageDialog(new JFrame(), "The selected file doesn't exist.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             } else if (!file.getName().toLowerCase().endsWith(".png") && !file.getName().toLowerCase().endsWith(".zip")) {
-                    JOptionPane.showMessageDialog(new JFrame(), "The selected file must be a *.png or *.zip file.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
+                JOptionPane.showMessageDialog(new JFrame(), "The selected file must be a *.png or *.zip file.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
         }
 
         String password = new String(keyTextField.getPassword());
 
         if (password.length() < 8) {
             JOptionPane.showMessageDialog(new JFrame(), "Your password is too short.\nInsert at least 8 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (newFilenameTextField.getText().compareTo("") == 0) {
+            JOptionPane.showMessageDialog(new JFrame(), "Give a name to your extracted file.", "Error", JOptionPane.ERROR_MESSAGE);
             return false;
         }
 
@@ -595,8 +600,6 @@ public class FlexibleCryptographicFileProtection extends JFrame {
     }//GEN-LAST:event_reloadPPsButtonActionPerformed
 
     private void cipherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cipherRadioButtonActionPerformed
-        newFileNameLabel.setEnabled(true);
-        newFilenameTextField.setEnabled(true);
         dummyContentRadioButton.setEnabled(true);
         if (dummyContentRadioButton.isSelected()) {
             dummyFilePathTextField.setEnabled(true);
@@ -625,8 +628,6 @@ public class FlexibleCryptographicFileProtection extends JFrame {
     }//GEN-LAST:event_cipherRadioButtonActionPerformed
 
     private void decipherRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decipherRadioButtonActionPerformed
-        newFileNameLabel.setEnabled(false);
-        newFilenameTextField.setEnabled(false);
         dummyContentRadioButton.setEnabled(false);
         dummyFilePathLabel.setEnabled(false);
         dummyFilePathTextField.setEnabled(false);
