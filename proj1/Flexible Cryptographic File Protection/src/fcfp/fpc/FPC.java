@@ -97,7 +97,7 @@ public class FPC {
         byte[] macReal=null;
         byte[] macDummy=null;
         try {
-            macReal = integrity.sign(file1, dummyKey);
+            macReal = integrity.sign(file1, key);
             macDummy = integrity.sign(file2, dummyKey);
         } catch (ProtectionPluginException ex) {
            System.out.println("Problema a criar os Macs! Verificar os plugins!");
@@ -137,18 +137,24 @@ public class FPC {
         }
 
         byte[] toEnc = new byte[zipToEnc1.length + zipToEnc2.length];
+             try {
+            encryption.cipher(zipToEnc1, key);
+        } catch (ProtectionPluginException ex) {
+           System.out.println("Não conseguiu encriptar o Zip real content!");
+           return;  
+        }
+            try {
+            encryption.cipher(zipToEnc2, dummyKey);
+           } catch (ProtectionPluginException ex) {
+           System.out.println("Não conseguiu encriptar os Zip hidden content!");
+           return;  
+        }
         Pad.fill(zipToEnc1, offset1, zipToEnc1.length);
         Pad.fill(zipToEnc2, offset2, zipToEnc2.length);
         System.arraycopy(zipToEnc1, 0, toEnc, 0, zipToEnc1.length);
         System.arraycopy(zipToEnc2, 0, toEnc, zipToEnc1.length, zipToEnc2.length);
         head1 = new Header((long) offset1, macReal);
         head2 = new Header((long) offset2, macDummy);
-        try {
-            encryption.cipher(toEnc, key);
-        } catch (ProtectionPluginException ex) {
-           System.out.println("Não conseguiu encriptar os Zips!");
-           return;  
-        }
         byte[] encHead1 = head1.getStream();
         byte[] encHead2 = head2.getStream();
         try {
@@ -179,7 +185,6 @@ public class FPC {
         head1 = new Header(unzip.getEntry(1));
         head2 = new Header(unzip.getEntry(2));
         System.out.println("Headers createad....");
-        encryption.decipher(content, key);
         if (head1.checksum()) {
             System.out.println("Header Content Checksum GOOD");
             DecipherZip(head1, content, true);
@@ -195,22 +200,45 @@ public class FPC {
 
     private void DecipherZip(Header header, byte[] content, boolean identity) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, ProtectionPluginException {
         UnZip Unzip;
+        byte [] toZipp;
         System.out.println("Choosing Content to Unzip...");
         if (identity) {
             System.out.println("Tamanho: " + content.length/2 + " . PadPos: " + header.getPadPos());
-            Unzip = new UnZip("files/" + output, Arrays.copyOfRange(content, 0, (int) header.getPadPos()));
+            toZipp = new byte[content.length/2-(int)header.getPadPos()];
+            toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos());
+            encryption.decipher(toZipp, key);
+            Unzip = new UnZip("files/" + output,toZipp);
             Unzip.run();
         } else {
-            Unzip = new UnZip("files/"+output, Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()));
+            toZipp= new byte[content.length/2-(int)header.getPadPos()];
+            toZipp = Arrays.copyOfRange(content, content.length/2, (int) header.getPadPos());
+            encryption.decipher(toZipp, key);
+            Unzip = new UnZip("files/"+output, encryption.decipher(Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()),key));
             Unzip.run();
         }
          Unzip.writeZip();
         integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));
-        if (header.getMac() == integrity.sign(Unzip.getEntry(1), key)) {
+        byte [] mac = integrity.sign(Unzip.getEntry(1), key);
+        byte [] macToCheck = header.getMac();
+        {
+        if(mac.length == macToCheck.length)
+        {
+            for(int i=0;i<mac.length;i++)
+            {
+                if(mac[i] != macToCheck[i])
+                {
+                    System.out.println(i);
+                    System.out.println("OMG: MAC NÂO SE VERIFICA");
+                    return;
+                }
+            }
             Unzip.writeZip();
             System.out.println("Great Success");
-        } else {    
+        }
+        else
+        {
             System.out.println("OMG: MAC NÂO SE VERIFICA");
+        }
         }
     }
 
@@ -261,13 +289,13 @@ public class FPC {
         this.integrity = PPEngine.getInstance().getIntegrityPP(name);
     }
 
-    public void setStega(String source) {
-        sourceSteganography = source;
+    public void setStega(String fonte) {
+        sourceSteganography = fonte;
         steganography = true;
     }
 
-    public void setDummy(String source, byte[] key) {
-        sourceDummy = source;
+    public void setDummy(String fonte, byte[] key) {
+        sourceDummy = fonte;
         dummy = true;
         dummyKey = key;
     }
