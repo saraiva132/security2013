@@ -1,15 +1,16 @@
 package pp;
 
 import fcfp.pp.EncryptionPP;
+import java.util.Arrays;
 
 /**
- * DES Protection Plugin
+ * TripleDES Protection Plugin
  *
  * @author Simão Paulo Rato Alves Reis
  * @author Rafael Saraiva Figueiredo
  * @version 1.0
  */
-public class DES implements EncryptionPP {
+public class TripleDES implements EncryptionPP {
 
     // initial permuation table
     private static int[] IP = {58, 50, 42, 34, 26, 18, 10, 2, 60, 52, 44, 36,
@@ -87,8 +88,10 @@ public class DES implements EncryptionPP {
             {7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8},
             {2, 1, 14, 7, 4, 10, 18, 13, 15, 12, 9, 0, 3, 5, 6, 11}
         }};
-    // holds subkeys(3 because we'll implement triple DES also
+    // holds subkeys(3 because we'll implement triple TripleDES also
     private static byte[][] K;
+    private static byte[][] K1;
+    private static byte[][] K2;
 
     private static void setBit(byte[] data, int pos, int val) {
         int posByte = pos / 8;
@@ -125,7 +128,6 @@ public class DES implements EncryptionPP {
             setBit(out, i, val);
         }
         return out;
-
     }
 
     private static byte[] permutFunc(byte[] input, int[] table) {
@@ -136,7 +138,6 @@ public class DES implements EncryptionPP {
             setBit(out, i, val);
         }
         return out;
-
     }
 
     private static byte[] xor_func(byte[] a, byte[] b) {
@@ -145,7 +146,6 @@ public class DES implements EncryptionPP {
             out[i] = (byte) (a[i] ^ b[i]);
         }
         return out;
-
     }
 
     private static byte[] encrypt64Bloc(byte[] bloc, byte[][] subkeys, boolean isDecrypt) {
@@ -260,9 +260,10 @@ public class DES implements EncryptionPP {
     }
 
     public byte[] cipher(byte[] data, byte[] key) {
-        int lenght;
+        int lenght = 0;
         byte[] padding;
         int i;
+
         lenght = 8 - data.length % 8;
         padding = new byte[lenght];
         padding[0] = (byte) 0x80;
@@ -270,17 +271,21 @@ public class DES implements EncryptionPP {
         for (i = 1; i < lenght; i++) {
             padding[i] = 0;
         }
-
+        
         byte[] tmp = new byte[data.length + lenght];
         byte[] bloc = new byte[8];
-
-        K = generateSubKeys(key);
-
+        
+        K = generateSubKeys(Arrays.copyOfRange(key, 0, key.length / 3));
+        K1 = generateSubKeys(Arrays.copyOfRange(key, key.length / 3, key.length * 2 / 3));
+        K2 = generateSubKeys(Arrays.copyOfRange(key, key.length * 2 / 3, key.length));
+        
         int count = 0;
 
         for (i = 0; i < data.length + lenght; i++) {
             if (i > 0 && i % 8 == 0) {
                 bloc = encrypt64Bloc(bloc, K, false);
+                bloc = encrypt64Bloc(bloc, K1, true);
+                bloc = encrypt64Bloc(bloc, K2, false);
                 System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
             }
             if (i < data.length) {
@@ -292,6 +297,8 @@ public class DES implements EncryptionPP {
         }
         if (bloc.length == 8) {
             bloc = encrypt64Bloc(bloc, K, false);
+            bloc = encrypt64Bloc(bloc, K1, true);
+            bloc = encrypt64Bloc(bloc, K2, false);
             System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
         }
         return tmp;
@@ -302,10 +309,14 @@ public class DES implements EncryptionPP {
         byte[] tmp = new byte[data.length];
         byte[] bloc = new byte[8];
 
-        K = generateSubKeys(key);
+        K = generateSubKeys(Arrays.copyOfRange(key, 0, key.length / 3));
+        K1 = generateSubKeys(Arrays.copyOfRange(key, key.length / 3, key.length * 2 / 3));
+        K2 = generateSubKeys(Arrays.copyOfRange(key, key.length * 2 / 3, key.length));
 
         for (i = 0; i < data.length; i++) {
             if (i > 0 && i % 8 == 0) {
+                bloc = encrypt64Bloc(bloc, K2, true);
+                bloc = encrypt64Bloc(bloc, K1, false);
                 bloc = encrypt64Bloc(bloc, K, true);
                 System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
             }
@@ -313,10 +324,11 @@ public class DES implements EncryptionPP {
                 bloc[i % 8] = data[i];
             }
         }
+        bloc = encrypt64Bloc(bloc, K2, true);
+        bloc = encrypt64Bloc(bloc, K1, false);
         bloc = encrypt64Bloc(bloc, K, true);
         System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
-
-
+        
         tmp = deletePadding(tmp);
 
         return tmp;

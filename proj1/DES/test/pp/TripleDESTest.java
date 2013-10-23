@@ -4,16 +4,16 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- * DES Protection Plugin Test Cases
+ * TripleDES Protection Plugin Test Cases
  *
  * @author Simão Paulo Rato Alves Reis
  * @author Rafael Saraiva Figueiredo
  * @version 1.0
  */
-public class DESTest {
+public class TripleDESTest {
 
     /**
-     * Test of cipher and decipher method, of class DES.
+     * Test of cipher and decipher method, of class TripleDES.
      */
     @Test
     public void testDES_ValidKey() {
@@ -22,7 +22,7 @@ public class DESTest {
         byte[] msg = text.getBytes();
         System.out.println("length: " + msg.length + " " + "length: " + text.length() + " " + text);
         byte[] key = pass.getBytes();
-        DES instance = new DES();
+        TripleDES instance = new TripleDES();
         byte[] result = instance.cipher(msg, key);
         System.out.println("length: " + result.length + " " + "length: " + new String(result).length() + " " + new String(result));
         result = instance.decipher(result, key);
