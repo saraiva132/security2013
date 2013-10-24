@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fcfp.fpc;
 
 import fcfp.util.cast.ByteCast;
@@ -17,7 +13,11 @@ public class Header {
     private long padPos;
     private byte[] mac;
     private byte[] checksum;
-
+    
+    /**
+     * 
+     * @param header 
+     */
     public Header(byte[] header) {
         checksum = new byte[TRUE.length];
         System.arraycopy(header, 0, checksum, 0, checksum.length);
@@ -25,14 +25,23 @@ public class Header {
         System.arraycopy(header, checksum.length, padPosStream, 0, padPosStream.length);
         padPos = ByteCast.byteArray2Long(padPosStream);
         mac = new byte[header.length - checksum.length - padPosStream.length];
-        System.arraycopy(header, checksum.length + padPosStream.length, mac, 0, header.length - checksum.length - padPosStream.length);
+        System.arraycopy(header, checksum.length + padPosStream.length, mac, 0, mac.length);
     }
-
+    
+    /**
+     * 
+     * @param padPos
+     * @param mac 
+     */
     public Header(long padPos, byte[] mac) {
         this.padPos = padPos;
         this.mac = mac;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public byte[] getStream() {
         byte[] padPosStream = ByteCast.long2ByteArray(padPos);
         byte[] header = new byte[TRUE.length + padPosStream.length + mac.length];
@@ -41,16 +50,28 @@ public class Header {
         System.arraycopy(mac, 0, header, TRUE.length + padPosStream.length, mac.length);
         return header;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public boolean checksum() {
         System.out.println(" : " + " JustToCheck: PadPos - " + padPos + " why not mac: - " + mac.length);
         return Arrays.equals(checksum, TRUE);
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public byte[] getMac() {
         return mac;
     }
-
+    
+    /**
+     * 
+     * @return 
+     */
     public long getPadPos() {
         return padPos;
     }
