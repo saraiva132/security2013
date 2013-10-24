@@ -123,7 +123,7 @@ public class UnZip {
         }*/
         
         FileOutputStream zos = null;
-        int i = 0;
+        int i = 1;
         while(i < fileList.size())
         {
             zos = new FileOutputStream(output+fileName.get(i));

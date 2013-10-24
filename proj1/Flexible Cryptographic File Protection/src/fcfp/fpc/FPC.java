@@ -161,18 +161,18 @@ public class FPC {
         byte[] toEnc = new byte[zipToEnc1.length + zipToEnc2.length];
         System.arraycopy(zipToEnc2, 0, toEnc, 0, zipToEnc2.length);
         System.arraycopy(zipToEnc1, 0, toEnc, zipToEnc2.length, zipToEnc1.length);
-        head1 = new Header((long) offset1, macReal);
-        head2 = new Header((long) offset2, macDummy);
+        head2 = new Header((long) offset1, macReal);
+        head1 = new Header((long) offset2, macDummy);
         byte[] encHead1 = head1.getStream();
         byte[] encHead2 = head2.getStream();
         try {
-            encHead1 = encryption.cipher(encHead1, key);
-            encHead2 = encryption.cipher(encHead2, dummyKey);
+            encHead1 = encryption.cipher(encHead1, dummyKey);
+            encHead2 = encryption.cipher(encHead2, key);
         } catch (ProtectionPluginException ex) {
             System.out.println("Não conseguiu encriptar os Headers!");
         }
         try {
-            Zip zipFinal = toZip(PPencName, "files/" + output, PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
+            Zip zipFinal = toZip(PPencName, "files/" + output +".zip", PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
             System.out.println(PPEngine.getInstance().getEncryptionPPSerialization(PPencName).length);
         } catch (FileNotFoundException ex) {
             System.out.println("Não conseguiu criar o zip de output!!");
@@ -182,12 +182,13 @@ public class FPC {
         if (steganography) {
             BufferedPNG toIMG = null;
             try {
+                System.out.println("A procura da imagem:" + sourceSteganography);
                 toIMG = new BufferedPNG(sourceSteganography);
             } catch (IOException ex) {
-                System.out.println("Imagem não encoantrada");
+                System.out.println("Imagem não encontrada");
             }
             try {
-                toIMG.encode("files/" + output, "files/" + output + ".png");
+                toIMG.encode("files/" + output + ".zip", "files/" + output + ".png");
             } catch (IOException ex) {
 
             } catch (InvalidPNGImageSizeException ex) {
@@ -227,14 +228,11 @@ public class FPC {
         System.out.println("Choosing Content to Unzip...");
         if (identity) {
             System.out.println("Tamanho: " + content.length / 2 + " . PadPos: " + header.getPadPos());
-            toZipp = new byte[content.length / 2 - (int) header.getPadPos()];
-            toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos());
+            toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos()+content.length/2);
             Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
             Unzip.run();
         } else {
-            toZipp = new byte[content.length / 2 - (int) header.getPadPos()];
-            toZipp = Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos());
-
+            toZipp = Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()+content.length);
             Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
             Unzip.run();
         }

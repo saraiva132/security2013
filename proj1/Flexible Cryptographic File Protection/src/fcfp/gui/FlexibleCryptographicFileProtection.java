@@ -664,7 +664,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
             fpc.setDummy(dummyFilePathTextField.getText(), new String(dummyKeyTextField.getPassword()).getBytes());
         }
         if (steganographyRadioButton.isSelected()) {
-            fpc.setStega(pngFilePathLabel.getText());
+            fpc.setStega(pngFilePathTextField.getText());
         }
         fpc.setPPenc(encryptionComboBox.getSelectedItem().toString());
         fpc.setPPint(integrityComboBox.getSelectedItem().toString());
