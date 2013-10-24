@@ -5,7 +5,6 @@
 package fcfp.fpc;
 
 import fcfp.util.cast.ByteCast;
-import fcfp.util.iv.InitVector;
 import java.util.Arrays;
 
 /**
@@ -25,8 +24,8 @@ public class Header {
         byte[] padPosStream = new byte[Byte.SIZE];
         System.arraycopy(header, checksum.length, padPosStream, 0, padPosStream.length);
         padPos = ByteCast.byteArray2Long(padPosStream);
-        mac = new byte[header.length - checksum.length - padPosStream.length - InitVector.getMaxLength()];
-        System.arraycopy(header, checksum.length + padPosStream.length, mac, 0, header.length - checksum.length - padPosStream.length - InitVector.getMaxLength());
+        mac = new byte[header.length - checksum.length - padPosStream.length];
+        System.arraycopy(header, checksum.length + padPosStream.length, mac, 0, header.length - checksum.length - padPosStream.length);
     }
 
     public Header(long padPos, byte[] mac) {
@@ -36,7 +35,7 @@ public class Header {
 
     public byte[] getStream() {
         byte[] padPosStream = ByteCast.long2ByteArray(padPos);
-        byte[] header = new byte[TRUE.length + padPosStream.length + mac.length + InitVector.getMaxLength()];
+        byte[] header = new byte[TRUE.length + padPosStream.length + mac.length];
         System.arraycopy(TRUE, 0, header, 0, TRUE.length);
         System.arraycopy(padPosStream, 0, header, TRUE.length, padPosStream.length);
         System.arraycopy(mac, 0, header, TRUE.length + padPosStream.length, mac.length);
