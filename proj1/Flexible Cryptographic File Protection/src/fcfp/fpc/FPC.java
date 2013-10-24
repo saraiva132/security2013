@@ -4,6 +4,8 @@
  */
 package fcfp.fpc;
 
+import fcfp.png.BufferedPNG;
+import fcfp.png.InvalidPNGImageSizeException;
 import fcfp.pp.EncryptionPP;
 import fcfp.pp.IntegrityPP;
 import fcfp.pp.PPDecompressor;
@@ -18,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -82,28 +86,28 @@ public class FPC {
         }
     }
 
-    public void Cipher(){
+    public void Cipher() {
         try {
-            Zip zip1 = toZip(PPintName,"files/zip1",PPEngine.getInstance().getIntegrityPPSerialization(PPintName),file1);
-            Zip zip2 = toZip(PPintName,"files/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName),file2);
+            Zip zip1 = toZip(PPintName, "files/zip1", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file1);
+            Zip zip2 = toZip(PPintName, "files/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file2);
         } catch (FileNotFoundException ex) {
-           System.out.println("Problema a ler os zips do content! Zips não encontrados.");
-           return;
+            System.out.println("Problema a ler os zips do content! Zips não encontrados.");
+            return;
         } catch (IOException ex) {
             System.out.println("Problema a ler os zips do content! IO Issues dude");
             return;
         }
-        
-        byte[] macReal=null;
-        byte[] macDummy=null;
+
+        byte[] macReal = null;
+        byte[] macDummy = null;
         try {
             macReal = integrity.sign(file1, key);
             macDummy = integrity.sign(file2, dummyKey);
         } catch (ProtectionPluginException ex) {
-           System.out.println("Problema a criar os Macs! Verificar os plugins!");
-           return;  
+            System.out.println("Problema a criar os Macs! Verificar os plugins!");
+            return;
         }
-       
+
         byte[] zipToEnc1 = null;
         byte[] zipToEnc2 = null;
         try {
@@ -130,46 +134,66 @@ public class FPC {
                 }
                 in.close();
             } catch (IOException ex) {
-              return;   
+                return;
             }
         } catch (FileNotFoundException ex) {
-          return;
+            return;
         }
 
-        byte[] toEnc = new byte[zipToEnc1.length + zipToEnc2.length];
-             try {
-            encryption.cipher(zipToEnc1, key);
-        } catch (ProtectionPluginException ex) {
-           System.out.println("Não conseguiu encriptar o Zip real content!");
-           return;  
-        }
-            try {
-            encryption.cipher(zipToEnc2, dummyKey);
-           } catch (ProtectionPluginException ex) {
-           System.out.println("Não conseguiu encriptar os Zip hidden content!");
-           return;  
-        }
         Pad.fill(zipToEnc1, offset1, zipToEnc1.length);
         Pad.fill(zipToEnc2, offset2, zipToEnc2.length);
-        System.arraycopy(zipToEnc1, 0, toEnc, 0, zipToEnc1.length);
-        System.arraycopy(zipToEnc2, 0, toEnc, zipToEnc1.length, zipToEnc2.length);
+        try {
+            System.out.println(zipToEnc1.length);
+            zipToEnc1 = encryption.cipher(zipToEnc1, key);
+            System.out.println(zipToEnc1.length);
+        } catch (ProtectionPluginException ex) {
+            System.out.println("Não conseguiu encriptar o Zip real content!");
+            return;
+        }
+        try {
+            System.out.println(zipToEnc2.length);
+            zipToEnc2 = encryption.cipher(zipToEnc2, dummyKey);
+            System.out.println(zipToEnc2.length);
+        } catch (ProtectionPluginException ex) {
+            System.out.println("Não conseguiu encriptar os Zip hidden content!");
+            return;
+        }
+        byte[] toEnc = new byte[zipToEnc1.length + zipToEnc2.length];
+        System.arraycopy(zipToEnc2, 0, toEnc, 0, zipToEnc2.length);
+        System.arraycopy(zipToEnc1, 0, toEnc, zipToEnc2.length, zipToEnc1.length);
         head1 = new Header((long) offset1, macReal);
         head2 = new Header((long) offset2, macDummy);
         byte[] encHead1 = head1.getStream();
         byte[] encHead2 = head2.getStream();
         try {
-            encryption.cipher(encHead1, key);
-            encryption.cipher(encHead2, dummyKey);
+            encHead1 = encryption.cipher(encHead1, key);
+            encHead2 = encryption.cipher(encHead2, dummyKey);
         } catch (ProtectionPluginException ex) {
             System.out.println("Não conseguiu encriptar os Headers!");
         }
         try {
-            Zip zipFinal = toZip(PPencName,"files/"+output, PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
+            Zip zipFinal = toZip(PPencName, "files/" + output, PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
             System.out.println(PPEngine.getInstance().getEncryptionPPSerialization(PPencName).length);
         } catch (FileNotFoundException ex) {
-              System.out.println("Não conseguiu criar o zip de output!!");
+            System.out.println("Não conseguiu criar o zip de output!!");
         } catch (IOException ex) {
-              System.out.println("Oops. Problema IO no zip output");
+            System.out.println("Oops. Problema IO no zip output");
+        }
+        if (steganography) {
+            BufferedPNG toIMG = null;
+            try {
+                toIMG = new BufferedPNG(sourceSteganography);
+            } catch (IOException ex) {
+                System.out.println("Imagem não encoantrada");
+            }
+            try {
+                toIMG.encode("files/" + output, "files/" + output + ".png");
+            } catch (IOException ex) {
+
+            } catch (InvalidPNGImageSizeException ex) {
+
+            }
+
         }
         System.out.println("Sucess!!! =)");
     }
@@ -180,16 +204,15 @@ public class FPC {
         System.out.println(unzip.getEntry(0).length);
         encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
         byte[] content = unzip.getEntry(3);
-        encryption.decipher(unzip.getEntry(1), key);
-        encryption.decipher(unzip.getEntry(2), key);
-        head1 = new Header(unzip.getEntry(1));
-        head2 = new Header(unzip.getEntry(2));
+
+        head1 = new Header(encryption.decipher(unzip.getEntry(1), key));
+        head2 = new Header(encryption.decipher(unzip.getEntry(2), key));
         System.out.println("Headers createad....");
         if (head1.checksum()) {
-            System.out.println("Header Content Checksum GOOD");
+            System.out.println("Header Dummy Checksum GOOD");
             DecipherZip(head1, content, true);
         } else if (head2.checksum()) {
-             System.out.println("Header Dummy Checksum GOOD");
+            System.out.println("Header Content Checksum GOOD");
             DecipherZip(head2, content, false);
         } else {
             System.out.println("Headers Checksum BOTH WRONG");
@@ -200,33 +223,28 @@ public class FPC {
 
     private void DecipherZip(Header header, byte[] content, boolean identity) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, ProtectionPluginException {
         UnZip Unzip;
-        byte [] toZipp;
+        byte[] toZipp;
         System.out.println("Choosing Content to Unzip...");
         if (identity) {
-            System.out.println("Tamanho: " + content.length/2 + " . PadPos: " + header.getPadPos());
-            toZipp = new byte[content.length/2-(int)header.getPadPos()];
+            System.out.println("Tamanho: " + content.length / 2 + " . PadPos: " + header.getPadPos());
+            toZipp = new byte[content.length / 2 - (int) header.getPadPos()];
             toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos());
-            encryption.decipher(toZipp, key);
-            Unzip = new UnZip("files/" + output,toZipp);
+            Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
             Unzip.run();
         } else {
-            toZipp= new byte[content.length/2-(int)header.getPadPos()];
-            toZipp = Arrays.copyOfRange(content, content.length/2, (int) header.getPadPos());
-            encryption.decipher(toZipp, key);
-            Unzip = new UnZip("files/"+output, encryption.decipher(Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()),key));
+            toZipp = new byte[content.length / 2 - (int) header.getPadPos()];
+            toZipp = Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos());
+
+            Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
             Unzip.run();
         }
-         Unzip.writeZip();
         integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));
-        byte [] mac = integrity.sign(Unzip.getEntry(1), key);
-        byte [] macToCheck = header.getMac();
-        {
-        if(mac.length == macToCheck.length)
-        {
-            for(int i=0;i<mac.length;i++)
-            {
-                if(mac[i] != macToCheck[i])
-                {
+        byte[] mac = integrity.sign(Unzip.getEntry(1), key);
+        byte[] macToCheck = header.getMac();
+
+        if (mac.length == macToCheck.length) {
+            for (int i = 0; i < mac.length; i++) {
+                if (mac[i] != macToCheck[i]) {
                     System.out.println(i);
                     System.out.println("OMG: MAC NÂO SE VERIFICA");
                     return;
@@ -234,35 +252,32 @@ public class FPC {
             }
             Unzip.writeZip();
             System.out.println("Great Success");
-        }
-        else
-        {
+        } else {
             System.out.println("OMG: MAC NÂO SE VERIFICA");
-        }
         }
     }
 
-    public Zip toZip(String name,String outs, byte[]... oi) throws FileNotFoundException, IOException {
+    public Zip toZip(String name, String outs, byte[]   ... oi) throws FileNotFoundException, IOException {
         List<File> fields = new ArrayList<>();
-        File zip;  
+        File zip;
         int i = 0;
         for (byte[] b : oi) {
-            if(i==0)
+            if (i == 0) {
                 zip = new File(name);
-            else
-                zip = new File("d4e1t5r"+i);
+            } else {
+                zip = new File("d4e1t5r" + i);
+            }
             i++;
             try (FileOutputStream out = new FileOutputStream(zip)) {
                 out.write(b);
             }
             fields.add(zip);
         }
-        
+
         Zip zipit = new Zip(outs, fields);
         zipit.run();
         return zipit;
     }
-
 
     public byte[] getDummy(int size) {
         byte[] dummyContent = new byte[size];
