@@ -126,7 +126,7 @@ public class UnZip {
         int i = 1;
         while(i < fileList.size())
         {
-            zos = new FileOutputStream(output+fileName.get(i));
+            zos = new FileOutputStream(output);
             zos.write(fileList.get(i),0,fileList.get(i).length);
             zos.close();
             i++;

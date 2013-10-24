@@ -172,7 +172,7 @@ public class FPC {
             System.out.println("Não conseguiu encriptar os Headers!");
         }
         try {
-            Zip zipFinal = toZip(PPencName, "files/" + output +".zip", PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
+            Zip zipFinal = toZip(PPencName, "files/" + output + ".zip", PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
             System.out.println(PPEngine.getInstance().getEncryptionPPSerialization(PPencName).length);
         } catch (FileNotFoundException ex) {
             System.out.println("Não conseguiu criar o zip de output!!");
@@ -200,9 +200,23 @@ public class FPC {
     }
 
     public void DeCipher() throws ProtectionPluginException, ClassNotFoundException, InstantiationException, IllegalAccessException, FileNotFoundException, IOException {
+        if (source.endsWith(".png")) {
+            BufferedPNG toIMG = null;
+            try {
+                System.out.println("A procura da imagem:" + source);
+                toIMG = new BufferedPNG(source);
+            } catch (IOException ex) {
+                System.out.println("Imagem não encontrada");
+            }
+            try {
+                toIMG.decode("files/temp.zip");
+            } catch (IOException ex) {
+
+            }
+            source = "files/temp.zip";
+        }
         UnZip unzip = new UnZip(source);
         unzip.run();
-        System.out.println(unzip.getEntry(0).length);
         encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
         byte[] content = unzip.getEntry(3);
 
@@ -228,11 +242,11 @@ public class FPC {
         System.out.println("Choosing Content to Unzip...");
         if (identity) {
             System.out.println("Tamanho: " + content.length / 2 + " . PadPos: " + header.getPadPos());
-            toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos()+content.length/2);
+            toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos() + content.length / 2);
             Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
             Unzip.run();
         } else {
-            toZipp = Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos()+content.length);
+            toZipp = Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos() + content.length);
             Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
             Unzip.run();
         }
