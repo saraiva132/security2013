@@ -43,7 +43,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
      *
      * @return
      */
-    private boolean validateCipher() {
+    private boolean validEncryption() {
 
         File file;
 
@@ -115,7 +115,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
      *
      * @return
      */
-    private boolean validateDecipher() {
+    private boolean validDecryption() {
 
         File file;
 
@@ -647,36 +647,42 @@ public class FlexibleCryptographicFileProtection extends JFrame {
     }//GEN-LAST:event_decipherRadioButtonActionPerformed
 
     private void cipherAndDecipherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cipherAndDecipherButtonActionPerformed
-        if (!(newFilenameTextField.getText().compareTo("") == 0) && !(originalFilePathTextField.getText().compareTo("") == 0)) {
-            FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
-            if (cipherRadioButton.isSelected()) {
-                if (dummyContentRadioButton.isSelected()) {
-                    System.out.println("Hidden Volume inserted!");
-                    fpc.setDummy(dummyFilePathTextField.getText(), new String (dummyKeyTextField.getPassword()).getBytes());
-                }
-                if (steganographyRadioButton.isSelected()) {
-                    fpc.setStega(pngFilePathLabel.getText());
-                }
-                fpc.setPPenc(encryptionComboBox.getSelectedItem().toString());
-                fpc.setPPint(integrityComboBox.getSelectedItem().toString());
-                fpc.CipherStartUP();
-                fpc.Cipher();
-            } else if (decipherRadioButton.isSelected()) {
-
-                try {
-                    fpc.DeCipher();
-                } catch (ProtectionPluginException | ClassNotFoundException | InstantiationException | IllegalAccessException | IOException ex) {
-                    //erro ao decifrar somewhere... melhorar    
-                }
-
-            } else {
-                //Não escolheu opção!?
-            }
+        if (cipherRadioButton.isSelected()) {
+            encrypt();
         } else {
-            //POPUP paths  
+            decrypt();
         }
-
     }//GEN-LAST:event_cipherAndDecipherButtonActionPerformed
+
+    private void encrypt() {
+        if (!validEncryption()) {
+            return;
+        }
+        FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
+        if (dummyContentRadioButton.isSelected()) {
+            System.out.println("Hidden Volume inserted!");
+            fpc.setDummy(dummyFilePathTextField.getText(), new String(dummyKeyTextField.getPassword()).getBytes());
+        }
+        if (steganographyRadioButton.isSelected()) {
+            fpc.setStega(pngFilePathLabel.getText());
+        }
+        fpc.setPPenc(encryptionComboBox.getSelectedItem().toString());
+        fpc.setPPint(integrityComboBox.getSelectedItem().toString());
+        fpc.CipherStartUP();
+        fpc.Cipher();
+    }
+
+    private void decrypt() {
+        if (!validDecryption()) {
+            return;
+        }
+        FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
+        try {
+            fpc.DeCipher();
+        } catch (ProtectionPluginException | ClassNotFoundException | InstantiationException | IllegalAccessException | IOException ex) {
+            //erro ao decifrar somewhere... melhorar    
+        }
+    }
 
     /**
      * @param args the command line arguments
