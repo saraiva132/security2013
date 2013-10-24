@@ -5,7 +5,8 @@
 package fcfp.fpc;
 
 import fcfp.util.cast.ByteCast;
-import java.util.zip.CRC32;
+import fcfp.util.iv.InitVector;
+import java.util.Arrays;
 
 /**
  *
@@ -13,19 +14,19 @@ import java.util.zip.CRC32;
  */
 public class Header {
 
-    private long padPos;
     private static final byte[] TRUE = "TRUE".getBytes();
+    private long padPos;
     private byte[] mac;
-
+    private byte[] checksum;
 
     public Header(byte[] header) {
+        checksum = new byte[TRUE.length];
+        System.arraycopy(header, 0, checksum, 0, checksum.length);
         byte[] padPosStream = new byte[Byte.SIZE];
-        System.arraycopy(header, 0, padPosStream, 0, 8);
+        System.arraycopy(header, checksum.length, padPosStream, 0, padPosStream.length);
         padPos = ByteCast.byteArray2Long(padPosStream);
-        System.arraycopy(header, padPosStream.length, mac, 0, header.length - padPosStream.length);
-        mac = new byte[header.length - padPosStream.length];
-        System.arraycopy(header, padPosStream.length, mac, 0, header.length - padPosStream.length);
-        System.out.println("padPos: " +padPos);
+        mac = new byte[header.length - checksum.length - padPosStream.length - InitVector.getMaxLength()];
+        System.arraycopy(header, checksum.length + padPosStream.length, mac, 0, header.length - checksum.length - padPosStream.length - InitVector.getMaxLength());
     }
 
     public Header(long padPos, byte[] mac) {
@@ -35,18 +36,16 @@ public class Header {
 
     public byte[] getStream() {
         byte[] padPosStream = ByteCast.long2ByteArray(padPos);
-        byte[] header = new byte[padPosStream.length + mac.length];
-        System.arraycopy(padPosStream, 0, header, 0, padPosStream.length);
-        System.arraycopy(mac, 0, header, padPosStream.length, mac.length);
-        System.out.println("padPos: " + padPosStream[3] + padPosStream[2] + padPosStream[1] + padPosStream[0]);
+        byte[] header = new byte[TRUE.length + padPosStream.length + mac.length + InitVector.getMaxLength()];
+        System.arraycopy(TRUE, 0, header, 0, TRUE.length);
+        System.arraycopy(padPosStream, 0, header, TRUE.length, padPosStream.length);
+        System.arraycopy(mac, 0, header, TRUE.length + padPosStream.length, mac.length);
         return header;
     }
 
-
     public boolean checksum() {
-        long temp;
-        System.out.println( " : " + " JustToCheck: PadPos - " + padPos + " why not mac: - " + mac.length);
-        return true;
+        System.out.println(" : " + " JustToCheck: PadPos - " + padPos + " why not mac: - " + mac.length);
+        return Arrays.equals(checksum, TRUE);
     }
 
     public byte[] getMac() {
