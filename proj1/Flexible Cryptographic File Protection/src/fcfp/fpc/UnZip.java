@@ -5,7 +5,6 @@
 package fcfp.fpc;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,7 +14,6 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 /**
  *
@@ -36,14 +34,14 @@ public class UnZip {
 
     public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
         this.output = output;
-        this.zip = new File("cocozadas");
+        this.zip = new File("temp/cocozadas");
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
     }
 
     public UnZip(byte[] toUnzip) throws FileNotFoundException, IOException {
-        this.zip = new File("cocozadas");
+        this.zip = new File("temp/cocozadas");
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
@@ -74,12 +72,11 @@ public class UnZip {
                     fileName.add(ze.getName());
                     in = zipFile.getInputStream(ze);
                     bufToAdd = new byte[in.available()];
-                    int len=0;
-                    int offset=0;
-                    byte [] buffer = new byte[in.available()];
-                    while(offset < buffer.length && (len = in.read(buffer, offset, buffer   .length - offset)) >= 0)
-                    {
-                        offset+=len;
+                    int len = 0;
+                    int offset = 0;
+                    byte[] buffer = new byte[in.available()];
+                    while (offset < buffer.length && (len = in.read(buffer, offset, buffer.length - offset)) >= 0) {
+                        offset += len;
                     }
                     fileList.add(buffer);
                 }
@@ -93,48 +90,18 @@ public class UnZip {
     }
 
     public void writeZip() throws FileNotFoundException, IOException {
-        
-       /* File folder = new File(output);
-    	if(!folder.exists()){
-    		folder.mkdir();
-    	}
-        
-        byte[] buffer = new byte[1024];
-        FileOutputStream zos = new FileOutputStream(output);
-        InputStream in = null;
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(zip));
-        ZipEntry ze = zis.getNextEntry();
-        while(ze != null)
-        {
-           String fileName = ze.getName();
-           File newFile = new File(output + File.separator + fileName);
- 
-           System.out.println("file unzip : "+ newFile.getAbsoluteFile());
- 
-            FileOutputStream fos = new FileOutputStream(newFile);             
- 
-            int len;
-            while ((len = zis.read(buffer)) > 0) {
-       		fos.write(buffer, 0, len);
-            }
- 
-            fos.close();   
-            ze = zis.getNextEntry();
-        }*/
-        
+
         FileOutputStream zos = null;
         int i = 1;
-        while(i < fileList.size())
-        {
+        while (i < fileList.size()) {
             zos = new FileOutputStream(output);
-            zos.write(fileList.get(i),0,fileList.get(i).length);
+            zos.write(fileList.get(i), 0, fileList.get(i).length);
             zos.close();
             i++;
         }
-       
-        }
-    
 
+    }
+     
     public byte[] getEntry(int i) {
         return fileList.get(i);
     }

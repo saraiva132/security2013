@@ -49,6 +49,10 @@ public class FPC {
         this.key = key;
         this.source = source;
         this.output = output;
+        File folder = new File("temp");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
     }
 
     public void CipherStartUP() {
@@ -88,8 +92,8 @@ public class FPC {
 
     public void Cipher() {
         try {
-            Zip zip1 = toZip(PPintName, "files/zip1", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file1);
-            Zip zip2 = toZip(PPintName, "files/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file2);
+            Zip zip1 = toZip(PPintName, "temp/zip1", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file1);
+            Zip zip2 = toZip(PPintName, "temp/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file2);
         } catch (FileNotFoundException ex) {
             System.out.println("Problema a ler os zips do content! Zips não encontrados.");
             return;
@@ -111,7 +115,7 @@ public class FPC {
         byte[] zipToEnc1 = null;
         byte[] zipToEnc2 = null;
         try {
-            FileInputStream in = new FileInputStream("files/zip1");
+            FileInputStream in = new FileInputStream("temp/zip1");
             try {
                 zipToEnc1 = new byte[getOffset(offset1 = in.available())];
                 int len;
@@ -125,7 +129,7 @@ public class FPC {
         } catch (FileNotFoundException ex) {
         }
         try {
-            FileInputStream in = new FileInputStream("files/zip2");
+            FileInputStream in = new FileInputStream("temp/zip2");
             try {
                 zipToEnc2 = new byte[getOffset(offset2 = in.available())];
                 int len;
@@ -196,6 +200,8 @@ public class FPC {
             }
 
         }
+        File folder = new File("temp");
+        deleteFolder(folder);
         System.out.println("Sucess!!! =)");
     }
 
@@ -209,11 +215,11 @@ public class FPC {
                 System.out.println("Imagem não encontrada");
             }
             try {
-                toIMG.decode("files/temp.zip");
+                toIMG.decode("temp/temp.zip");
             } catch (IOException ex) {
 
             }
-            source = "files/temp.zip";
+            source = "temp/temp.zip";
         }
         UnZip unzip = new UnZip(source);
         unzip.run();
@@ -267,6 +273,9 @@ public class FPC {
         } else {
             System.out.println("OMG: MAC NÂO SE VERIFICA");
         }
+
+        File folder = new File("temp");
+        deleteFolder(folder);
     }
 
     public Zip toZip(String name, String outs, byte[]   ... oi) throws FileNotFoundException, IOException {
@@ -275,9 +284,9 @@ public class FPC {
         int i = 0;
         for (byte[] b : oi) {
             if (i == 0) {
-                zip = new File(name);
+                zip = new File("temp/"+name);
             } else {
-                zip = new File("d4e1t5r" + i);
+                zip = new File("temp/d4e1t5r" + i);
             }
             i++;
             try (FileOutputStream out = new FileOutputStream(zip)) {
@@ -325,5 +334,19 @@ public class FPC {
         sourceDummy = fonte;
         dummy = true;
         dummyKey = key;
+    }
+
+    public static void deleteFolder(File folder) {
+        File[] files = folder.listFiles();
+        if (files != null) { //some JVMs return null for empty dirs
+            for (File f : files) {
+                if (f.isDirectory()) {
+                    deleteFolder(f);
+                } else {
+                    f.delete();
+                }
+            }
+        }
+        folder.delete();
     }
 }
