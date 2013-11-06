@@ -29,4 +29,16 @@ public class AESTest {
         System.out.println("length: " + result.length + " " + "length: " + new String(result).length() + " " + new String(result));
         assertArrayEquals(msg, result);
     }
+    
+    @Test
+    public void testDoubleTranspose() {
+        byte[][] array = new byte[][]{
+            {1,2,3},
+            {4,5,6},
+            {7,8,9}
+        };
+        byte[][] cpy = AES.MtrxDoublTranspose(array);
+        cpy = AES.InvMtrxDoublTranspose(cpy);
+        assertArrayEquals(array, cpy);
+    }
 }

@@ -7,7 +7,7 @@ import fcfp.pp.EncryptionPP;
  *
  * @author Simão Paulo Rato Alves Reis
  * @author Rafael Saraiva Figueiredo
- * @version 1.0
+ * @version 1.1
  */
 public class AES implements EncryptionPP {
 
@@ -242,6 +242,58 @@ public class AES implements EncryptionPP {
         }
         return r;
     }
+    
+    /**
+     * New step of AES cypher, transposes a state matrix in both main diagonals.
+     */
+    protected static byte[][] MtrxDoublTranspose(byte[][] state) {
+        byte[][] newState = new byte[state.length][state[0].length];
+        for (int i = 0; i < newState.length; i++) {
+            System.arraycopy(state[i], 0, newState[i], 0, state.length);
+        }
+        for (int i = 1; i < newState.length; i++) {
+            for (int j = 0; j < i; j++) {
+                newState[i][j] ^= newState[j][i];
+                newState[j][i] ^= newState[i][j];
+                newState[i][j] ^= newState[j][i];
+            }
+        }
+        for (int i = 1; i < newState.length; i++) {
+            for (int j = newState.length - i; j < newState.length; j++) {
+                int I = newState.length - 1 - i, J = newState.length - 1 - j;
+                newState[i][j] ^= newState[J][I];
+                newState[J][I] ^= newState[i][j];
+                newState[i][j] ^= newState[J][I];
+            }
+        }
+        return newState; 
+    }
+    
+    /**
+     * New step of AES decypher, transposes a state matrix in both main diagonals.
+     */
+    protected static byte[][] InvMtrxDoublTranspose(byte[][] state) {
+        byte[][] newState = new byte[state.length][state[0].length];
+        for (int i = 0; i < newState.length; i++) {
+            System.arraycopy(state[i], 0, newState[i], 0, state.length);
+        }
+        for (int i = 1; i < newState.length; i++) {
+            for (int j = newState.length - i; j < newState.length; j++) {
+                int I = newState.length - 1 - i, J = newState.length - 1 - j;
+                newState[i][j] ^= newState[J][I];
+                newState[J][I] ^= newState[i][j];
+                newState[i][j] ^= newState[J][I];
+            }
+        }
+        for (int i = 1; i < newState.length; i++) {
+            for (int j = 0; j < i; j++) {
+                newState[i][j] ^= newState[j][i];
+                newState[j][i] ^= newState[i][j];
+                newState[i][j] ^= newState[j][i];
+            }
+        }
+        return newState; 
+    }
 
     private static byte[] encryptBloc(byte[] in) {
         byte[] tmp = new byte[in.length];
@@ -258,11 +310,13 @@ public class AES implements EncryptionPP {
         for (int round = 1; round < Nr; round++) {
             state = SubBytes(state);
             state = ShiftRows(state);
+            state = MtrxDoublTranspose(state); /* double matrix transposition */
             state = MixColumns(state);
             state = AddRoundKey(state, w, round);
         }
         state = SubBytes(state);
         state = ShiftRows(state);
+        state = MtrxDoublTranspose(state); /* double matrix transposition */
         state = AddRoundKey(state, w, Nr);
 
         for (int i = 0; i < tmp.length; i++) {
@@ -283,12 +337,14 @@ public class AES implements EncryptionPP {
 
         state = AddRoundKey(state, w, Nr);
         for (int round = Nr - 1; round >= 1; round--) {
+            state = InvMtrxDoublTranspose(state); /* double matrix transposition */
             state = InvSubBytes(state);
             state = InvShiftRows(state);
             state = AddRoundKey(state, w, round);
             state = InvMixColumns(state);
 
         }
+        state = InvMtrxDoublTranspose(state); /* double matrix transposition */
         state = InvSubBytes(state);
         state = InvShiftRows(state);
         state = AddRoundKey(state, w, 0);
