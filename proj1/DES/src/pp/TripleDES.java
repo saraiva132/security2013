@@ -1,6 +1,7 @@
 package pp;
 
 import fcfp.pp.EncryptionPP;
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 /**
@@ -39,16 +40,15 @@ public class TripleDES implements EncryptionPP {
         30, 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29,
         32};
     // key shift for each round
-    //Shift value altered; keyShiftOriginal = {1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1}
-    private static int[] keyShift = {1, 2, 3, 2, 1, 3, 3, 1, 1, 2, 2, 1, 2, 2,
-        2, 1};
+    //Shift value altered; 
+    //keyShift Original = {1,1,2,2,2,2,2,2,1,2,2,2,2,2,2,1};
+    private static int[] keyShift = {1, 2, 3, 2, 1, 3, 3, 1, 1, 2, 2, 1, 2, 2,2,1};
+    
     // expansion permutation from function f
     private static int[] expandTbl = {32, 1, 2, 3, 4, 5, 4, 5, 6, 7, 8, 9, 8,
         9, 10, 11, 12, 13, 12, 13, 14, 15, 16, 17, 16, 17, 18, 19, 20, 21,
         20, 21, 22, 23, 24, 25, 24, 25, 26, 27, 28, 29, 28, 29, 30, 31, 32,
         1};
-    //xor each round R1 = (Lo ^ xorRound) ^ f(Ro,Ki);
-    private static byte [] xorRound = {28,12,18,9};
     // substitution boxes
     private static int[][][] sboxes = {
         {{14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},
@@ -95,7 +95,10 @@ public class TripleDES implements EncryptionPP {
     private static byte[][] K;
     private static byte[][] K1;
     private static byte[][] K2;
-
+    //xor each round R1 = (Lo ^ IV) ^ f(Ro,Ki);
+    //IV Size will be 4 bytes(half block size)
+    private static byte [] IV;
+    
     private static void setBit(byte[] data, int pos, int val) {
         int posByte = pos / 8;
         int posBit = pos % 8;
@@ -162,8 +165,9 @@ public class TripleDES implements EncryptionPP {
             } else {
                 R = f_func(R, subkeys[i]);
             }
-        
-            R = xor_func(xor_func(L,xorRound), R);
+            //Added XorRound in each Right Round xor_func(L,IV)
+            //Right part of each Block gets XOR'ed with IV each round
+            R = xor_func(xor_func(L,IV), R);
             L = tmpR;
         }
 
@@ -264,6 +268,12 @@ public class TripleDES implements EncryptionPP {
     }
 
     public byte[] cipher(byte[] data, byte[] key) {
+        if(key.length < 24)
+        {
+            byte keyz [] = key;
+            key = new byte[24];
+            System.arraycopy(keyz, 0, key,0, keyz.length);
+        }
         int lenght = 0;
         byte[] padding;
         int i;
@@ -275,6 +285,10 @@ public class TripleDES implements EncryptionPP {
         for (i = 1; i < lenght; i++) {
             padding[i] = 0;
         }
+        //Generate 32 bits IV
+        //IV = new byte[4];
+        //SecureRandom newIV = new SecureRandom(IV);
+        //newIV.nextBytes(IV);
         
         byte[] tmp = new byte[data.length + lenght];
         byte[] bloc = new byte[8];
@@ -305,14 +319,27 @@ public class TripleDES implements EncryptionPP {
             bloc = encrypt64Bloc(bloc, K2, false);
             System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
         }
-        return tmp;
+        byte [] temp = new byte[tmp.length + IV.length];
+        System.arraycopy(tmp, 0, temp,0, tmp.length);
+        //Add IV to the data. Utilizador não precisa de saber que carrega o IV.
+        System.out.println(IV.length);
+        System.arraycopy(IV, 0, temp,tmp.length, IV.length);
+        return temp;
     }
 
     public byte[] decipher(byte[] data, byte[] key) {
+        if(key.length < 24)
+        {
+            byte keyz [] = key;
+            key = new byte[24];
+            System.arraycopy(keyz, 0, key,0, keyz.length);
+        }
         int i;
-        byte[] tmp = new byte[data.length];
+        byte[] tmp = new byte[data.length-4];
         byte[] bloc = new byte[8];
-
+        //Get the IV from the data
+        IV = new byte[4];
+        System.arraycopy(data, data.length-4, IV,0,4);
         K = generateSubKeys(Arrays.copyOfRange(key, 0, key.length / 3));
         K1 = generateSubKeys(Arrays.copyOfRange(key, key.length / 3, key.length * 2 / 3));
         K2 = generateSubKeys(Arrays.copyOfRange(key, key.length * 2 / 3, key.length));
@@ -334,7 +361,6 @@ public class TripleDES implements EncryptionPP {
         System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
         
         tmp = deletePadding(tmp);
-
         return tmp;
     }
 }
