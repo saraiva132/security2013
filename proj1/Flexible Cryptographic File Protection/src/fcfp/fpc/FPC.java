@@ -242,16 +242,22 @@ public class FPC {
 
     private void DecipherZip(Header header, byte[] content, boolean identity) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, ProtectionPluginException {
         UnZip Unzip;
-        byte[] toZipp;
+        byte [] zip = new byte [content.length/2];
+        byte[] toZipp = new byte[(int)header.getPadPos()];
         System.out.println("Choosing Content to Unzip...");
         if (identity) {
-            System.out.println("Tamanho: " + content.length / 2 + " . PadPos: " + header.getPadPos());
-            toZipp = Arrays.copyOfRange(content, 0, (int) header.getPadPos() + content.length / 2);
-            Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
+            System.arraycopy(content, 0, zip, 0, content.length/2);
+            zip = encryption.decipher(zip, key);
+            System.out.println("Tamanho: " + content.length / 2 +"zipSize: " +zip.length + " PadPos: " + header.getPadPos());
+            System.arraycopy(zip, 0, toZipp, 0, (int) (header.getPadPos()));
+            Unzip = new UnZip("files/" + output,toZipp);
             Unzip.run();
         } else {
-            toZipp = Arrays.copyOfRange(content, content.length / 2, (int) header.getPadPos() + content.length);
-            Unzip = new UnZip("files/" + output, encryption.decipher(toZipp, key));
+            System.arraycopy(content, content.length/2, zip, 0, content.length/2);
+            zip = encryption.decipher(zip, key);
+            System.out.println("Tamanho: " + content.length / 2 + "zipSize: " +zip.length +" PadPos: " + header.getPadPos());
+            System.arraycopy(zip, 0, toZipp, 0, (int) (header.getPadPos()));
+            Unzip = new UnZip("files/" + output, toZipp);
             Unzip.run();
         }
         integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));
