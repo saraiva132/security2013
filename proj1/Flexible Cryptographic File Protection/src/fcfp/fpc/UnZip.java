@@ -34,14 +34,14 @@ public class UnZip {
 
     public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
         this.output = output;
-        this.zip = new File("temp/cocozadas");
+        this.zip = new File("temp/temp");
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
     }
 
     public UnZip(byte[] toUnzip) throws FileNotFoundException, IOException {
-        this.zip = new File("temp/cocozadas");
+        this.zip = new File("temp/temp");
         try (FileOutputStream out = new FileOutputStream(zip)) {
             out.write(toUnzip);
         }
