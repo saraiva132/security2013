@@ -19,6 +19,12 @@ class ByteClassLoader extends ClassLoader {
      */
     Class<?> defineClass(String className, byte[] classBytes) throws ClassNotFoundException {
 
-        return super.defineClass(className, classBytes, 0, classBytes.length);
+        Class<?> loadedClass;
+        try {
+            loadedClass = super.defineClass(className, classBytes, 0, classBytes.length);
+        } catch (LinkageError ex) {
+            loadedClass = Class.forName(className);
+        }
+        return loadedClass;
     }
 }
