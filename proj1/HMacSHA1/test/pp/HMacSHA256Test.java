@@ -23,7 +23,7 @@ public class HMacSHA256Test {
     public void testSign() throws ProtectionPluginException {
         System.out.println("sign");
         byte[] msg = "Olá como vai isso?".getBytes();
-        byte[] key = "chave privata simétrica".getBytes();
+        byte[] key = "chave privata".getBytes();
         HMacSHA256 instance = new HMacSHA256();
         byte[] expResult = instance.sign(msg, key);
         byte[] result = instance.sign(msg, key);
