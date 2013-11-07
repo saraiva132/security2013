@@ -1,6 +1,6 @@
 package fcfp.fpc;
 
-import fcfp.util.cast.ByteCast;
+import fcfp.util.ByteCast;
 import java.util.Arrays;
 
 /**

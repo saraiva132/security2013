@@ -1,6 +1,6 @@
 package fcfp.png;
 
-import fcfp.util.cast.ByteCast;
+import fcfp.util.ByteCast;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;

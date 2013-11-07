@@ -4,6 +4,7 @@
  */
 package fcfp.util.cast;
 
+import fcfp.util.ByteCast;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

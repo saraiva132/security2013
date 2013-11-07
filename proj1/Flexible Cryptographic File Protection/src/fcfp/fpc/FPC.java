@@ -4,6 +4,7 @@
  */
 package fcfp.fpc;
 
+import fcfp.util.Pad;
 import fcfp.png.BufferedPNG;
 import fcfp.png.InvalidPNGImageSizeException;
 import fcfp.pp.EncryptionPP;

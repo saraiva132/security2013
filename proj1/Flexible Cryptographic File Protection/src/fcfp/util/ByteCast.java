@@ -1,4 +1,4 @@
-package fcfp.util.cast;
+package fcfp.util;
 
 import java.nio.ByteBuffer;
 
