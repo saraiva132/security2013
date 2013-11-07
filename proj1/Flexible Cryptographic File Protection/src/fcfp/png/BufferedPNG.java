@@ -67,7 +67,6 @@ public class BufferedPNG {
         BufferedImage output = copyImage(input);
         byte[] paint = getByteData(output);
         byte[] outContent = LessSignificantBit.decode(paint);
-        System.out.println(new String(outContent));
         File out = new File(outPath);
         FileOutputStream outStream = new FileOutputStream(out);
         outStream.write(outContent);

@@ -10,6 +10,7 @@ package fcfp.fpc;
  */
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -33,39 +34,36 @@ public class Zip {
     /**
      * Zip it 2
      */
-    public void run() {
+    public void run() throws IOException {
         zipIt();
     }
 
-    public void zipIt() {
+    public void zipIt() throws FileNotFoundException, IOException {
 
         byte[] buffer = new byte[1024];
 
-        try {
-            FileOutputStream fos = new FileOutputStream(output);
-            ZipOutputStream zos = new ZipOutputStream(fos);
+        FileOutputStream fos = new FileOutputStream(output);
+        ZipOutputStream zos = new ZipOutputStream(fos);
 
-            System.out.println("Output to Zip : " + output);
-            //Enquanto houver ficheiros para escrever no zip
-            int i=0;
-            for (File file : this.fields) {
-                ZipEntry ze = new ZipEntry(file.getName());
-                zos.putNextEntry(ze);
-                FileInputStream in =
-                        new FileInputStream(file);
-                //Escrever a proxima fileEntry
-                int len;
-                while ((len = in.read(buffer)) > 0) {
-                    zos.write(buffer, 0, len);
-                }
+        System.out.println("Output to Zip : " + output);
+        //Enquanto houver ficheiros para escrever no zip
+        int i = 0;
+        for (File file : this.fields) {
+            ZipEntry ze = new ZipEntry(file.getName());
+            zos.putNextEntry(ze);
+            FileInputStream in
+                    = new FileInputStream(file);
+            //Escrever a proxima fileEntry
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                zos.write(buffer, 0, len);
             }
-            zos.closeEntry();
-            zos.close();
-
-            System.out.println("Done");
-        } catch (IOException ex) {
-            ex.printStackTrace();
         }
+        zos.closeEntry();
+        zos.close();
+
+        System.out.println("Done");
+
     }
 
     public String getOutput() {

@@ -47,7 +47,7 @@ public class UnZip {
         }
     }
 
-    void run() {
+    void run() throws IOException {
         unZipIt();
     }
 
@@ -57,36 +57,32 @@ public class UnZip {
      * @param zipFile input zip file
      * @param output zip file output folder
      */
-    private void unZipIt() {
+    private void unZipIt() throws IOException {
 
         byte[] bufToAdd;
         InputStream in = null;
-        try {
-            System.out.println("Unzipping Content!..");
-            System.out.println(zip == null);
-            try (ZipFile zipFile = new ZipFile(zip)) {
-                Enumeration<? extends ZipEntry> oi = zipFile.entries();
-                while (oi.hasMoreElements()) {
-                    final ZipEntry ze = oi.nextElement();
-                    System.out.println("addingtoZip: " + ze.getName());
-                    fileName.add(ze.getName());
-                    in = zipFile.getInputStream(ze);
-                    bufToAdd = new byte[in.available()];
-                    int len = 0;
-                    int offset = 0;
-                    byte[] buffer = new byte[in.available()];
-                    while (offset < buffer.length && (len = in.read(buffer, offset, buffer.length - offset)) >= 0) {
-                        offset += len;
-                    }
-                    fileList.add(buffer);
+        System.out.println("Unzipping Content!..");
+        System.out.println(zip == null);
+        try (ZipFile zipFile = new ZipFile(zip)) {
+            Enumeration<? extends ZipEntry> oi = zipFile.entries();
+            while (oi.hasMoreElements()) {
+                final ZipEntry ze = oi.nextElement();
+                System.out.println("addingtoZip: " + ze.getName());
+                fileName.add(ze.getName());
+                in = zipFile.getInputStream(ze);
+                bufToAdd = new byte[in.available()];
+                int len = 0;
+                int offset = 0;
+                byte[] buffer = new byte[in.available()];
+                while (offset < buffer.length && (len = in.read(buffer, offset, buffer.length - offset)) >= 0) {
+                    offset += len;
                 }
-                in.close();
+                fileList.add(buffer);
             }
-            System.out.println("Done");
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
+            in.close();
         }
+        System.out.println("Done");
+
     }
 
     public void writeZip() throws FileNotFoundException, IOException {
@@ -101,7 +97,7 @@ public class UnZip {
         }
 
     }
-     
+
     public byte[] getEntry(int i) {
         return fileList.get(i);
     }

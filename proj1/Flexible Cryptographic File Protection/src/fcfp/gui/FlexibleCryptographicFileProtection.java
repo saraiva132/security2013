@@ -668,8 +668,8 @@ public class FlexibleCryptographicFileProtection extends JFrame {
         }
         fpc.setPPenc(encryptionComboBox.getSelectedItem().toString());
         fpc.setPPint(integrityComboBox.getSelectedItem().toString());
-        fpc.CipherStartUP();
-        fpc.Cipher();
+        fpc.CipherRun();
+        JOptionPane.showMessageDialog(new JFrame(), "File encrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void decrypt() {
@@ -677,11 +677,8 @@ public class FlexibleCryptographicFileProtection extends JFrame {
             return;
         }
         FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
-        try {
-            fpc.DeCipher();
-        } catch (ProtectionPluginException | ClassNotFoundException | InstantiationException | IllegalAccessException | IOException ex) {
-            //erro ao decifrar somewhere... melhorar    
-        }
+        fpc.DeCipher();
+
     }
 
     /**
