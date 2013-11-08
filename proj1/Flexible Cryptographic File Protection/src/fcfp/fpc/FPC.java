@@ -186,6 +186,7 @@ public class FPC {
             }
 
         }
+        JOptionPane.showMessageDialog(new JFrame(), "File encrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
         deleteFolder(new File("temp"));
     }
 
@@ -238,7 +239,7 @@ public class FPC {
         } else {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
         }
-
+        
     }
 
     private void DecipherZip(Header header, byte[] content, boolean identity) {
@@ -325,7 +326,7 @@ public class FPC {
         } else {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
         }
-
+        JOptionPane.showMessageDialog(new JFrame(), "File encrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
         deleteFolder(new File("temp"));
     }
 
