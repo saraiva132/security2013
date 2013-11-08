@@ -22,7 +22,7 @@ class ByteClassLoader extends ClassLoader {
         Class<?> loadedClass;
         try {
             loadedClass = super.defineClass(className, classBytes, 0, classBytes.length);
-        } catch (LinkageError ex) {
+        } catch (ClassFormatError ex) {
             loadedClass = Class.forName(className);
         }
         return loadedClass;

@@ -2,11 +2,9 @@ package fcfp.gui;
 
 import fcfp.fpc.FPC;
 import fcfp.pp.PPEngine;
-import fcfp.pp.ProtectionPluginException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -16,11 +14,11 @@ import javax.swing.JOptionPane;
  *
  * @author Simão Paulo Rato Alves Reis
  * @author Rafael Saraiva Figueiredo
- * @version 3.0
+ * @version 4.0
  */
 public class FlexibleCryptographicFileProtection extends JFrame {
 
-    private PPEngine ppEngine;
+    private final PPEngine ppEngine;
 
     /**
      * Load all EcryptionPP and IntegrityPP located in the system plugins
@@ -83,10 +81,15 @@ public class FlexibleCryptographicFileProtection extends JFrame {
                 }
             }
 
-            password = new String(dummyKeyTextField.getPassword());
+            String dummyPassword = new String(dummyKeyTextField.getPassword());
 
-            if (password.length() < 8) {
+            if (dummyPassword.length() < 8) {
                 JOptionPane.showMessageDialog(new JFrame(), "Your hidden password is too short.\nInsert at least 8 characters.", "Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            
+            if (password.compareTo(dummyPassword)==0) {
+                JOptionPane.showMessageDialog(new JFrame(), "Both your passwords must not be the same.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -146,6 +149,15 @@ public class FlexibleCryptographicFileProtection extends JFrame {
         }
 
         return true;
+    }
+    
+    private void resetWindow() {
+        originalFilePathTextField.setText("");
+        newFilenameTextField.setText("");
+        dummyFilePathTextField.setText("");
+        pngFilePathTextField.setText("");
+        keyTextField.setText("");
+        dummyKeyTextField.setText("");
     }
 
     /**
@@ -652,6 +664,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
         } else {
             decrypt();
         }
+        resetWindow();
     }//GEN-LAST:event_cipherAndDecipherButtonActionPerformed
 
     private void encrypt() {
