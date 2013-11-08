@@ -87,8 +87,8 @@ public class FlexibleCryptographicFileProtection extends JFrame {
                 JOptionPane.showMessageDialog(new JFrame(), "Your hidden password is too short.\nInsert at least 8 characters.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
-            
-            if (password.compareTo(dummyPassword)==0) {
+
+            if (password.compareTo(dummyPassword) == 0) {
                 JOptionPane.showMessageDialog(new JFrame(), "Both your passwords must not be the same.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
@@ -150,7 +150,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
 
         return true;
     }
-    
+
     private void resetWindow() {
         originalFilePathTextField.setText("");
         newFilenameTextField.setText("");
@@ -681,7 +681,10 @@ public class FlexibleCryptographicFileProtection extends JFrame {
         }
         fpc.setPPenc(encryptionComboBox.getSelectedItem().toString());
         fpc.setPPint(integrityComboBox.getSelectedItem().toString());
-        fpc.CipherRun();
+        if (fpc.CipherRun()) {
+            JOptionPane.showMessageDialog(new JFrame(), "File encrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
+            resetWindow();
+        }
     }
 
     private void decrypt() {
@@ -689,7 +692,11 @@ public class FlexibleCryptographicFileProtection extends JFrame {
             return;
         }
         FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
-        fpc.DeCipher();
+        if (fpc.DeCipher()) {
+            JOptionPane.showMessageDialog(new JFrame(), "File Decrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
+            resetWindow();
+        }
+
     }
 
     /**
