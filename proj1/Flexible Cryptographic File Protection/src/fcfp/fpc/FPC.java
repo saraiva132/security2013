@@ -216,7 +216,7 @@ public class FPC {
         }
         try {
             encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoClassDefFoundError | ClassFormatError ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoClassDefFoundError | ClassFormatError | IndexOutOfBoundsException ex) {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return;
         }
