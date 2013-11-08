@@ -287,9 +287,9 @@ public class TripleDES implements EncryptionPP {
             padding[i] = 0;
         }
         //Generate 32 bits IV
-        //IV = new byte[4];
-        //SecureRandom newIV = new SecureRandom(IV);
-        //newIV.nextBytes(IV);
+        IV = new byte[4];
+        SecureRandom newIV = new SecureRandom(IV);
+        newIV.nextBytes(IV);
         
         byte[] tmp = new byte[data.length + lenght];
         byte[] bloc = new byte[8];
@@ -346,14 +346,14 @@ public class TripleDES implements EncryptionPP {
         K1 = generateSubKeys(Arrays.copyOfRange(key, key.length / 3, key.length * 2 / 3));
         K2 = generateSubKeys(Arrays.copyOfRange(key, key.length * 2 / 3, key.length));
 
-        for (i = 0; i < data.length; i++) {
+        for (i = 0; i < data.length-4; i++) {
             if (i > 0 && i % 8 == 0) {
                 bloc = encrypt64Bloc(bloc, K2, true);
                 bloc = encrypt64Bloc(bloc, K1, false);
                 bloc = encrypt64Bloc(bloc, K, true);
                 System.arraycopy(bloc, 0, tmp, i - 8, bloc.length);
             }
-            if (i < data.length) {
+            if (i < data.length-4) {
                 bloc[i % 8] = data[i];
             }
         }
