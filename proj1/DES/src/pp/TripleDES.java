@@ -267,6 +267,7 @@ public class TripleDES implements EncryptionPP {
         return tmp;
     }
 
+    @Override
     public byte[] cipher(byte[] data, byte[] key) {
         if(key.length < 24)
         {
@@ -327,6 +328,7 @@ public class TripleDES implements EncryptionPP {
         return temp;
     }
 
+    @Override
     public byte[] decipher(byte[] data, byte[] key) {
         if(key.length < 24)
         {
