@@ -1,7 +1,6 @@
 package pp;
 
 import fcfp.pp.IntegrityPP;
-
 /**
  *
  * @author Simão Paulo Rato Alves Reis
@@ -15,7 +14,7 @@ public class HMacMD5 implements IntegrityPP {
     private static final String hex_chr = "0123456789abcdef";
 
     @Override
-    public byte[] sign(byte[] msg, byte[] key) {
+        public byte[] sign(byte[] msg, byte[] key) {
         byte[] ikey = new byte[key.length];
         for (int i = 0; i < ikey.length; i++) {
             ikey[i] = (byte) (key[i] ^ ipad);
@@ -66,11 +65,13 @@ public class HMacMD5 implements IntegrityPP {
     }
 
     private static int cmn(int q, int a, int b, int x, int s, int t) {
-        return add(rol(add(add(a, q), add(x, t)), s), b);
+        //Mudei os ultimos dois argumentos, de s,t
+        return add(rol(add(add(a, q), add(x, t)), add(x,s)), add(b,t));
     }
 
     private static int ff(int a, int b, int c, int d, int x, int s, int t) {
-        return cmn((b & c) | ((~b) & d), a, b, x, s, t);
+        //mudei 2 argumento de a
+        return cmn((b & c) | ((~b) & d), (~a & d), b, x, s, t);
     }
 
     private static int gg(int a, int b, int c, int d, int x, int s, int t) {
