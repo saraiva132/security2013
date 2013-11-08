@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -58,23 +56,22 @@ public class FPC {
     }
 
     public void CipherRun() {
+        int len;
+        FileInputStream in;
         try {
-            FileInputStream in = new FileInputStream(source);
+            in = new FileInputStream(source);
             try {
                 file1 = new byte[in.available()];
-                int len;
                 while ((len = in.read(file1)) > 0) {
                     in.read(file1, 0, len);
                 }
                 in.close();
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Error opening file.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Error opening file.");
                 return;
             }
         } catch (FileNotFoundException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "The selected file doesn't exist.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("The selected file does not exist.");
             return;
         }
         if (!dummy) {
@@ -83,22 +80,19 @@ public class FPC {
             file2 = getDummy(file1.length);
         } else {
             try {
-                FileInputStream in = new FileInputStream(sourceDummy);
+                in = new FileInputStream(sourceDummy);
                 try {
                     file2 = new byte[in.available()];
-                    int len;
                     while ((len = in.read(file2)) > 0) {
                         in.read(file2, 0, len);
                     }
                     in.close();
                 } catch (IOException ex) {
-                    deleteFolder(new File("temp"));
-                    JOptionPane.showMessageDialog(new JFrame(), "Error opening file.", "Error", JOptionPane.ERROR_MESSAGE);
+                    errorMessage("Error opening file.");
                     return;
                 }
             } catch (FileNotFoundException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "The selected file doesn't exist.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("The selected file doesn't exist.");
                 return;
             }
         }
@@ -115,17 +109,16 @@ public class FPC {
             macReal = integrity.sign(file1, key);
             macDummy = integrity.sign(file2, dummyKey);
         } catch (ProtectionPluginException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Malformed Integrity Protection Plugin.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Malformed Integrity Protection Plugin.");
             return;
         }
 
         byte[] zipToEnc1;
         byte[] zipToEnc2;
         int len;
-        FileInputStream in;
+
         try {
-            in = new FileInputStream("temp/zip1");
+            FileInputStream in = new FileInputStream("temp/zip1");
 
             zipToEnc1 = new byte[getOffset(offset1 = in.available())];
             System.out.println("Tamanho: " + zipToEnc1.length + " . PadPos: " + offset1);
@@ -135,14 +128,14 @@ public class FPC {
             in.close();
 
             in = new FileInputStream("temp/zip2");
+
             zipToEnc2 = new byte[getOffset(offset2 = in.available())];
             while ((len = in.read(zipToEnc2)) > 0) {
                 in.read(zipToEnc2, 0, len);
             }
             in.close();
         } catch (IOException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Something went wrong.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Something went wrong.");
             return;
 
         }
@@ -153,8 +146,7 @@ public class FPC {
             zipToEnc1 = encryption.cipher(zipToEnc1, key);
             zipToEnc2 = encryption.cipher(zipToEnc2, dummyKey);
         } catch (ProtectionPluginException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Malformed Encryption Protection Plugin.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Malformed Encryption Protection Plugin.");
             return;
         }
         byte[] toEnc = new byte[zipToEnc1.length + zipToEnc2.length];
@@ -168,8 +160,7 @@ public class FPC {
             encHead1 = encryption.cipher(encHead1, dummyKey);
             encHead2 = encryption.cipher(encHead2, key);
         } catch (ProtectionPluginException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Malformed Encryption Protection Plugin.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Malformed Encryption Protection Plugin.");
             return;
         }
         toZip(PPencName, "files/" + output + ".zip", PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
@@ -181,19 +172,16 @@ public class FPC {
                 System.out.println("A procura da imagem:" + sourceSteganography);
                 toIMG = new BufferedPNG(sourceSteganography);
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Problem opening image.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Problem opening image.");
                 return;
             }
             try {
                 toIMG.encode("files/" + output + ".zip", "files/" + output + ".png");
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Something is wrong with the image.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Something is wrong with the message.");
                 return;
             } catch (InvalidPNGImageSizeException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Image should be at least 8 times \n larger than the input files.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Image should be at least 8 times \n larger than the input files.");
                 return;
             }
 
@@ -208,15 +196,13 @@ public class FPC {
                 System.out.println("A procura da imagem:" + source);
                 toIMG = new BufferedPNG(source);
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Image not found.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Image not found.");
                 return;
             }
             try {
                 toIMG.decode("temp/temp.zip");
             } catch (IOException | ArrayIndexOutOfBoundsException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
             source = "temp/temp.zip";
@@ -225,15 +211,13 @@ public class FPC {
         try {
             unzip.run();
         } catch (IOException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return;
         }
         try {
             encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoClassDefFoundError | ClassFormatError ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return;
         }
         byte[] content = unzip.getEntry(3);
@@ -241,8 +225,7 @@ public class FPC {
             head1 = new Header(encryption.decipher(unzip.getEntry(1), key));
             head2 = new Header(encryption.decipher(unzip.getEntry(2), key));
         } catch (ProtectionPluginException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return;
         }
         System.out.println("Headers createad....");
@@ -253,15 +236,14 @@ public class FPC {
             System.out.println("Header Content Checksum GOOD");
             DecipherZip(head2, content, false);
         } else {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
         }
 
     }
 
     private void DecipherZip(Header header, byte[] content, boolean identity) {
         UnZip Unzip;
-        byte[] zip = new byte[content.length / 2];
+        byte[] zip = new byte[content.length / 2 + 1];
         byte[] toZipp = new byte[(int) header.getPadPos()];
 
         System.out.println("Choosing Content to Unzip...");
@@ -271,62 +253,57 @@ public class FPC {
             try {
                 zip = encryption.decipher(zip, key);
             } catch (ProtectionPluginException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
             System.arraycopy(zip, 0, toZipp, 0, (int) (header.getPadPos()));
             try {
                 Unzip = new UnZip("files/" + output, toZipp);
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
             try {
                 Unzip.run();
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
         } else {
-
+            System.arraycopy(content, content.length / 2, zip, 0, content.length / 2);
             try {
                 zip = encryption.decipher(zip, key);
             } catch (ProtectionPluginException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
             System.arraycopy(zip, 0, toZipp, 0, (int) (header.getPadPos()));
             try {
                 Unzip = new UnZip("files/" + output, toZipp);
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
+            System.out.println(header.getPadPos() + " : " + content.length / 2 + " : " + zip.length + " : " + toZipp.length);
             try {
                 Unzip.run();
             } catch (IOException ex) {
                 deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
         }
         try {
             integrity = PPDecompressor.getInstance().decompressIntegrityPP(Unzip.getName(0), Unzip.getEntry(0));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return;
         }
         byte[] mac;
         try {
             mac = integrity.sign(Unzip.getEntry(1), key);
         } catch (ProtectionPluginException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return;
         }
         byte[] macToCheck = header.getMac();
@@ -342,12 +319,11 @@ public class FPC {
             try {
                 Unzip.writeZip();
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return;
             }
         } else {
-            JOptionPane.showMessageDialog(new JFrame(), "Wrong password, corrupted file, or not a File Protection Container.", "Error", JOptionPane.ERROR_MESSAGE);
+            errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
         }
 
         deleteFolder(new File("temp"));
@@ -370,8 +346,7 @@ public class FPC {
                 out.write(b);
 
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
-                JOptionPane.showMessageDialog(new JFrame(), "Something went wrong.", "Error", JOptionPane.ERROR_MESSAGE);
+                errorMessage("Something went wrong.");
                 return;
             }
             fields.add(zip);
@@ -381,9 +356,7 @@ public class FPC {
         try {
             zipit.run();
         } catch (IOException ex) {
-            deleteFolder(new File("temp"));
-            JOptionPane.showMessageDialog(new JFrame(), "Something went wrong.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
+            errorMessage("Something went wrong.");
         }
     }
 
@@ -423,7 +396,7 @@ public class FPC {
         dummyKey = key;
     }
 
-    public static void deleteFolder(File folder) {
+    private void deleteFolder(File folder) {
         File[] files = folder.listFiles();
         if (files != null) { //some JVMs return null for empty dirs
             for (File f : files) {
@@ -435,5 +408,10 @@ public class FPC {
             }
         }
         folder.delete();
+    }
+
+    private void errorMessage(String message) {
+        deleteFolder(new File("temp"));
+        JOptionPane.showMessageDialog(new JFrame(), message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

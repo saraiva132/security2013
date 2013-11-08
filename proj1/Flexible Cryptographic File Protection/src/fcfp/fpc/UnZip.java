@@ -60,25 +60,25 @@ public class UnZip {
     private void unZipIt() throws IOException {
 
         byte[] bufToAdd;
-        InputStream in = null;
+        InputStream in;
         System.out.println("Unzipping Content!..");
         System.out.println(zip == null);
-        try (ZipFile zipFile = new ZipFile(zip)) {
-            Enumeration<? extends ZipEntry> oi = zipFile.entries();
-            while (oi.hasMoreElements()) {
-                final ZipEntry ze = oi.nextElement();
-                System.out.println("addingtoZip: " + ze.getName());
-                fileName.add(ze.getName());
-                in = zipFile.getInputStream(ze);
-                bufToAdd = new byte[in.available()];
-                int len = 0;
-                int offset = 0;
-                byte[] buffer = new byte[in.available()];
-                while (offset < buffer.length && (len = in.read(buffer, offset, buffer.length - offset)) >= 0) {
-                    offset += len;
-                }
-                fileList.add(buffer);
+        ZipFile zipFile = new ZipFile(zip);
+        Enumeration<? extends ZipEntry> oi = zipFile.entries();
+        while (oi.hasMoreElements()) {
+            final ZipEntry ze = oi.nextElement();
+            System.out.println("addingtoZip: " + ze.getName());
+            fileName.add(ze.getName());
+            in = zipFile.getInputStream(ze);
+            bufToAdd = new byte[in.available()];
+            int len = 0;
+            int offset = 0;
+            byte[] buffer = new byte[in.available()];
+            while (offset < buffer.length && (len = in.read(buffer, offset, buffer.length - offset)) >= 0) {
+                offset += len;
             }
+            fileList.add(buffer);
+
             in.close();
         }
         System.out.println("Done");
