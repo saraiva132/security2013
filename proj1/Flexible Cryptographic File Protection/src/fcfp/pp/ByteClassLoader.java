@@ -17,13 +17,13 @@ class ByteClassLoader extends ClassLoader {
      * @throws ClassNotFoundException when the classByets don't contain any class
      * with the given name.
      */
-    Class<?> defineClass(String className, byte[] classBytes) throws ClassNotFoundException {
+    Class<?> defineClass(String className, byte[] classBytes) {
 
         Class<?> loadedClass;
         try {
             loadedClass = super.defineClass(className, classBytes, 0, classBytes.length);
         } catch (LinkageError ex) {
-            loadedClass = Class.forName(className);
+            loadedClass = super.findLoadedClass(className);
         }
         return loadedClass;
     }

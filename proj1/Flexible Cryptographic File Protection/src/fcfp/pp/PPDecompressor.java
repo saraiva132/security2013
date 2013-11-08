@@ -38,12 +38,10 @@ public class PPDecompressor {
      * @param ppName the Protection Plugin class name.
      * @param stream the Protection Plugin serialization.
      * @return the Encryption Protection Plugin.
-     * @throws ClassNotFoundException when the classByets don't contain any
-     * class with the given name.
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public EncryptionPP decompressEncryptionPP(String ppName, byte[] stream) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public EncryptionPP decompressEncryptionPP(String ppName, byte[] stream) throws InstantiationException, IllegalAccessException {
 
         Class<?> pp = bcl.defineClass(ppName, stream);
         return (EncryptionPP) pp.newInstance();
@@ -55,12 +53,10 @@ public class PPDecompressor {
      * @param ppName the Protection Plugin class name.
      * @param stream the Protection Plugin serialization.
      * @return the Integrity Protection Plugin.
-     * @throws ClassNotFoundException when the classByets don't contain any
-     * class with the given name.
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    public IntegrityPP decompressIntegrityPP(String ppName, byte[] stream) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public IntegrityPP decompressIntegrityPP(String ppName, byte[] stream) throws InstantiationException, IllegalAccessException {
 
         Class<?> pp = bcl.defineClass(ppName, stream);
         return (IntegrityPP) pp.newInstance();

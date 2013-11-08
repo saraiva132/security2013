@@ -100,6 +100,7 @@ public class PPDecompressorTest {
 //                        assertArrayEquals(data2, data);
 
                         EncryptionPP aes = PPDecompressor.getInstance().decompressEncryptionPP(ppName, data);
+                        EncryptionPP aes2 = PPDecompressor.getInstance().decompressEncryptionPP(ppName, data);
                         String text = "Ola como nhg nhg";
                         String pass = "3hd7s6h4453dgtredgdfgdfgdfg";
                         byte[] msg = text.getBytes();
