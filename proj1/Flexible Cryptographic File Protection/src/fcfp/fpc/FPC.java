@@ -31,12 +31,12 @@ public class FPC {
 
     private EncryptionPP encryption;
     private IntegrityPP integrity;
-    private byte[] key;
+    private final byte[] key;
     private byte[] dummyKey;
     private String source;
     private String sourceDummy;
     private String sourceSteganography;
-    private String output;
+    private final String output;
     private boolean steganography = false;
     private boolean dummy = false;
     private String PPencName;
@@ -244,7 +244,7 @@ public class FPC {
 
     private void DecipherZip(Header header, byte[] content, boolean identity) {
         UnZip Unzip;
-        byte[] zip = new byte[content.length / 2 + 1];
+        byte[] zip = new byte[content.length / 2 ];
         byte[] toZipp = new byte[(int) header.getPadPos()];
 
         System.out.println("Choosing Content to Unzip...");
@@ -326,7 +326,7 @@ public class FPC {
         } else {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
         }
-        JOptionPane.showMessageDialog(new JFrame(), "File encrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(new JFrame(), "File Decrypted with success!", "Encryption", JOptionPane.INFORMATION_MESSAGE);
         deleteFolder(new File("temp"));
     }
 
