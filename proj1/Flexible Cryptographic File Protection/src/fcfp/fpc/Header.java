@@ -56,7 +56,7 @@ public class Header {
      * @return 
      */
     public boolean checksum() {
-        System.out.println(" : " + " JustToCheck: PadPos - " + padPos + " why not mac: - " + mac.length);
+        //System.out.println(" : " + " JustToCheck: PadPos - " + padPos + " why not mac: - " + mac.length);
         return Arrays.equals(checksum, TRUE);
     }
     

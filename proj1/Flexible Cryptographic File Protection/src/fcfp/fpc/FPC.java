@@ -60,13 +60,10 @@ public class FPC {
         this.output = output;
         int lastindex = source.lastIndexOf(".");
         extensionDummy = "";
-        extension = "";
         if (lastindex != -1) {
             extension = source.substring(lastindex);
-        }
-        File folder = new File("temp");
-        if (!folder.exists()) {
-            folder.mkdir();
+        } else {
+            extension = "";
         }
     }
 
@@ -78,6 +75,10 @@ public class FPC {
      * @return Return true if successful else return error message pop-up.
      */
     public boolean CipherRun() {
+        File folder = new File("temp");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
         int len;
         FileInputStream in;
         try {
@@ -89,7 +90,7 @@ public class FPC {
                 }
                 in.close();
             } catch (IOException ex) {
-                errorMessage("Error opening file.");
+                errorMessage("Error opening the file.");
                 return false;
             }
         } catch (FileNotFoundException ex) {
@@ -123,7 +124,6 @@ public class FPC {
                 return false;
             }
         }
-
         return Cipher();
     }
 
@@ -139,8 +139,8 @@ public class FPC {
         if (extensionDummy.compareTo("") == 0) {
             extensionDummy = "d3r5s6";
         }
-        System.out.println(":::" + extension);
-        System.out.println(extensionDummy);
+        //System.out.println(":::" + extension);
+        //System.out.println(extensionDummy);
         toZip(extension, PPintName, "temp/zip1", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file1);
         toZip(extensionDummy, PPintName, "temp/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file2);
 
@@ -242,10 +242,14 @@ public class FPC {
      * @return Return true if successful else return error message pop-up.
      */
     public boolean DeCipher() {
+        File folder = new File("temp");
+        if (!folder.exists()) {
+            folder.mkdir();
+        }
         if (source.endsWith(".png")) {
             BufferedPNG toIMG;
             try {
-                System.out.println("A procura da imagem:" + source);
+                //System.out.println("A procura da imagem:" + source);
                 toIMG = new BufferedPNG(source);
             } catch (IOException ex) {
                 errorMessage("Image not found.");
@@ -270,7 +274,7 @@ public class FPC {
             encryption = PPDecompressor.getInstance().decompressEncryptionPP(unzip.getName(0), unzip.getEntry(0));
         } catch (InstantiationException | IllegalAccessException ex) {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
-            System.out.println(ex);
+            //System.out.println(ex);
             return false;
         }
         byte[] content = unzip.getEntry(3);
@@ -283,10 +287,10 @@ public class FPC {
         }
         //System.out.println("Headers createad....");
         if (head1.checksum()) {
-            //System.out.println("Header Dummy Checksum GOOD");
+            System.out.println("Header Dummy Checksum GOOD");
             return DecipherZip(head1, content, true);
         } else if (head2.checksum()) {
-            //System.out.println("Header Content Checksum GOOD");
+            System.out.println("Header Content Checksum GOOD");
             return DecipherZip(head2, content, false);
         } else {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
@@ -350,7 +354,6 @@ public class FPC {
             try {
                 Unzip.run();
             } catch (IOException ex) {
-                deleteFolder(new File("temp"));
                 errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return false;
             }
@@ -369,7 +372,6 @@ public class FPC {
             return false;
         }
         byte[] macToCheck = header.getMac();
-
         if (mac.length == macToCheck.length) {
             for (int i = 0; i < mac.length; i++) {
                 if (mac[i] != macToCheck[i]) {
@@ -378,12 +380,12 @@ public class FPC {
                     return false;
                 }
             }
-            String extension = Unzip.getName(1);
-            if (!extension.startsWith(".")) {
-                extension = "";
+            String ext = Unzip.getName(1);
+            if (!ext.startsWith(".")) {
+                ext = "";
             }
             try {
-                Unzip.writeZip("files/" + output + extension);
+                Unzip.writeZip("files/" + output + ext);
             } catch (IOException ex) {
                 errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return false;
@@ -405,8 +407,7 @@ public class FPC {
      * @param outs Output path;
      * @param oi List of zip entries(files)
      */
-    public void toZip(String entryName, String name, String outs, byte[]  
-        ... oi) {
+    public void toZip(String entryName, String name, String outs, byte[]... oi) {
         List<File> fields = new ArrayList<>();
         File zip;
         int i = 0;
@@ -420,9 +421,7 @@ public class FPC {
             }
             i++;
             try (FileOutputStream out = new FileOutputStream(zip)) {
-
                 out.write(b);
-
             } catch (IOException ex) {
                 errorMessage("Something went wrong.");
                 return;

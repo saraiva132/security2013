@@ -150,7 +150,7 @@ public class PPEngine {
 
         // Query to the system's protection plugin folder entries.
         ppsFolder = new File("plugins");
-        System.out.println(ppsFolder.getAbsolutePath());
+        //System.out.println(ppsFolder.getAbsolutePath());
         ppsFolderContent = ppsFolder.listFiles();
         if (ppsFolderContent == null) {
             return;
@@ -165,7 +165,7 @@ public class PPEngine {
                 try {
                     ppJar = new JarFile(file);
                 } catch (IOException ex) {
-                    System.out.println(ex);
+                    //System.out.println(ex);
                     continue;
                 }
 
@@ -178,7 +178,7 @@ public class PPEngine {
                 try {
                     classLoader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()});
                 } catch (MalformedURLException ex) {
-                    System.out.println(ex);
+                    //System.out.println(ex);
                     continue;
                 }
 
@@ -194,7 +194,7 @@ public class PPEngine {
                             pp = classLoader.loadClass(ppName);
                             ppInstance = pp.newInstance();
                         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-                            System.out.println(ex);
+                            //System.out.println(ex);
                             break;
                         }
 
@@ -211,7 +211,7 @@ public class PPEngine {
                                         offset += numRead;
                                     }
                                 } catch (IOException ex) {
-                                    System.out.println(ex);
+                                    //System.out.println(ex);
                                     continue;
                                 }
                                 if (ppInterface.equals(EncryptionPP.class)) {

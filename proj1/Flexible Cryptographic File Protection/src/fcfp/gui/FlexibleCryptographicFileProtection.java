@@ -674,7 +674,6 @@ public class FlexibleCryptographicFileProtection extends JFrame {
         }
         FPC fpc = new FPC(originalFilePathTextField.getText(), newFilenameTextField.getText(), new String(keyTextField.getPassword()).getBytes());
         if (dummyContentRadioButton.isSelected()) {
-            System.out.println("Hidden Volume inserted!");
             fpc.setDummy(dummyFilePathTextField.getText(), new String(dummyKeyTextField.getPassword()).getBytes());
         }
         if (steganographyRadioButton.isSelected()) {

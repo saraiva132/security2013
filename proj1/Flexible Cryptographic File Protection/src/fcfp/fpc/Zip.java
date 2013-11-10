@@ -40,30 +40,27 @@ public class Zip {
     }
 
     public void zipIt() throws FileNotFoundException, IOException {
-
-        byte[] buffer = new byte[1024];
-
+        
         FileOutputStream fos = new FileOutputStream(output);
         try (ZipOutputStream zos = new ZipOutputStream(fos)) {
-            System.out.println("Output to Zip : " + output);
+            //System.out.println("Output to Zip : " + output);
             //Enquanto houver ficheiros para escrever no zip
-            int i = 0;
             for (File file : this.fields) {
                 ZipEntry ze = new ZipEntry(file.getName());
                 zos.putNextEntry(ze);
-                FileInputStream in
-                        = new FileInputStream(file);
+                FileInputStream in = new FileInputStream(file);
                 //Escrever a proxima fileEntry
-                int len;
-                while ((len = in.read(buffer)) > 0) {
+                int len = 0;
+                int offset = 0;
+                byte[] buffer = new byte[in.available()];
+                while (offset < buffer.length && (len = in.read(buffer, offset, buffer.length - offset)) >= 0) {
+                    offset += len;
                     zos.write(buffer, 0, len);
                 }
             }
             zos.closeEntry();
         }
-
-        System.out.println("Done");
-
+        //System.out.println("Done");
     }
 
     public String getOutput() {

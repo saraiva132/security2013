@@ -66,8 +66,7 @@ public class UnZip {
             fileList.add(buffer);
             in.close();
         }
-        System.out.println("Done");
-
+        //System.out.println("Done");
     }
 
     public void writeZip(String output) throws FileNotFoundException, IOException {
