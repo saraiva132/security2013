@@ -16,6 +16,7 @@ public class InvalidPNGImageSizeException extends Exception {
 
     /**
      * Default Exception Constructor with message error.
+     * @param err error message.
      */
     public InvalidPNGImageSizeException(String err) {
         super(err);

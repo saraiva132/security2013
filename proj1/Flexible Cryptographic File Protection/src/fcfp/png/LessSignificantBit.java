@@ -12,6 +12,7 @@ public class LessSignificantBit {
      * @param image the container image.
      * @param content the file byte stream.
      * @param offset the starting byte of the image.
+     * @throws fcfp.png.InvalidPNGImageSizeException
      */
     public static void encode(byte[] image, byte[] content, int offset) throws InvalidPNGImageSizeException {
         if (((content.length + offset) << 3) > image.length) {

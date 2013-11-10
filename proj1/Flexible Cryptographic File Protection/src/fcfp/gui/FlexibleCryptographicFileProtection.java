@@ -166,6 +166,7 @@ public class FlexibleCryptographicFileProtection extends JFrame {
     public FlexibleCryptographicFileProtection() {
 
         initComponents();
+        setTitle("Flexible Cryptographic File Protection"); 
         setLocationRelativeTo(null);
         cipherRadioButton.setSelected(true);
         dummyFilePathTextField.setEnabled(false);

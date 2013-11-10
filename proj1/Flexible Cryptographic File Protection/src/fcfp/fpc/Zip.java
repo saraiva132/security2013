@@ -33,6 +33,7 @@ public class Zip {
 
     /**
      * Zip it 2
+     * @throws java.io.IOException
      */
     public void run() throws IOException {
         zipIt();
@@ -43,24 +44,23 @@ public class Zip {
         byte[] buffer = new byte[1024];
 
         FileOutputStream fos = new FileOutputStream(output);
-        ZipOutputStream zos = new ZipOutputStream(fos);
-
-        System.out.println("Output to Zip : " + output);
-        //Enquanto houver ficheiros para escrever no zip
-        int i = 0;
-        for (File file : this.fields) {
-            ZipEntry ze = new ZipEntry(file.getName());
-            zos.putNextEntry(ze);
-            FileInputStream in
-                    = new FileInputStream(file);
-            //Escrever a proxima fileEntry
-            int len;
-            while ((len = in.read(buffer)) > 0) {
-                zos.write(buffer, 0, len);
+        try (ZipOutputStream zos = new ZipOutputStream(fos)) {
+            System.out.println("Output to Zip : " + output);
+            //Enquanto houver ficheiros para escrever no zip
+            int i = 0;
+            for (File file : this.fields) {
+                ZipEntry ze = new ZipEntry(file.getName());
+                zos.putNextEntry(ze);
+                FileInputStream in
+                        = new FileInputStream(file);
+                //Escrever a proxima fileEntry
+                int len;
+                while ((len = in.read(buffer)) > 0) {
+                    zos.write(buffer, 0, len);
+                }
             }
+            zos.closeEntry();
         }
-        zos.closeEntry();
-        zos.close();
 
         System.out.println("Done");
 

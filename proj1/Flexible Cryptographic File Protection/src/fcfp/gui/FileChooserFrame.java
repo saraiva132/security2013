@@ -15,6 +15,8 @@ public class FileChooserFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form FileChooserFrame
+     * @param tf file text field.
+     * @param exts extensions list.
      */
     public FileChooserFrame(final JTextField tf, String... exts) {
         initComponents();

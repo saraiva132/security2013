@@ -22,9 +22,10 @@ public class ByteCast {
     }
 
     /**
-     *
-     * @param data
-     * @return
+     * Convert a byte array to a long value.
+     * 
+     * @param data the byte array.
+     * @return the long value.
      */
     public static long byteArray2Long(byte[] data) {
         ByteBuffer buffer = ByteBuffer.allocate(8);
@@ -46,9 +47,10 @@ public class ByteCast {
     }
 
     /**
-     *
-     * @param data
-     * @return
+     * Convert a byte array to a int value.
+     * 
+     * @param data the byte array.
+     * @return the int value.
      */
     public static int byteArray2Int(byte[] data) {
         ByteBuffer buffer = ByteBuffer.allocate(4);

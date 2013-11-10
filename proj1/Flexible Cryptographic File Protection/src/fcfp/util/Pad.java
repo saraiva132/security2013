@@ -12,7 +12,6 @@ public class Pad {
         if (length > contentToPad.length) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        Random r = new Random();
         byte[] padData = new byte[length - offset];
         new Random().nextBytes(padData);
         System.arraycopy(padData, 0, contentToPad, offset, length-offset);

@@ -20,7 +20,7 @@ import javax.imageio.ImageIO;
  */
 public class BufferedPNG {
 
-    private BufferedImage input;
+    private final BufferedImage input;
 
     /**
      * Default construct which sets the image container file's byte stream.
@@ -40,6 +40,7 @@ public class BufferedPNG {
      * @throws FileNotFoundException in case the file was not found.
      * @throws IOException if something goes wrong while writing the output.
      * image.
+     * @throws fcfp.png.InvalidPNGImageSizeException
      */
     public void encode(String inPath, String outPath) throws FileNotFoundException, IOException, InvalidPNGImageSizeException {
         BufferedImage output = copyImage(input);

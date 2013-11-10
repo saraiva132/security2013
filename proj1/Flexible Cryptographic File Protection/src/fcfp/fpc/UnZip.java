@@ -21,15 +21,13 @@ import java.util.zip.ZipFile;
  */
 public class UnZip {
 
-    private List<byte[]> fileList = new ArrayList<>();
-    private List<String> fileName = new ArrayList<>();
-    private File zip;
+    private final List<byte[]> fileList = new ArrayList<>();
+    private final List<String> fileName = new ArrayList<>();
+    private final File zip;
     private String output;
-    private String source;
 
     public UnZip(String source) {
         this.zip = new File(source);
-        this.source = source;
     }
 
     public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
@@ -58,8 +56,6 @@ public class UnZip {
      * @param output zip file output folder
      */
     private void unZipIt() throws IOException {
-
-        byte[] bufToAdd;
         InputStream in;
         System.out.println("Unzipping Content!..");
         System.out.println(zip == null);
@@ -70,7 +66,6 @@ public class UnZip {
             System.out.println("addingtoZip: " + ze.getName());
             fileName.add(ze.getName());
             in = zipFile.getInputStream(ze);
-            bufToAdd = new byte[in.available()];
             int len = 0;
             int offset = 0;
             byte[] buffer = new byte[in.available()];
@@ -78,7 +73,6 @@ public class UnZip {
                 offset += len;
             }
             fileList.add(buffer);
-
             in.close();
         }
         System.out.println("Done");
@@ -86,8 +80,7 @@ public class UnZip {
     }
 
     public void writeZip() throws FileNotFoundException, IOException {
-
-        FileOutputStream zos = null;
+        FileOutputStream zos;
         int i = 1;
         while (i < fileList.size()) {
             zos = new FileOutputStream(output);

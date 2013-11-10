@@ -27,8 +27,8 @@ public class PPEngine {
      */
     private class EncryptionPPContainer {
 
-        private EncryptionPP encryptionPP;
-        private byte[] stream;
+        private final EncryptionPP encryptionPP;
+        private final byte[] stream;
 
         /**
          * Creates a new container for the Encryption Protection Plugin.
@@ -67,8 +67,8 @@ public class PPEngine {
      */
     private class IntegrityPPContainer {
 
-        private IntegrityPP integrityPP;
-        private byte[] stream;
+        private final IntegrityPP integrityPP;
+        private final byte[] stream;
 
         /**
          * Creates a new container for the Integrity Protection Plugin.

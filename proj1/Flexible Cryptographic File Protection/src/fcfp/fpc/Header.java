@@ -10,8 +10,8 @@ import java.util.Arrays;
 public class Header {
 
     private static final byte[] TRUE = "TRUE".getBytes();
-    private long padPos;
-    private byte[] mac;
+    private final long padPos;
+    private final byte[] mac;
     private byte[] checksum;
     
     /**

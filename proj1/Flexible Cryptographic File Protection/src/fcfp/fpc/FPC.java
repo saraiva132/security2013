@@ -20,8 +20,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -194,7 +192,7 @@ public class FPC {
 
     public boolean DeCipher() {
         if (source.endsWith(".png")) {
-            BufferedPNG toIMG = null;
+            BufferedPNG toIMG;
             try {
                 System.out.println("A procura da imagem:" + source);
                 toIMG = new BufferedPNG(source);
