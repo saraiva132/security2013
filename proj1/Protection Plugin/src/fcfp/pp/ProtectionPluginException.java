@@ -16,6 +16,7 @@ public class ProtectionPluginException extends Exception {
 
     /**
      * Default Exception Constructor with message error.
+     * @param err error message.
      */
     public ProtectionPluginException(String err) {
         super(err);
