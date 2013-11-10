@@ -323,7 +323,6 @@ public class TripleDES implements EncryptionPP {
         byte [] temp = new byte[tmp.length + IV.length];
         System.arraycopy(tmp, 0, temp,0, tmp.length);
         //Add IV to the data. Utilizador não precisa de saber que carrega o IV.
-        System.out.println(IV.length);
         System.arraycopy(IV, 0, temp,tmp.length, IV.length);
         return temp;
     }
