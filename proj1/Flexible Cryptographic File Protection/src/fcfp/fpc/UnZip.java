@@ -24,18 +24,9 @@ public class UnZip {
     private final List<byte[]> fileList = new ArrayList<>();
     private final List<String> fileName = new ArrayList<>();
     private final File zip;
-    private String output;
 
     public UnZip(String source) {
         this.zip = new File(source);
-    }
-
-    public UnZip(String output, byte[] toUnzip) throws FileNotFoundException, IOException {
-        this.output = output;
-        this.zip = new File("temp/temp");
-        try (FileOutputStream out = new FileOutputStream(zip)) {
-            out.write(toUnzip);
-        }
     }
 
     public UnZip(byte[] toUnzip) throws FileNotFoundException, IOException {
@@ -57,13 +48,13 @@ public class UnZip {
      */
     private void unZipIt() throws IOException {
         InputStream in;
-        System.out.println("Unzipping Content!..");
-        System.out.println(zip == null);
+        //System.out.println("Unzipping Content!..");
+        //System.out.println(zip == null);
         ZipFile zipFile = new ZipFile(zip);
         Enumeration<? extends ZipEntry> oi = zipFile.entries();
         while (oi.hasMoreElements()) {
             final ZipEntry ze = oi.nextElement();
-            System.out.println("addingtoZip: " + ze.getName());
+            //System.out.println("addingtoZip: " + ze.getName());
             fileName.add(ze.getName());
             in = zipFile.getInputStream(ze);
             int len = 0;
@@ -79,7 +70,7 @@ public class UnZip {
 
     }
 
-    public void writeZip() throws FileNotFoundException, IOException {
+    public void writeZip(String output) throws FileNotFoundException, IOException {
         FileOutputStream zos;
         int i = 1;
         while (i < fileList.size()) {

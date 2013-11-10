@@ -44,17 +44,32 @@ public class FPC {
     private byte[] file1, file2;
     private Header head1, head2;
     private int offset1, offset2;
-
+    private String extension;
+    private String extensionDummy;
+    
+    /**
+     * Folder temp generated to store temporary files. Deleted at the end.
+     * 
+     * @param source Entry file Path.
+     * @param output Output file Path
+     * @param key    Key to use.
+     */
     public FPC(String source, String output, byte[] key) {
         this.key = key;
         this.source = source;
         this.output = output;
+        extension = source.substring(source.lastIndexOf("."));
+        extensionDummy="";
         File folder = new File("temp");
         if (!folder.exists()) {
             folder.mkdir();
         }
     }
-
+    /**
+     * This method deals with the instantiation of the secondary and primary content.
+     * If the user does not provide a secondary content path it will be replaced with trash.
+     * @return Return true if successful else return error message pop-up.
+     */
     public boolean CipherRun() {
         int len;
         FileInputStream in;
@@ -80,6 +95,7 @@ public class FPC {
             file2 = getDummy(file1.length);
         } else {
             try {
+                extensionDummy = sourceDummy.substring(sourceDummy.lastIndexOf("."));
                 in = new FileInputStream(sourceDummy);
                 try {
                     file2 = new byte[in.available()];
@@ -99,10 +115,23 @@ public class FPC {
 
         return Cipher();
     }
-
+    /**
+     * Encryption algorithm
+     * @return Return true if successful else return error message pop-up.
+     */
     private boolean Cipher() {
-        toZip(PPintName, "temp/zip1", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file1);
-        toZip(PPintName, "temp/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file2);
+        if(extension.compareTo("")==0)
+        {
+            extension = "d3r5s5";
+        }
+        if(extensionDummy.compareTo("")==0)
+        {
+            extensionDummy = "d3r5s6";
+        }
+        System.out.println(":::"+extension);
+        System.out.println(extensionDummy);
+        toZip(extension ,PPintName, "temp/zip1", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file1);
+        toZip(extensionDummy,PPintName, "temp/zip2", PPEngine.getInstance().getIntegrityPPSerialization(PPintName), file2);
 
         byte[] macReal;
         byte[] macDummy;
@@ -122,7 +151,7 @@ public class FPC {
             FileInputStream in = new FileInputStream("temp/zip1");
 
             zipToEnc1 = new byte[getOffset(offset1 = in.available())];
-            System.out.println("Tamanho: " + zipToEnc1.length + " . PadPos: " + offset1);
+            //System.out.println("Tamanho: " + zipToEnc1.length + " . PadPos: " + offset1);
             while ((len = in.read(zipToEnc1)) > 0) {
                 in.read(zipToEnc1, 0, len);
             }
@@ -164,13 +193,11 @@ public class FPC {
             errorMessage("Malformed Encryption Protection Plugin.");
             return false;
         }
-        toZip(PPencName, "files/" + output + ".zip", PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
-        System.out.println(PPEngine.getInstance().getEncryptionPPSerialization(PPencName).length);
+        toZip("d3r5s6",PPencName, "files/" + output + ".zip", PPEngine.getInstance().getEncryptionPPSerialization(PPencName), encHead1, encHead2, toEnc);
 
         if (steganography) {
             BufferedPNG toIMG;
             try {
-                System.out.println("A procura da imagem:" + sourceSteganography);
                 toIMG = new BufferedPNG(sourceSteganography);
             } catch (IOException ex) {
                 errorMessage("Problem opening image.");
@@ -189,7 +216,11 @@ public class FPC {
         deleteFolder(new File("temp"));
         return true;
     }
-
+    /**
+     * Decipher algorithm, checks input for .png extension. If true runs steganography algorithm.
+     * 
+     * @return Return true if successful else return error message pop-up.
+     */
     public boolean DeCipher() {
         if (source.endsWith(".png")) {
             BufferedPNG toIMG;
@@ -230,25 +261,33 @@ public class FPC {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return false;
         }
-        System.out.println("Headers createad....");
+        //System.out.println("Headers createad....");
         if (head1.checksum()) {
-            System.out.println("Header Dummy Checksum GOOD");
+            //System.out.println("Header Dummy Checksum GOOD");
             return DecipherZip(head1, content, true);
         } else if (head2.checksum()) {
-            System.out.println("Header Content Checksum GOOD");
+            //System.out.println("Header Content Checksum GOOD");
             return DecipherZip(head2, content, false);
         } else {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
             return false;
         }
     }
-
+    /**
+     * we receive the header, flag to determine the content and the full content.
+     * We extract from the header the padPosition to know where the zip ends.
+     * If mac checks the file will be written in the output path. 
+     * @param header This was the successfully deciphered header. 
+     * @param content Full content(Secondary and primary).
+     * @param identity Flag to determine which content to decipher.
+     * @return Return true if successful else return error message pop-up.
+     */
     private boolean DecipherZip(Header header, byte[] content, boolean identity) {
         UnZip Unzip;
         byte[] zip = new byte[content.length / 2];
         byte[] toZipp = new byte[(int) header.getPadPos()];
 
-        System.out.println("Choosing Content to Unzip...");
+        //System.out.println("Choosing Content to Unzip...");
 
         if (identity) {
             System.arraycopy(content, 0, zip, 0, content.length / 2);
@@ -260,7 +299,7 @@ public class FPC {
             }
             System.arraycopy(zip, 0, toZipp, 0, (int) (header.getPadPos()));
             try {
-                Unzip = new UnZip("files/" + output, toZipp);
+                Unzip = new UnZip(toZipp);
             } catch (IOException ex) {
                 errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return false;
@@ -281,12 +320,12 @@ public class FPC {
             }
             System.arraycopy(zip, 0, toZipp, 0, (int) (header.getPadPos()));
             try {
-                Unzip = new UnZip("files/" + output, toZipp);
+                Unzip = new UnZip(toZipp);
             } catch (IOException ex) {
                 errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return false;
             }
-            System.out.println(header.getPadPos() + " : " + content.length / 2 + " : " + zip.length + " : " + toZipp.length);
+            //System.out.println(header.getPadPos() + " : " + content.length / 2 + " : " + zip.length + " : " + toZipp.length);
             try {
                 Unzip.run();
             } catch (IOException ex) {
@@ -313,25 +352,37 @@ public class FPC {
         if (mac.length == macToCheck.length) {
             for (int i = 0; i < mac.length; i++) {
                 if (mac[i] != macToCheck[i]) {
-                    System.out.println(i);
-                    System.out.println("OMG: MAC NÂO SE VERIFICA");
+                    //System.out.println("OMG: MAC NÂO SE VERIFICA");
+                    errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                     return false;
                 }
             }
+            String extension = Unzip.getName(1);
+            if(!extension.startsWith("."))
+            {
+                extension = "";
+            }
             try {
-                Unzip.writeZip();
+                Unzip.writeZip("files/"+output+extension);
             } catch (IOException ex) {
                 errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
                 return false;
             }
         } else {
             errorMessage("Wrong password, corrupted file, or not a File Protection Container.");
+            return false;
         }
         deleteFolder(new File("temp"));
         return true;
     }
-
-    public void toZip(String name, String outs, byte[]  
+    /**
+     * Method that deals with the zipping calls.
+     * @param entryName Name of the file
+     * @param name PP name. We need this in order to assure we know which PP we are using in decipher.
+     * @param outs Output path;
+     * @param oi List of zip entries(files)
+     */
+    public void toZip(String entryName,String name, String outs, byte[]  
         ... oi) {
         List<File> fields = new ArrayList<>();
         File zip;
@@ -339,8 +390,12 @@ public class FPC {
         for (byte[] b : oi) {
             if (i == 0) {
                 zip = new File("temp/" + name);
-            } else {
-                zip = new File("temp/d4e1t5r" + i);
+            } else if(i==1){
+                zip = new File("temp/"+entryName);
+            }
+            else
+            {
+                 zip = new File("temp/"+entryName + i);
             }
             i++;
             try (FileOutputStream out = new FileOutputStream(zip)) {
@@ -361,13 +416,21 @@ public class FPC {
             errorMessage("Something went wrong.");
         }
     }
-
+    /**
+     * 
+     * @param size creates trash with size bytes
+     * @return returns trash content
+     */
     public byte[] getDummy(int size) {
         byte[] dummyContent = new byte[size];
         new Random().nextBytes(dummyContent);
         return dummyContent;
     }
-
+    /**
+     * 
+     * @param toBeOrNotToBe Pads content to the next potency of 2.
+     * @return size.
+     */
     public int getOffset(int toBeOrNotToBe) {
         int toBe = 1;
 
@@ -376,28 +439,44 @@ public class FPC {
         }
         return toBe;
     }
-
+    /**
+     * 
+     * @param name set encryption PP to use and instance it.
+     */
     public void setPPenc(String name) {
         this.PPencName = name;
         this.encryption = PPEngine.getInstance().getEncryptionPP(name);
     }
-
+    /**
+     * 
+     * @param name set integrity PP to use and instance it.
+     */
     public void setPPint(String name) {
         this.PPintName = name;
         this.integrity = PPEngine.getInstance().getIntegrityPP(name);
     }
-
+    /**
+     * 
+     * @param fonte set if user wants to use steganography and set image path
+     */
     public void setStega(String fonte) {
         sourceSteganography = fonte;
         steganography = true;
     }
-
+    /**
+     * 
+     * @param fonte set if user wants secondary content.
+     * @param key set secondary content key
+     */
     public void setDummy(String fonte, byte[] key) {
         sourceDummy = fonte;
         dummy = true;
         dummyKey = key;
     }
-
+    /**
+     * Used to delete temporary folder and it's files.
+     * @param folder directory to delete. 
+     */
     private void deleteFolder(File folder) {
         File[] files = folder.listFiles();
         if (files != null) { //some JVMs return null for empty dirs
@@ -411,7 +490,10 @@ public class FPC {
         }
         folder.delete();
     }
-
+    /**
+     * Error treatment.
+     * @param message error message
+     */
     private void errorMessage(String message) {
         deleteFolder(new File("temp"));
         JOptionPane.showMessageDialog(new JFrame(), message, "Error", JOptionPane.ERROR_MESSAGE);
