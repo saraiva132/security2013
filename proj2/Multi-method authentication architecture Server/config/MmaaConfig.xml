@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<config>
+    <pin>
+        <length>4</length>
+        <duration>
+            <weeks>1</weeks>
+            <days>1</days>
+        </duration>
+    </pin>
+    <authorized>
+        <user>dracostriker</user>
+    </authorized>
+</config>
