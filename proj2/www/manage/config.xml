@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config>
+	<permited>
+		<user>s</user>
+		<user>p</user>
+	</permited>
+	<pin>
+		<length>4</length>
+		<days>1</days>
+	</pin>
+</config>
