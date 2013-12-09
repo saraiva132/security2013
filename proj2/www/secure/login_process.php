@@ -1,10 +1,8 @@
 <?php
+session_start();
 include '../utils/db.php';
 include '../utils/function.php';
-if(empty($_SESSION)) {
-	session_start();
-}
-if (!empty($_SESSION) || !isset($_POST['submit'])) {
+if (isset($_SESSION['on']) || !isset($_POST['username'])) {
    redirect('../index.php');
    exit();
 }
@@ -15,9 +13,7 @@ while($row = $result->fetchArray()) {
 	$rows++;
 }
 if ($rows == 1) {
-	session_start();
 	$_SESSION['on'] = TRUE;
-	$_SESSION['has_pin'] = FALSE;
 	$_SESSION['username'] = $_POST['username'];
     redirect('../index.php');
 } else {

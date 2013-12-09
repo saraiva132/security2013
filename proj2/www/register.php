@@ -1,13 +1,12 @@
 <?php
-if(empty($_SESSION)) {
-   session_start();
+session_start();
+include 'utils/function.php';
+if(isset($_SESSION['on'])) {
+   redirect('index.php');
+   exit();
 }
-if($_SESSION['on']) {
-   header('location: debug.php');
-   exit(); 
-}
+include 'theme/menu.php'
 ?>
-<?php include 'theme/menu.php'?>
 <div class="container">
 	<section id="intro">
 		<hgroup>

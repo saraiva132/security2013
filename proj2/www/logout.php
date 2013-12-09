@@ -1,10 +1,6 @@
 <?php
-include 'utils/function.php';
-if (empty($_SESSION)) {
-   session_start();
-}
-unset($_SESSION['username']);
+session_start();
 session_destroy();
-$_SESSION['on'] = FALSE;
+include 'utils/function.php';
 redirect('index.php');
 ?>

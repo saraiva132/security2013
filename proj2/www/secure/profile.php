@@ -1,14 +1,12 @@
 <?php
+session_start();
 include '../utils/function.php';
-if(empty($_SESSION)) {
-   session_start();
-}
-if(!$_SESSION['on']) {
+if(!isset($_SESSION['on'])) {
    redirect('../login.php');
    exit();
 }
+include '../theme/menu.php';
 ?>
-<?php include '../theme/menu.php'?>
 <div class="container">
 	<hgroup>
 		<?php

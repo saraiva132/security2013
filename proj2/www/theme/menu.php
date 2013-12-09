@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html id="default"> 
 	<head>
@@ -14,11 +15,7 @@
 							<ul>
 								<li><a href="/index.php">Home</a></li>
 								<?php
-								include 'utils/function.php';
-								if(empty($_SESSION)) {
-									session_start();
-								}
-								if ($_SESSION['on']) {
+								if (isset($_SESSION['on'])) {
 									echo '<li><a href="/secure/profile.php">Profile</a></li>';
 									echo '<li><a href="/secure/account.php">New Account</a></li>';
 									echo '<li><a href="/secure/accounts.php">My Accounts</a></li>';
