@@ -35,7 +35,7 @@ include '../theme/menu.php'
 		<form>
 			<div class="field_container">
 			 	<label for="account">Name</label>
-				<input type="text" name="account" required>
+				<input type="text" name="account" pattern="[_a-zA-Z0-9]{4,16}" required>
 			</div>
 			<p>
 				<input type="submit" name="create" id="create" value="create" formmethod="post" formaction="pin_process.php"/>

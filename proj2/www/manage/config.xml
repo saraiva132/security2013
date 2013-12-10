@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <config>
 	<permited>
-		<user>s</user>
-		<user>p</user>
+		<user>simon</user>
 	</permited>
 	<pin>
 		<length>4</length>
