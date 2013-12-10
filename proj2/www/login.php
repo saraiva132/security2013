@@ -8,12 +8,10 @@ if(isset($_SESSION['on'])) {
 include 'theme/menu.php';
 ?>
 <div class="container">
-	<section id="intro">
-		<hgroup>
-			<h1>Login</h1>
-			<h2>Insert your citizen card into your card reader!</h2>
-		</hgroup>
-	</section>
+	<hgroup>
+		<h1>Login</h1>
+		<h2>Insert your citizen card into your card reader!</h2>
+	</hgroup>
 	<form>
 		<div class=”field_container”>
 			<label for="name">Username</label>

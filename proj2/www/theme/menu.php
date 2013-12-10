@@ -16,7 +16,6 @@
 								<li><a href="/index.php">Home</a></li>
 								<?php
 								if (isset($_SESSION['on'])) {
-									echo '<li><a href="/secure/profile.php">Profile</a></li>';
 									echo '<li><a href="/secure/account.php">New Account</a></li>';
 									echo '<li><a href="/secure/accounts.php">My Accounts</a></li>';
 									echo '<li><a href="/logout.php">Logout</a></li>';

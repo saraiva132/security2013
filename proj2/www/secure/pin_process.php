@@ -20,16 +20,26 @@ if ($rows > 0) {
 	redirect('../secure/account.php');
 	exit();
 }
+$query = "SELECT * FROM passwd";
+$result = $db->query($query);
+$rows = 0;
+while($row = $result->fetchArray() && $rows < 1) {
+	$rows++;
+}
+if ($rows > 0) {
+	$query = "SELECT max(uid) as uid FROM passwd";
+	$result = $db->query($query);
+	$row = $result->fetchArray();
+	$uid = $row['uid'] + 1;
+} else {
+	$uid = 10000;
+}
 $length = config_length();
 $pin = genpin($length);
 $days = config_days();
 $account = $_POST['account'];
-//TODO
-$uid = 
 $gid = 10000;
 $home = '/home/' . $_POST['account'];
-mkdir($home, 0755);
-chown($home, $uid . ':' . $gid);
 $bash = '/bin/bash';
 $expdate = time() + 24 * 60 * 60 * $days;
 $expflag = 0;
