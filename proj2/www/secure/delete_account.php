@@ -1,8 +1,14 @@
 <?php
+session_start();
 include '../utils/db.php';
-$query = "DELETE FROM useraccounts WHERE username = '" . $_SESSION['username'] . "'";
+include '../utils/function.php';
+if (!isset($_SESSION['on']) || !isset($_POST['delete'])) {
+	redirect('accounts.php');
+	exit();
+}
+$query = "DELETE FROM useraccounts WHERE account = '" . $_POST['deleteList'] . "'";
 $db->exec($query);
-$query = "DELETE FROM passwd WHERE name = '" . $_SESSION['username'] . "'";
+$query = "DELETE FROM passwd WHERE username = '" . $_POST['deleteList'] . "'";
 $db->exec($query);
-redirect('../secure/account.php');
+redirect('../secure/accounts.php');
 ?>

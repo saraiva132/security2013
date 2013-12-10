@@ -33,7 +33,7 @@ function can_create_account($username) {
 	if (file_exists('../manage/config.xml')) {
 		$xml = simplexml_load_file('../manage/config.xml');
 		$permited = $xml->permited;
-		foreach($xml->user as $user) {
+		foreach($permited->user as $user) {
 			if (strcmp($username, $user) == 0) {
 				return TRUE;
 			}

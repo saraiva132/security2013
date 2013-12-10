@@ -15,13 +15,14 @@ while($row = $result->fetchArray()) {
 $query = "SELECT * FROM users WHERE serial = '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "'";
 $result2 = $db->query($query);
 $rows2 = 0;
-while($row = $result->fetchArray()) {
+while($row = $result2->fetchArray()) {
 	$rows2++;
 }
 if ($rows > 0 || $rows2 > 0) {
     redirect('../register.php');
+    exit();
 } else {
-    $query = "INSERT INTO users (name, pass, serial) VALUES ('" . $_POST['username'] . "', '" . $_POST['password'] . "', '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "')";
+    $query = "INSERT INTO users (name, pass, serial) VALUES ('" . $_POST['username'] . "', '" . md5($_POST['password']) . "', '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "')";
     $db->exec($query);
     redirect('../index.php');
 }

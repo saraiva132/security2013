@@ -1,7 +1,7 @@
 <?php
 session_start();
 include '../utils/function.php';
-if(!isset($_SESSION['on'])) {
+if (!isset($_SESSION['on'])) {
    redirect('../login.php');
    exit();
 }
@@ -38,7 +38,7 @@ include '../theme/menu.php'
 				<input type="text" name="account" required>
 			</div>
 			<p>
-				<input type="submit" name="submit" id="submit" value="Create" formmethod="post" formaction="secure/pin_process.php"/>
+				<input type="submit" name="create" id="create" value="create" formmethod="post" formaction="pin_process.php"/>
 			</p>
 		</form>
 		';
