@@ -13,7 +13,7 @@ include '../theme/menu.php'
 		echo '
 		<section id="intro">
 			<hgroup>
-				<h1>Temporary Account Created</h1>
+				<h1>Temporary Account ' . $_SESSION['account_state'] . '</h1>
 				<h2>You can start using your new account!</h2>
 			</hgroup>
 		</section>
@@ -23,6 +23,7 @@ include '../theme/menu.php'
 		unset($_SESSION['has_pin']);
 		unset($_SESSION['account']);
 		unset($_SESSION['pin']);
+		unset($_SESSION['account_state']);
 	} else {
 		echo '
 		<section id="intro">

@@ -46,10 +46,11 @@ $expflag = 0;
 $retrycount = 0;
 $query = "INSERT INTO passwd (uid, gid, username, password, home, bash, expdate, expflag, retrycount) VALUES (" . $uid . ", " . $gid . ", '" . $account . "', '" . $pin . "', '" . $home . "', '" . $bash . "', " . $expdate . ", " . $expflag . ", '" . $retrycount . "')";
 $db->exec($query);
-$query = "INSERT INTO useraccount (username, account) VALUES ('" . $_SESSION['username'] . "', '" . $_POST['account'] . "')";
+$query = "INSERT INTO useraccounts (username, account) VALUES ('" . $_SESSION['username'] . "', '" . $_POST['account'] . "')";
 $db->exec($query);
 $_SESSION['pin'] = $pin;
 $_SESSION['account'] = $_POST['account'];
 $_SESSION['has_pin'] = TRUE;
+$_SESSION['account_state'] = 'Created';
 redirect('../secure/account.php');
 ?>
