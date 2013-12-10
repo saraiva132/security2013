@@ -43,4 +43,8 @@ function can_create_account($username) {
 		exit('Failed to open test.xml.');
 	}
 }
+function salt_hash($password) {
+    $salt = sha1(md5($password));
+    return md5($password.$salt);
+}
 ?>

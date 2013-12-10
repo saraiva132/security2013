@@ -10,7 +10,7 @@ $days = config_days();
 $length = config_length();
 $pin = genpin($length);
 $expdate = time() + 24 * 60 * 60 * $days;
-$query = "UPDATE passwd SET password = '" . md5($pin) . "', expflag = 0, expdate =" . $expdate . ", retrycount = 0  WHERE username = '" . $_POST['renewList'] . "'";
+$query = "UPDATE passwd SET password = '" . salt_hash($pin) . "', expflag = 0, expdate =" . $expdate . ", retrycount = 0  WHERE username = '" . $_POST['renewList'] . "'";
 $db->exec($query);
 $_SESSION['pin'] = $pin;
 $_SESSION['account'] = $_POST['renewList'];

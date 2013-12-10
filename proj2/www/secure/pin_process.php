@@ -44,7 +44,7 @@ $bash = '/bin/bash';
 $expdate = time() + 24 * 60 * 60 * $days;
 $expflag = 0;
 $retrycount = 0;
-$query = "INSERT INTO passwd (uid, gid, username, password, home, bash, expdate, expflag, retrycount) VALUES (" . $uid . ", " . $gid . ", '" . $account . "', '" . md5($pin) . "', '" . $home . "', '" . $bash . "', " . $expdate . ", " . $expflag . ", '" . $retrycount . "')";
+$query = "INSERT INTO passwd (uid, gid, username, password, home, bash, expdate, expflag, retrycount) VALUES (" . $uid . ", " . $gid . ", '" . $account . "', '" . salt_hash($pin) . "', '" . $home . "', '" . $bash . "', " . $expdate . ", " . $expflag . ", '" . $retrycount . "')";
 $db->exec($query);
 $query = "INSERT INTO useraccounts (username, account) VALUES ('" . $_SESSION['username'] . "', '" . $_POST['account'] . "')";
 $db->exec($query);

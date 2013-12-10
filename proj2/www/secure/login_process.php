@@ -6,7 +6,7 @@ if (isset($_SESSION['on']) || !isset($_POST['username'])) {
    redirect('../index.php');
    exit();
 }
-$query = "SELECT * FROM users WHERE name = '" . $_POST['username'] . "' and pass = '" . md5($_POST['password']) . "' and serial = '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "'";
+$query = "SELECT * FROM users WHERE name = '" . $_POST['username'] . "' and pass = '" . salt_hash($_POST['password']) . "' and serial = '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "'";
 $result = $db->query($query);
 $rows = 0;
 while($row = $result->fetchArray()) {

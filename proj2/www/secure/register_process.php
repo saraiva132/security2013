@@ -22,7 +22,7 @@ if ($rows > 0 || $rows2 > 0) {
     redirect('../register.php');
     exit();
 } else {
-    $query = "INSERT INTO users (name, pass, serial) VALUES ('" . $_POST['username'] . "', '" . md5($_POST['password']) . "', '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "')";
+    $query = "INSERT INTO users (name, pass, serial) VALUES ('" . $_POST['username'] . "', '" . salt_hash($_POST['password']) . "', '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "')";
     $db->exec($query);
     redirect('../index.php');
 }
