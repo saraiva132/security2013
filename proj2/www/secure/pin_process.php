@@ -19,6 +19,8 @@ while($row = $result->fetchArray()) {
 	$rows++;
 }
 if ($rows > 0) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'Linux account already exists.';
 	redirect('../secure/account.php');
 	exit();
 }

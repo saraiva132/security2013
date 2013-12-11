@@ -42,6 +42,11 @@ require '../theme/menu.php';
 			</p>
 		</form>
 		';
+		if (isset($_SESSION['error'])) {
+			echo '<p>' . $_SESSION['error_log'] . '</p>';
+			unset($_SESSION['error']);
+			unset($_SESSION['error_log']);
+		}
 	}
 	?>
 </div>

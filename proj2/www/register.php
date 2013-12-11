@@ -25,5 +25,12 @@ require 'theme/menu.php'
 			<input type="submit" name="submit" id="submit" value="Register" formmethod="post" formaction="secure/register_process.php"/>
 		</p>
 	</form>
+	<?php
+	if (isset($_SESSION['error'])) {
+		echo '<p>' . $_SESSION['error_log'] . '</p>';
+		unset($_SESSION['error']);
+		unset($_SESSION['error_log']);
+	}
+	?>
 </div>
 <?php require 'theme/footer.php'?>

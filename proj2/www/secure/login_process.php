@@ -16,6 +16,8 @@ while ($row = $result->fetchArray()) {
 	$rows++;
 }
 if ($rows < 1) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'Invalid username, password or citizen card.';
 	redirect('../login.php');
 	exit();
 }
@@ -29,6 +31,8 @@ while ($row = $result->fetchArray()) {
 	$rows++;
 }
 if ($rows < 1) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'Invalid username, password or citizen card.';
 	redirect('../login.php');
 	exit();
 }

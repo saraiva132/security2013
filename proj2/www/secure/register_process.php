@@ -2,13 +2,9 @@
 session_start();
 require_once '../utils/db.php';
 require_once '../utils/function.php';
-if (isset($_SESSION['on'])) {
-   redirect('../index.php');
-   exit();
-}
-if (!isset($_POST['username'])) {
-   redirect('../register.php');
-   exit();
+if (isset($_SESSION['on']) || !isset($_POST['username'])) {
+	redirect('../login.php');
+	exit();
 }
 $query = "SELECT * FROM users WHERE name = :username";
 $stmt = $db->prepare($query);
@@ -25,6 +21,8 @@ while($row = $result2->fetchArray()) {
 	$rows2++;
 }
 if ($rows > 0 || $rows2 > 0) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'Username or citizen card already registed.';
     redirect('../register.php');
     exit();
 } else {
