@@ -10,8 +10,10 @@ if (!can_create_account($_SESSION['username'])) {
 	redirect('../secure/account.php');
 	exit();
 }
-$query = "SELECT * FROM passwd WHERE username = '" . $_POST['account'] . "'";
-$result = $db->query($query);
+$query = "SELECT * FROM passwd WHERE username = :account";
+$stmt = $db->prepare($query);
+$stmt->bindValue(':account', $_POST['account']);
+$result = $stmt->execute();
 $rows = 0;
 while($row = $result->fetchArray()) {
 	$rows++;
@@ -23,7 +25,7 @@ if ($rows > 0) {
 $query = "SELECT * FROM passwd";
 $result = $db->query($query);
 $rows = 0;
-while($row = $result->fetchArray() && $rows < 1) {
+while ($row = $result->fetchArray() && $rows < 1) {
 	$rows++;
 }
 if ($rows > 0) {
@@ -44,10 +46,16 @@ $bash = '/bin/bash';
 $expdate = time() + 24 * 60 * 60 * $days;
 $expflag = 0;
 $retrycount = 0;
-$query = "INSERT INTO passwd (uid, gid, username, password, home, bash, expdate, expflag, retrycount) VALUES (" . $uid . ", " . $gid . ", '" . $account . "', '" . salt_hash($pin) . "', '" . $home . "', '" . $bash . "', " . $expdate . ", " . $expflag . ", '" . $retrycount . "')";
-$db->exec($query);
-$query = "INSERT INTO useraccounts (username, account) VALUES ('" . $_SESSION['username'] . "', '" . $_POST['account'] . "')";
-$db->exec($query);
+$salt = gensalt();
+$query = "INSERT INTO passwd (uid, gid, username, password, salt, home, bash, expdate, expflag, retrycount) VALUES (" . $uid . ", " . $gid . ", :account, '" . salt_hash($pin, $salt) . "', '" . $salt . "', :home, '" . $bash . "', " . $expdate . ", " . $expflag . ", '" . $retrycount . "')";
+$stmt = $db->prepare($query);
+$stmt->bindValue(':account', $account);
+$stmt->bindValue(':home', $home);
+$result = $stmt->execute();
+$query = "INSERT INTO useraccounts (username, account) VALUES ( '" . $_SESSION['username'] . "', :account)";
+$stmt = $db->prepare($query);
+$stmt->bindValue(':account', $_POST['account']);
+$result = $stmt->execute();
 $_SESSION['pin'] = $pin;
 $_SESSION['account'] = $_POST['account'];
 $_SESSION['has_pin'] = TRUE;

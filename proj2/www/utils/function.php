@@ -43,8 +43,15 @@ function can_create_account($username) {
 		exit('Failed to open test.xml.');
 	}
 }
-function salt_hash($password) {
-    $salt = sha1(md5($password));
-    return md5($password.$salt);
+function salt_hash($password, $salt) {
+    return md5($salt . $password);
+}
+function gensalt() {
+	$characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	$string = '';
+	for ($i = 0; $i < 21; $i++) {
+		 $string .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $string;
 }
 ?>
