@@ -1,9 +1,13 @@
 <?php
 session_start();
-include '../utils/db.php';
-include '../utils/function.php';
-if (isset($_SESSION['on']) || !isset($_POST['username'])) {
+require_once '../utils/db.php';
+require_once '../utils/function.php';
+if (isset($_SESSION['on'])) {
    redirect('../index.php');
+   exit();
+}
+if (!isset($_POST['username'])) {
+   redirect('../register.php');
    exit();
 }
 $query = "SELECT * FROM users WHERE name = :username";

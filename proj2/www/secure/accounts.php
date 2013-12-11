@@ -1,11 +1,11 @@
 <?php
 session_start();
-include '../utils/function.php';
+require_once '../utils/function.php';
 if (!isset($_SESSION['on'])) {
-	redirect('accounts.php');
+	redirect('../login.php');
 	exit();
 }
-include '../theme/menu.php'
+require '../theme/menu.php';
 ?>
 <div class="container">
 	<hgroup>
@@ -19,7 +19,7 @@ include '../theme/menu.php'
 			<th>State</th>
 		</tr>
 		<?php
-		include '../utils/db.php';
+		require_once '../utils/db.php';
 		$query = "SELECT passwd.username as username, expdate, expflag FROM passwd JOIN useraccounts ON passwd.username = useraccounts.account WHERE useraccounts.username = '" . $_SESSION['username'] . "'";
 		$result = $db->query($query);
 		for($idx = 0; $row = $result->fetchArray(); $idx++) {
@@ -51,13 +51,13 @@ include '../theme/menu.php'
 	while ($row = $result->fetchArray()) {
 		if ($row['expflag'] || time() > $row['expdate']) {
 			$rowsRENEW++;
-			$listRENEW  = $listRENEW  . '<option value = "' . $row['username'] . '">' . $row['username'] . '</option>';
+			$listRENEW .= '<option value = "' . $row['username'] . '">' . $row['username'] . '</option>';
 		}
 		$rowsDELETE++;
-		$listDELETE = $listDELETE . '<option value = "' . $row['username'] . '">' . $row['username'] . '</option>';
+		$listDELETE .= '<option value = "' . $row['username'] . '">' . $row['username'] . '</option>';
 	}
-	$listRENEW = $listRENEW . '</select>';
-	$listDELETE = $listDELETE . '</select>';
+	$listRENEW .= '</select>';
+	$listDELETE .= '</select>';
 	if ($rowsRENEW > 0) {
 		echo '
 			<form>
@@ -76,4 +76,4 @@ include '../theme/menu.php'
 	}
 	?>
 </div>
-<?php include '../theme/footer.php'?>
+<?php require '../theme/footer.php'?>

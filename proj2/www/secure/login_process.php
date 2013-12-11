@@ -1,9 +1,9 @@
 <?php
 session_start();
-include '../utils/db.php';
-include '../utils/function.php';
+require_once '../utils/db.php';
+require_once '../utils/function.php';
 if (isset($_SESSION['on']) || !isset($_POST['username'])) {
-	redirect('../index.php');
+	redirect('../login.php');
 	exit();
 }
 $query = "SELECT salt FROM users WHERE name = :username";

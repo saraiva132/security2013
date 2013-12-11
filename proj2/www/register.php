@@ -1,11 +1,11 @@
 <?php
 session_start();
-include 'utils/function.php';
+require_once 'utils/function.php';
 if(isset($_SESSION['on'])) {
    redirect('index.php');
    exit();
 }
-include 'theme/menu.php'
+require 'theme/menu.php'
 ?>
 <div class="container">
 	<hgroup>
@@ -26,4 +26,4 @@ include 'theme/menu.php'
 		</p>
 	</form>
 </div>
-<?php include 'theme/footer.php'?>
+<?php require 'theme/footer.php'?>

@@ -1,12 +1,12 @@
 <?php
 session_start();
-include '../utils/db.php';
-include '../utils/function.php';
-if (!isset($_SESSION['on']) || !isset($_POST['account'])) {
-	redirect('../index.php');
+require_once '../utils/db.php';
+require_once '../utils/function.php';
+if (!isset($_SESSION['on'])) {
+	redirect('../login.php');
 	exit();
 }
-if (!can_create_account($_SESSION['username'])) {
+if (!isset($_POST['account']) || !can_create_account($_SESSION['username'])) {
 	redirect('../secure/account.php');
 	exit();
 }

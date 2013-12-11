@@ -1,6 +1,6 @@
 <?php
 session_start();
 session_destroy();
-include 'utils/function.php';
+require_once 'utils/function.php';
 redirect('index.php');
 ?>

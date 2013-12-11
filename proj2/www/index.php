@@ -1,4 +1,4 @@
-﻿<?php include 'theme/menu.php'?>
+﻿<?php require 'theme/menu.php'?>
 <div class="container">
 	<br>
 	<br>
@@ -15,4 +15,4 @@
 		</hgroup>
 	</section>
 </div>
-<?php include 'theme/footer.php'?>
+<?php require 'theme/footer.php'?>

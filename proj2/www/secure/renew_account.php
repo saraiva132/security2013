@@ -1,9 +1,13 @@
 <?php
 session_start();
-include '../utils/db.php';
-include '../utils/function.php';
-if (!isset($_SESSION['on']) || !isset($_POST['renew'])) {
-	redirect('accounts.php');
+require_once '../utils/db.php';
+require_once '../utils/function.php';
+if (!isset($_SESSION['on'])) {
+	redirect('../login.php');
+	exit();
+}
+if (!isset($_POST['renew'])) {
+	redirect('../secure/accounts.php');
 	exit();
 }
 $days = config_days();

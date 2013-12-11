@@ -1,11 +1,11 @@
 <?php
 session_start();
-include '../utils/function.php';
+require_once '../utils/function.php';
 if (!isset($_SESSION['on'])) {
-   redirect('../login.php');
-   exit();
+	redirect('../login.php');
+	exit();
 }
-include '../theme/menu.php'
+require '../theme/menu.php';
 ?>
 <div class="container">
 	<?php
@@ -45,4 +45,4 @@ include '../theme/menu.php'
 	}
 	?>
 </div>
-<?php include '../theme/footer.php'?>
+<?php require '../theme/footer.php'?>
