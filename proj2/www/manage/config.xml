@@ -2,6 +2,7 @@
 <config>
 	<permited>
 		<user>simon</user>
+		<user>pedro</user>
 	</permited>
 	<pin>
 		<length>4</length>
