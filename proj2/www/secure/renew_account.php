@@ -10,6 +10,12 @@ if (!isset($_POST['renew'])) {
 	redirect('../secure/accounts.php');
 	exit();
 }
+if (!can_create_account($_SESSION['username'])) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'You are not authorized to renew Linux accounts.';
+	redirect('../secure/accounts.php');
+	exit();
+}
 $days = config_days();
 $length = config_length();
 $pin = genpin($length);

@@ -43,6 +43,14 @@ function can_create_account($username) {
 		exit('Failed to open test.xml.');
 	}
 }
+function max_accounts() {
+	if (file_exists('../manage/config.xml')) {
+		$xml = simplexml_load_file('../manage/config.xml');
+	} else {
+		exit('Failed to open test.xml.');
+	}
+	return $xml->max;
+}
 function salt_hash($password, $salt) {
     return md5($salt . $password);
 }

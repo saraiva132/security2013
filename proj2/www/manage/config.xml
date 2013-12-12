@@ -5,6 +5,7 @@
 	</permited>
 	<pin>
 		<length>4</length>
-		<days>2</days>
+		<days>1</days>
 	</pin>
+	<max>3</max>
 </config>

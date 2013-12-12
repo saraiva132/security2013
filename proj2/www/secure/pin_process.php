@@ -6,7 +6,25 @@ if (!isset($_SESSION['on'])) {
 	redirect('../login.php');
 	exit();
 }
-if (!isset($_POST['account']) || !can_create_account($_SESSION['username'])) {
+if (!isset($_POST['account'])) {
+	redirect('../secure/account.php');
+	exit();
+}
+if (!can_create_account($_SESSION['username'])) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'You are not authorized to create Linux accounts.';
+	redirect('../secure/account.php');
+	exit();
+}
+$query = "SELECT * FROM passwd JOIN useraccounts ON passwd.username = useraccounts.account WHERE useraccounts.username = '" . $_SESSION['username'] . "'";
+$result = $db->query($query);
+$rows = 0;
+while ($row = $result->fetchArray()) {
+	$rows++;
+}
+if ($rows >= max_accounts()) {
+	$_SESSION['error'] = TRUE;
+	$_SESSION['error_log'] = 'Reached max number of permited Linux accounts.';
 	redirect('../secure/account.php');
 	exit();
 }
