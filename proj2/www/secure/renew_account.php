@@ -21,7 +21,7 @@ $length = config_length();
 $pin = genpin($length);
 $expdate = time() + 24 * 60 * 60 * $days;
 $salt = gensalt();
-$query = "UPDATE passwd SET password = '" . salt_hash($pin) . "', salt = '" . $salt . "', expflag = 0, expdate =" . $expdate . ", retrycount = 0  WHERE username = :renewList";
+$query = "UPDATE passwd SET password = '" . salt_hash($pin, $salt) . "', salt = '" . $salt . "', expflag = 0, expdate =" . $expdate . ", retrycount = 0  WHERE username = :renewList";
 $stmt = $db->prepare($query);
 $stmt->bindValue(':renewList', $_POST['renewList']);
 $result = $stmt->execute();
