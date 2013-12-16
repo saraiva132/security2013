@@ -52,7 +52,7 @@ function max_accounts() {
 	return $xml->max;
 }
 function salt_hash($password, $salt) {
-    return md5($salt . $password);
+    return crypt($password, $salt);
 }
 function gensalt() {
 	$characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
