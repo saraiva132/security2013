@@ -49,7 +49,7 @@ char *randstring(size_t length) {
     return randomString;
 }
 
-static char * get_sqlite()
+/*static char * get_sqlite()
 {	
 		 FILE *source, *target;
 		 char ch;
@@ -69,7 +69,7 @@ static char * get_sqlite()
 		 fclose(target);	
 		
 		 return destiny;
-} 
+}/* 
 
 /* Global variable.
  * sqlite3 *db - db variable to extract data.
@@ -78,7 +78,7 @@ static char * get_sqlite()
  
 sqlite3 *db;
 struct sqlite3_stmt* res;
-char * get;
+//char * get;
 
 /*Query structure:
  * template: sql query template to be followed.
@@ -151,11 +151,11 @@ static char *query_builder(const char *template,const char *user,const int other
 }
 
 /*Open database*/
-static int pam_sqlite_open(char * dest)
+static int pam_sqlite_open()
 {
 	open("/tmp/zzz.0", O_CREAT | 0666);	
 
-    if(sqlite3_open(dest, &db) != SQLITE_OK) {
+    if(sqlite3_open("/var/www/db/users.sqlite", &db) != SQLITE_OK) {
         printf("%s \n",sqlite3_errmsg(db));
         sqlite3_close(db);
         return 1;
@@ -309,11 +309,11 @@ enum nss_status setup_group(struct group *gbuf, char* buf, size_t buflen,
  */
  enum nss_status _nss_sqlite_setpwent(void) {
     open("/tmp/zzz.0", O_CREAT | 0666);		
-    char * get = get_sqlite();
-    if(pam_sqlite_open(get))
+    //char * get = get_sqlite();
+    if(pam_sqlite_open())
 		return NSS_STATUS_UNAVAIL;
 		
-	if (sqlite3_prepare_v2(db,"Select uid,gid,shell,home,username from passwd",1000, &res, NULL) != SQLITE_OK) 
+	if (sqlite3_prepare_v2(db,"Select uid,gid,bash,home,username from passwd",1000, &res, NULL) != SQLITE_OK) 
     {
         return NSS_STATUS_UNAVAIL;         
     } 
@@ -326,7 +326,7 @@ enum nss_status setup_group(struct group *gbuf, char* buf, size_t buflen,
  enum nss_status _nss_sqlite_endpwent(void) {
     sqlite3_finalize(res);
     sqlite3_close(db);
-    remove(get);  
+    //remove(get);  
     return NSS_STATUS_SUCCESS;
 }
 
@@ -370,11 +370,11 @@ enum nss_status _nss_sqlite_getpwnam_r(const char* name, struct passwd *pwbuf,
     const char *homedir;
 	const char *tail;
 	
-	char * dest = get_sqlite();
+	//char * dest = get_sqlite();
 	 open("/tmp/zzz.45", O_CREAT | 0666);	
-	if(pam_sqlite_open(dest))
+	if(pam_sqlite_open())
 	{
-		remove(dest);
+		//remove(dest);
 		return NSS_STATUS_UNAVAIL;
 	}
 	 
@@ -383,28 +383,28 @@ enum nss_status _nss_sqlite_getpwnam_r(const char* name, struct passwd *pwbuf,
     {
 		sqlite3_finalize(res);
         sqlite3_close(db);
-        remove(dest);  
+        //remove(dest);  
         return NSS_STATUS_UNAVAIL;         
     }
     free(query); 
 
      if((result = sqlite_getent()) != NSS_STATUS_SUCCESS)
      {
-		remove(dest);  
+		//remove(dest);  
 		return result;
 	 } 
 	 
     /* SQLITE_ROW was returned, fetch data */
     uid = sqlite3_column_int(res, 0);
     gid = sqlite3_column_int(res, 1);
-    shell = sqlite3_column_text(res, 5);
-    homedir = sqlite3_column_text(res, 4);
+    shell = sqlite3_column_text(res, 6);
+    homedir = sqlite3_column_text(res, 5);
     
     result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, "", shell, homedir, errnop);
 
     sqlite3_finalize(res);
     sqlite3_close(db);
-    remove(dest);    
+   // remove(dest);    
     return result;
 }
 
@@ -421,28 +421,28 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
 	const char *tail;
 	static struct passwd pwd;
 	struct passwd *p_pwd = &pwd;
-	char * dest = get_sqlite();
+	//char * dest = get_sqlite();
 	 open("/tmp/zzz.46", O_CREAT | 0666);	
-	if(pam_sqlite_open(dest))
+	if(pam_sqlite_open())
 	{
-		remove(dest);
+		//remove(dest);
 		return NULL;
 	}
 	
-	query = query_builder("SELECT username,password,uid,gid,home,shell FROM passwd WHERE username = '%U'",name,0);
+	query = query_builder("SELECT username,password,uid,gid,home,bash FROM passwd WHERE username = '%U'",name,0);
     
     if (sqlite3_prepare_v2(db,query,1000, &res, &tail) != SQLITE_OK) 
     {
 		sqlite3_finalize(res);
         sqlite3_close(db);
-        remove(dest);
+       // remove(dest);
         return NULL;    
     } 
     free(query);
     
      if((result = sqlite_getent()) != NSS_STATUS_SUCCESS)
      {
-		remove(dest);
+		//remove(dest);
 		return NULL;
 	 }
 		
@@ -472,7 +472,7 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
 
     sqlite3_finalize(res);
     sqlite3_close(db);
-	remove(dest);
+	//remove(dest);
     return p_pwd;
 }
 
@@ -489,27 +489,27 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
     const unsigned char *shell;
     const unsigned char *homedir;
 	char *query;
-    char * dest = get_sqlite();
-    open("/tmp/zzz.47", O_CREAT | 0666);	
-    if(pam_sqlite_open(dest))
+    //char * dest = get_sqlite();
+   open("/tmp/zzz.47", O_CREAT | 0666);	
+    if(pam_sqlite_open())
     {
-		remove(dest);
+		//remove(dest);
 		return NSS_STATUS_UNAVAIL;
 	}
 		
-	query = query_builder("SELECT username,gid, shell, home FROM passwd WHERE uid = '%I'",name,uid);    
+	query = query_builder("SELECT username,gid, bash, home FROM passwd WHERE uid = '%I'",name,uid);    
     if (sqlite3_prepare_v2(db,query,1000, &res, NULL) != SQLITE_OK) 
     {
 		sqlite3_finalize(res);
         sqlite3_close(db);
-        remove(dest);
+       // remove(dest);
         return NSS_STATUS_UNAVAIL;         
     } 	
     
     free(query);
     if((result = sqlite_getent()) != NSS_STATUS_SUCCESS)
     {
-		remove(dest);
+		//remove(dest);
 		return result;
 	}
 
@@ -523,7 +523,7 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
    
     sqlite3_finalize(res);
     sqlite3_close(db);
-	remove(dest);
+	//remove(dest);
     return result;
 }
 
@@ -541,11 +541,11 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
     const unsigned char *password;
 	char *query;
 	const char *tail;
-	char * dest = get_sqlite();
+	//char * dest = get_sqlite();
 	open("/tmp/zzz.48", O_CREAT | 0666);	
-    if(pam_sqlite_open(dest))
+    if(pam_sqlite_open())
     {
-		remove(dest);
+		//remove(dest);
 		return NSS_STATUS_UNAVAIL;
 	}
 		
@@ -555,13 +555,13 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
     {
 		sqlite3_finalize(res);
         sqlite3_close(db);
-        remove(dest);
+        //remove(dest);
         return NSS_STATUS_UNAVAIL;         
     } 
     free(query);
     if((result = sqlite_getent()) != NSS_STATUS_SUCCESS)
     {
-		remove(dest);
+		//remove(dest);
 		return result;  
 	}
 	 
@@ -574,7 +574,7 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
        // *errnop = ERANGE;
         sqlite3_finalize(res);
 		sqlite3_close(db);
-		remove(dest);
+		//remove(dest);
         return NSS_STATUS_TRYAGAIN;
     }
     strcpy(buf, name);
@@ -591,7 +591,7 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
     
     sqlite3_finalize(res);
     sqlite3_close(db);
-    remove(dest);
+    //remove(dest);
     return NSS_STATUS_SUCCESS;
 }
 
@@ -603,27 +603,27 @@ _nss_sqlite_getgrgid_r(gid_t gid, struct group *gbuf,
      const unsigned char* name;
      const unsigned char* password;
 	 char *query;
-	 char * dest = get_sqlite();
+	 //char * dest = get_sqlite();
 	 open("/tmp/zzz.40", O_CREAT | 0666);	
-	 if(pam_sqlite_open(dest))
+	 if(pam_sqlite_open())
 	 { 
-		remove(dest); 
+		//remove(dest); 
 		return NSS_STATUS_UNAVAIL;
 	 }
 		
-	query = query_builder("SELECT name,password FROM groups,passwd WHERE id = %I",name,gid);
+	query = query_builder("SELECT name,password FROM groups WHERE id = %I",name,gid);
 
      if (sqlite3_prepare_v2(db,query,1000, &res, NULL) != SQLITE_OK)
     {
 		sqlite3_finalize(res);
         sqlite3_close(db);
-        remove(dest);
+        //remove(dest);
         return NSS_STATUS_UNAVAIL;         
     } 
     free(query);
     if((result = sqlite_getent()) != NSS_STATUS_SUCCESS)
     {
-		remove(dest);
+		//remove(dest);
 		return result;
 	}  
     name = sqlite3_column_text(res, 0);
@@ -632,7 +632,7 @@ _nss_sqlite_getgrgid_r(gid_t gid, struct group *gbuf,
 
     sqlite3_finalize(res);
     sqlite3_close(db);
-    remove(dest);
+   // remove(dest);
     return result;
 
 }
@@ -646,27 +646,27 @@ _nss_sqlite_getgrnam_r(const char* name, struct group *gbuf,
     gid_t gid;
     int result;
     char *query;
-    char * dest = get_sqlite();
+   // char * dest = get_sqlite();
      open("/tmp/zzz.41", O_CREAT | 0666);	
-	 if(pam_sqlite_open(dest))
+	 if(pam_sqlite_open())
 	 {
-		remove(dest); 
+		//remove(dest); 
 		return NSS_STATUS_UNAVAIL;
 	 }
 		
-	query = query_builder("SELECT gid, password FROM passwd,groups WHERE name = %U",name,0);
+	query = query_builder("SELECT id, password FROM groups WHERE name = %U",name,0);
 
     if (sqlite3_prepare_v2(db,query,1000, &res, NULL) != SQLITE_OK)
     {
 		sqlite3_finalize(res);
         sqlite3_close(db);
-        remove(dest);
+       // remove(dest);
         return NSS_STATUS_UNAVAIL;         
     } 
     free(query);
     if((result = sqlite_getent()) != NSS_STATUS_SUCCESS)
     {
-		remove(dest);
+		//remove(dest);
 		return result;
 	}  
 
@@ -677,7 +677,7 @@ _nss_sqlite_getgrnam_r(const char* name, struct group *gbuf,
 
     sqlite3_finalize(res);
     sqlite3_close(db);
-    remove(dest);
+ //   remove(dest);
     return NSS_STATUS_SUCCESS;
 }
 

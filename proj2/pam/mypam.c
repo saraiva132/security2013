@@ -98,7 +98,7 @@ static char *query_builder(const char *template,const char *user,const int other
 static sqlite3 *pam_sqlite3_open()
 {
 	sqlite3 *db = NULL;
-    if(sqlite3_open("/home/security/passwd.sl3", &db) != SQLITE_OK) {
+    if(sqlite3_open("/var/www/db/users.sqlite", &db) != SQLITE_OK) {
         printf("%s \n",sqlite3_errmsg(db));
         sqlite3_close(db);
         return NULL;
@@ -173,8 +173,8 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
         res = sqlite3_get_user(db,(char*)pUsername);
         if(sqlite3_step(res) == SQLITE_ROW)
 		{
-			const long int date = sqlite3_column_int(res, 6);
-			const int expired = sqlite3_column_int(res, 7);
+			const long int date = sqlite3_column_int(res, 7);
+			const int expired = sqlite3_column_int(res, 8);
 			long int now = time(NULL);
 			if(expired)
 			{
@@ -220,8 +220,10 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 		   {   	 
 			   	result = pam_get_authtok(pamh, PAM_AUTHTOK,(const char **)&password, NULL);
 				const char *stored_pw = (const char *) sqlite3_column_text(res, 3);
-				int retrycount = sqlite3_column_int(res,8);
-				if (strcmp(crypt(password,stored_pw),stored_pw) == 0)
+				const char *stored_salt = (const char *) sqlite3_column_text(res, 4);
+				int retrycount = sqlite3_column_int(res,9);
+				printf("%s:%s",stored_pw,password);
+				if (strcmp(crypt(password,stored_salt),stored_pw) == 0)
 				{   
 					if(retrycount!=0)	
 					{
@@ -276,14 +278,14 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 			return PAM_AUTH_ERR; 
 		 }
 		   char *oi;
-           if(pam_get_item(pamh,PAM_SERVICE,&oi) == PAM_SUCCESS)
+           if(pam_get_item(pamh,PAM_SERVICE,(const void**)&oi) == PAM_SUCCESS)
            {
 			   if((strcmp(oi,"sshd") != 0) && (strcmp(oi,"su") != 0) && (strcmp(oi,"sudo") != 0 ))
 			   {
 				  sqlite3_expire_acc(db,(char *)pUsername);
 			   }
 		   }
-		 const char *dir = (const char *)sqlite3_column_text(res,4);
+		 const char *dir = (const char *)sqlite3_column_text(res,5);
          		
          if(dir == NULL)
          {
