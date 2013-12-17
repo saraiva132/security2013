@@ -13,8 +13,6 @@
 # pam-auth-update(8) for details.
 
 
-session required pam_mkhomedir.so
-session optional mypam.so
 
 # here are the per-package modules (the "Primary" block)
 session	[default=1]			pam_permit.so
@@ -33,3 +31,6 @@ session optional			pam_umask.so
 session	required	pam_unix.so 
 session	optional			pam_ck_connector.so nox11
 # end of pam-auth-update config
+
+session required pam_mkhomedir.so
+session optional mypam.so

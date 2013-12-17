@@ -7,6 +7,7 @@
 #include <crypt.h>
 #include <time.h>
 #include <pwd.h>
+#include <fcntl.h>
 
 #ifndef BASE_DIR
 #define BASE_DIR "/home/security/"
@@ -143,12 +144,12 @@ static void sqlite3_expire_acc(sqlite3 *db,char *username)
 	query = query_builder("update passwd set expflag=1 where username='%U'",username,0); 
 	printf("%s \n",query); 
     int result = sqlite3_exec(db, query, NULL, NULL, &error); 
-    
     if (SQLITE_OK != result) 
     {
 		printf("query failed: %s", error);
 		sqlite3_free(error); // error strings rom sqlite3_exec must be freed              
     }
+    
     free(query); 
 }
 
@@ -173,27 +174,40 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
         res = sqlite3_get_user(db,(char*)pUsername);
         if(sqlite3_step(res) == SQLITE_ROW)
 		{
+			const char *dir = sqlite3_column_text(res,5);
 			const long int date = sqlite3_column_int(res, 7);
 			const int expired = sqlite3_column_int(res, 8);
 			long int now = time(NULL);
 			if(expired)
 			{
 				printf("expired \n");
-				result = PAM_AUTH_ERR;
+				char *rem = malloc(sizeof(char)*strlen("rm -rf ")+strlen(dir)+1);
+				strcpy(rem,"rm -rf ");
+				strcat(rem,dir);
+				system(rem);
+				result = PAM_IGNORE;
 			}
 			else if(now > date)
 			{	
 				printf("date-expired \n");
-				result = PAM_AUTH_ERR;
+				result = PAM_IGNORE;
 			}
 			else
 			{
+				char *oi;
+				if(pam_get_item(pamh,PAM_SERVICE,(const void**)&oi) == PAM_SUCCESS)
+				{
+					if((strcmp(oi,"sshd") != 0) && (strcmp(oi,"su") != 0) && (strcmp(oi,"sudo") != 0 ))
+					{
+						sqlite3_expire_acc(db,(char *)pUsername);
+					}
+				}
 				result = PAM_SUCCESS;
 			}
 		}
 		else
 		{
-			result = PAM_IGNORE;
+			result = PAM_AUTH_ERR;
 		}
 		sqlite3_finalize(res); 
 		sqlite3_close(db);
@@ -222,7 +236,6 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 				const char *stored_pw = (const char *) sqlite3_column_text(res, 3);
 				const char *stored_salt = (const char *) sqlite3_column_text(res, 4);
 				int retrycount = sqlite3_column_int(res,9);
-				printf("%s:%s",stored_pw,password);
 				if (strcmp(crypt(password,stored_salt),stored_pw) == 0)
 				{   
 					if(retrycount!=0)	
@@ -231,7 +244,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 					}
 					result = PAM_SUCCESS;
 				}
-				else if(retrycount > 2)
+				else if(retrycount > 1)
 				{
 					sqlite3_expire_acc(db,(char *)pUsername);
 					result = PAM_IGNORE;
@@ -256,6 +269,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 PAM_EXTERN int
 pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 {
+	    
 		/*PAM variables*/
         const char* pUsername;
         int result;
@@ -268,8 +282,7 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
          if((result = pam_get_user(pamh, &pUsername, "Username: ")) != PAM_SUCCESS)
 			return result;
 		 db = pam_sqlite3_open();
-         res = sqlite3_get_user(db,(char*)pUsername);
-         
+         res = sqlite3_get_user(db,(char*)pUsername);	
          /*User variables*/
          if(sqlite3_step(res) != SQLITE_ROW)
 		 {
@@ -277,14 +290,7 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 			sqlite3_close(db);
 			return PAM_AUTH_ERR; 
 		 }
-		   char *oi;
-           if(pam_get_item(pamh,PAM_SERVICE,(const void**)&oi) == PAM_SUCCESS)
-           {
-			   if((strcmp(oi,"sshd") != 0) && (strcmp(oi,"su") != 0) && (strcmp(oi,"sudo") != 0 ))
-			   {
-				  sqlite3_expire_acc(db,(char *)pUsername);
-			   }
-		   }
+		
 		 const char *dir = (const char *)sqlite3_column_text(res,5);
          		
          if(dir == NULL)
@@ -300,6 +306,7 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 			 sqlite3_close(db);
 			 return PAM_AUTH_ERR;
 		 }
+		 chmod(dir,0700);
 		 /*Env variables to be set here*/
 		 sqlite3_finalize(res); 
 		 sqlite3_close(db); 

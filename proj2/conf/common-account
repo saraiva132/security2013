@@ -14,7 +14,7 @@
 #
 
 
-account sufficient mypam.so
+account [success=done ignore=die default=ignore] mypam.so
 # here are the per-package modules (the "Primary" block)
 account	[success=1 new_authtok_reqd=done default=ignore]	pam_unix.so 
 # here's the fallback if no module succeeds
