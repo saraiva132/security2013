@@ -349,7 +349,7 @@ _nss_sqlite_getpwent_r(struct passwd *pwbuf, char *buf,
     char *homedir = (char *)sqlite3_column_text(res, 3);
     char *name = (char *) sqlite3_column_text(res, 4);
     
-    result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, "", shell, homedir, errnop);
+    result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, name, shell, homedir, errnop);
 
     return result;
 }
@@ -400,7 +400,7 @@ enum nss_status _nss_sqlite_getpwnam_r(const char* name, struct passwd *pwbuf,
     shell = sqlite3_column_text(res, 6);
     homedir = sqlite3_column_text(res, 5);
     
-    result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, "", shell, homedir, errnop);
+    result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, name, shell, homedir, errnop);
 
     sqlite3_finalize(res);
     sqlite3_close(db);
@@ -519,7 +519,7 @@ struct passwd * _nss_sqlite_getpwnam(const char* name) {
     homedir = sqlite3_column_text(res, 3);
 	
 	
-	result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, "", shell, homedir, errnop);
+	result = setup_passwd(pwbuf, buf, buflen, name, "*", uid, gid, name, shell, homedir, errnop);
    
     sqlite3_finalize(res);
     sqlite3_close(db);

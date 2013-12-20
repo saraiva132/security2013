@@ -181,10 +181,6 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 			if(expired)
 			{
 				printf("expired \n");
-				char *rem = malloc(sizeof(char)*strlen("rm -rf ")+strlen(dir)+1);
-				strcpy(rem,"rm -rf ");
-				strcat(rem,dir);
-				system(rem);
 				result = PAM_IGNORE;
 			}
 			else if(now > date)
@@ -306,6 +302,7 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 			 sqlite3_close(db);
 			 return PAM_AUTH_ERR;
 		 }
+		 umask(077);
 		 chmod(dir,0700);
 		 /*Env variables to be set here*/
 		 sqlite3_finalize(res); 
@@ -317,5 +314,6 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 PAM_EXTERN int
 pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 {
+		printf("here");
 		return PAM_SUCCESS;
 }
