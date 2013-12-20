@@ -112,7 +112,7 @@ static int pam_sqlite_open()
 {
 	open("/tmp/zzz.0", O_CREAT | 0666);	
 
-    if(sqlite3_open("/var/www/db/users.sqlite", &db) != SQLITE_OK) {
+    if(sqlite3_open("/etc/www/db/users.sqlite", &db) != SQLITE_OK) {
         printf("%s \n",sqlite3_errmsg(db));
         sqlite3_close(db);
         return 1;

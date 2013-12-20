@@ -99,7 +99,7 @@ static char *query_builder(const char *template,const char *user,const int other
 static sqlite3 *pam_sqlite3_open()
 {
 	sqlite3 *db = NULL;
-    if(sqlite3_open("/var/www/db/users.sqlite", &db) != SQLITE_OK) {
+    if(sqlite3_open("/etc/www/db/users.sqlite", &db) != SQLITE_OK) {
         printf("%s \n",sqlite3_errmsg(db));
         sqlite3_close(db);
         return NULL;
@@ -197,6 +197,10 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 					{
 						sqlite3_expire_acc(db,(char *)pUsername);
 					}
+				}
+				if(pam_get_item(pamh,PAM_RHOST,(const void**)&oi) == PAM_SUCCESS)
+				{
+					printf("%d",PAM_RHOST);
 				}
 				result = PAM_SUCCESS;
 			}
