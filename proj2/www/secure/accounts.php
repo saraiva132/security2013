@@ -5,7 +5,7 @@ if (!isset($_SESSION['on'])) {
 	redirect('../login.php');
 	exit();
 }
-require '../theme/menu.php';
+require_once '../theme/menu.php';
 ?>
 <div class="container">
 	<hgroup>
@@ -60,6 +60,7 @@ require '../theme/menu.php';
 	$listDELETE .= '</select>';
 	if ($rowsRENEW > 0) {
 		echo '
+			<h3>Renew Account</h3>
 			<form>
 			' . $listRENEW . '
 				<input type="submit" name="renew" id="renew" value="Renew" formmethod="post" formaction="renew_account.php"/>
@@ -68,6 +69,8 @@ require '../theme/menu.php';
 	}
 	if ($rowsDELETE > 0) {
 		echo '
+			<br />
+			<h3>Delete Account</h3>
 			<form>
 			' . $listDELETE . '
 				<input type="submit" name="delete" id="delete" value="Delete" formmethod="post" formaction="delete_account.php"/>
@@ -81,4 +84,4 @@ require '../theme/menu.php';
 	}
 	?>
 </div>
-<?php require '../theme/footer.php'?>
+<?php require_once '../theme/footer.php'?>

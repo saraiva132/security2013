@@ -18,6 +18,7 @@
 								if (isset($_SESSION['on'])) {
 									echo '<li><a href="/secure/account.php">New Account</a></li>';
 									echo '<li><a href="/secure/accounts.php">My Accounts</a></li>';
+									echo '<li><a href="/secure/permissions.php">My Permissions</a></li>';
 									echo '<li><a href="/logout.php">Logout</a></li>';
 								} else {
 									echo '<li><a href="/login.php">Login</a></li>';

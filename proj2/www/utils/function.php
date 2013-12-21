@@ -12,8 +12,8 @@ function genpin($length) {
 	return $string;
 }
 function config_length() {
-	if (file_exists('../manage/config.xml')) {
-		$xml = simplexml_load_file('../manage/config.xml');
+	if (file_exists('/etc/www/manage/config.xml')) {
+		$xml = simplexml_load_file('/etc/www/manage/config.xml');
 		$length = $xml->pin->length;
 		return (int)$length;
 	} else {
@@ -21,8 +21,8 @@ function config_length() {
 	}
 }
 function config_days() {
-	if (file_exists('../manage/config.xml')) {
-		$xml = simplexml_load_file('../manage/config.xml');
+	if (file_exists('/etc/www/manage/config.xml')) {
+		$xml = simplexml_load_file('/etc/www/manage/config.xml');
 		$days = $xml->pin->days;
 		return (int)$days;
 	} else {
@@ -30,8 +30,8 @@ function config_days() {
 	}
 }
 function can_create_account($username) {
-	if (file_exists('../manage/config.xml')) {
-		$xml = simplexml_load_file('../manage/config.xml');
+	if (file_exists('/etc/www/manage/config.xml')) {
+		$xml = simplexml_load_file('/etc/www/manage/config.xml');
 		$permited = $xml->permited;
 		foreach($permited->user as $user) {
 			if (strcmp($username, $user) == 0) {
@@ -44,8 +44,8 @@ function can_create_account($username) {
 	}
 }
 function max_accounts() {
-	if (file_exists('../manage/config.xml')) {
-		$xml = simplexml_load_file('../manage/config.xml');
+	if (file_exists('/etc/www/manage/config.xml')) {
+		$xml = simplexml_load_file('/etc/www/manage/config.xml');
 	} else {
 		return 3;
 	}
@@ -55,8 +55,8 @@ function salt_hash($password, $salt) {
     return crypt($password, $salt);
 }
 function gensalt() {
-	if (file_exists('../manage/config.xml')) {
-		$xml = simplexml_load_file('../manage/config.xml');
+	if (file_exists('/etc/www/manage/config.xml')) {
+		$xml = simplexml_load_file('/etc/www/manage/config.xml');
 		$algorithm = '$' . $xml->salt->algorithm . '$';
 		$length = (int)$xml->salt->length;
 	} else {
