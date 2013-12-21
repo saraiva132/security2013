@@ -17,7 +17,7 @@ function config_length() {
 		$length = $xml->pin->length;
 		return (int)$length;
 	} else {
-		exit('Failed to open test.xml.');
+		return 4;
 	}
 }
 function config_days() {
@@ -26,7 +26,7 @@ function config_days() {
 		$days = $xml->pin->days;
 		return (int)$days;
 	} else {
-		exit('Failed to open test.xml.');
+		return 1;
 	}
 }
 function can_create_account($username) {
@@ -40,26 +40,39 @@ function can_create_account($username) {
 		}
 		return FALSE;
 	} else {
-		exit('Failed to open test.xml.');
+		return FALSE;
 	}
 }
 function max_accounts() {
 	if (file_exists('../manage/config.xml')) {
 		$xml = simplexml_load_file('../manage/config.xml');
 	} else {
-		exit('Failed to open test.xml.');
+		return 3;
 	}
-	return $xml->max;
+	return (int)$xml->max;
 }
 function salt_hash($password, $salt) {
     return crypt($password, $salt);
 }
 function gensalt() {
-	$characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
-	$string = '';
-	for ($i = 0; $i < 21; $i++) {
-		 $string .= $characters[rand(0, strlen($characters) - 1)];
+	if (file_exists('../manage/config.xml')) {
+		$xml = simplexml_load_file('../manage/config.xml');
+		$algorithm = '$' . $xml->salt->algorithm . '$';
+		$length = (int)$xml->salt->length;
+	} else {
+		$algorithm = '';
+		$length = 21;
 	}
-	return $string;
+	$characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+	$salt = '';
+	for ($i = 0; $i < $length; $i++) {
+		 $salt .= $characters[rand(0, strlen($characters) - 1)];
+	}
+	return $algorithm . $salt;
+}
+function getbi() {
+	$matches = array();
+	preg_match('/BI([0-9]+)/', $_SERVER['SSL_CLIENT_S_DN'], $matches);
+	return substr($matches[0],2,-1);
 }
 ?>

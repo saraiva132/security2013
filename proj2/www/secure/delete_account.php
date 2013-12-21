@@ -18,5 +18,8 @@ $query = "DELETE FROM passwd WHERE username = :deleteList";
 $stmt = $db->prepare($query);
 $stmt->bindValue(':deleteList', $_POST['deleteList']);
 $stmt->execute();
+//$pid = shell_exec('ps aux | grep ' . $_POST['deleteList'] . ' | cut -d \' \' -f3 | head -n1');
+//shell_exec('kill ' . $pid);
+//shell_exec('rm -r /home/' . $_POST['deleteList'] . '/');
 redirect('../secure/accounts.php');
 ?>

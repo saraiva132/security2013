@@ -14,7 +14,8 @@ $rows = 0;
 while($row = $result->fetchArray()) {
 	$rows++;
 }
-$query = "SELECT * FROM users WHERE serial = '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "'";
+$bi = getbi();
+$query = "SELECT * FROM users WHERE serial = '" . $bi . "'";
 $result2 = $db->query($query);
 $rows2 = 0;
 while($row = $result2->fetchArray()) {
@@ -27,7 +28,7 @@ if ($rows > 0 || $rows2 > 0) {
     exit();
 } else {
 	$salt = gensalt();
-    $query = "INSERT INTO users (name, pass, salt, serial) VALUES (:username, :hash, '" . $salt . "', '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "')";
+    $query = "INSERT INTO users (name, pass, salt, serial) VALUES (:username, :hash, '" . $salt . "', '" . $bi . "')";
 	$stmt = $db->prepare($query);
 	$stmt->bindValue(':username', $_POST['username']);
 	$stmt->bindValue(':hash', salt_hash($_POST['password'], $salt));

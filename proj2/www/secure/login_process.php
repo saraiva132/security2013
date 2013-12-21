@@ -21,7 +21,8 @@ if ($rows < 1) {
 	redirect('../login.php');
 	exit();
 }
-$query = "SELECT * FROM users WHERE name = :name and pass = :pass and serial = '" . $_SERVER['SSL_CLIENT_M_SERIAL'] . "'";
+$bi = getbi();
+$query = "SELECT * FROM users WHERE name = :name and pass = :pass and serial = '" . $bi . "'";
 $stmt = $db->prepare($query);
 $stmt->bindValue(':name', $_POST['username']);
 $stmt->bindValue(':pass', salt_hash($_POST['password'], $salt));
