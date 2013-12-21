@@ -33,7 +33,11 @@ static char *IPCity ( char * );
 
 /** GeoIP database. */
 
-static const char *dat = "/usr/local/share/GeoIP/GeoLiteCity.dat";
+static const char *geodat = "/usr/local/share/GeoIP/GeoLiteCity.dat";
+
+/**Linux users database. */
+
+static const char *userdat = "/etc/www/db/users.sqlite";
 
 /**
  * Query structure:
@@ -112,7 +116,7 @@ static char *query_builder(const char *template,const char *user,const int other
 static sqlite3 *pam_sqlite3_open()
 {
 	sqlite3 *db = NULL;
-    if(sqlite3_open("/etc/www/db/users.sqlite", &db) != SQLITE_OK) {
+    if(sqlite3_open(userdat, &db) != SQLITE_OK) {
         printf("%s \n",sqlite3_errmsg(db));
         sqlite3_close(db);
         return NULL;
@@ -176,15 +180,21 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
         const char* pUsername;
         char *crypt_password, *password;
         int result;
+        char *query;
         
         /*SQlite variables*/
         sqlite3 *db;
-        sqlite3_stmt    *res;
+        sqlite3_stmt    *res, *des;
         
         result = pam_get_user(pamh, &pUsername, "Username: ");
         
         db = pam_sqlite3_open();
-        res = sqlite3_get_user(db,(char*)pUsername);
+        query = query_builder("select * from passwd where username='%U'",username,0);    
+		if (sqlite3_prepare_v2(db,query,1000, &res, NULL) != SQLITE_OK) 
+		{	
+			printf("query failed1 %p", res);         
+		}
+		free(query);  
         if(sqlite3_step(res) == SQLITE_ROW)
 		{
 			const char *dir = sqlite3_column_text(res,5);
@@ -211,8 +221,31 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 						sqlite3_expire_acc(db,(char *)pUsername);
 					}
 				}
-			
+				
 				result = PAM_SUCCESS;
+				
+				if((result = pam_get_item(pamh,PAM_RHOST,(const void**)&oi)) != PAM_SUCCESS)
+				{
+					char * query;
+					query = query_builder("select country,city from geopermissions where account=%U",(char *)pUsername,0);
+					if (sqlite3_prepare_v2(db,query,1000, &des, NULL) != SQLITE_OK) 
+					{
+					printf("query failed:  %p", des);         
+					}
+					free(query);
+					result = PAM_AUTH_ERR;	
+					while(sqlite3_step(des) == SQLITE_ROW)
+					{
+						if(strcmp(sqlite3_column_text(des,0),IPCountry(oi))==0)
+						{
+							if(strcmp(sqlite3_column_text(des,1),"N/A") == 0 || strcmp(sqlite3_column_text(des,1),IPCity(oi)) == 0)
+							{
+								result = PAM_SUCCESS;
+								break;
+							}
+						}
+					}
+				}			
 			}
 		}
 		else
@@ -235,15 +268,9 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
         sqlite3_stmt    *res;
         
          result = pam_get_user(pamh, &pUsername, "Username: ");
-          
-         printf("Welcome %s\n", pUsername);
 		 db = pam_sqlite3_open();
          res = sqlite3_get_user(db,(char*)pUsername);
-        	if(pam_get_item(pamh,PAM_RHOST,(const void**)&oi) == PAM_SUCCESS)
-				{
-					printf("IP = %s, Country = %s, City = %s\n",oi,IPCountry(oi),IPCity(oi));
-					
-				}
+         //Lets check if the password match
 		   if(sqlite3_step(res) == SQLITE_ROW)
 		   {   	 
 			   	result = pam_get_authtok(pamh, PAM_AUTHTOK,(const char **)&password, NULL);
@@ -252,17 +279,20 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
 				int retrycount = sqlite3_column_int(res,9);
 				if (strcmp(crypt(password,stored_salt),stored_pw) == 0)
 				{   
+					//If the password match and retrycount not zero. Reset.
 					if(retrycount!=0)	
 					{
 						sqlite3_retry_update(db,(char *)pUsername,0);
 					}
 					result = PAM_SUCCESS;
 				}
+				//If the password doesnt match and retrycount 2(missed 3 times now) expire.
 				else if(retrycount > 1)
 				{
 					sqlite3_expire_acc(db,(char *)pUsername);
 					result = PAM_IGNORE;
 				}
+				//password fail. retrycount increment.
 				else
 				{
 					retrycount++;
@@ -304,25 +334,26 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 			sqlite3_close(db);
 			return PAM_AUTH_ERR; 
 		 }
-		
+		//Get user home directory path
 		 const char *dir = (const char *)sqlite3_column_text(res,5);
-         		
+         //Home exists?
          if(dir == NULL)
          {
 			sqlite3_finalize(res); 
 			sqlite3_close(db);
 			return PAM_AUTH_ERR;
 		 }
-			
+		 //move to home
 		 if(chdir(dir) == -1)
 		 {
 			 sqlite3_finalize(res); 
 			 sqlite3_close(db);
 			 return PAM_AUTH_ERR;
 		 }
+		 //set user default permissions. Only user has permissions!
 		 umask(077);
+		 //change home permissions.
 		 chmod(dir,0700);
-		 /*Env variables to be set here*/
 		 sqlite3_finalize(res); 
 		 sqlite3_close(db); 
 		 return PAM_SUCCESS;
@@ -332,7 +363,6 @@ pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 PAM_EXTERN int
 pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 {
-		printf("here");
 		return PAM_SUCCESS;
 }
 
@@ -349,7 +379,7 @@ static char *IPCountry ( char *host ) {
     char *country;
     uint32_t length;
 
-    gi = GeoIP_open(dat, GEOIP_INDEX_CACHE);
+    gi = GeoIP_open(geodat, GEOIP_INDEX_CACHE);
     
     gir = GeoIP_record_by_name(gi, host);
 
@@ -357,11 +387,11 @@ static char *IPCountry ( char *host ) {
         return NULL;
     }
     
-    length = sizeof(char) * strlen(gir->country_code) + 1;
+    length = sizeof(char) * strlen(_mk_NA(gir->city)) + 1;
     
     country = (char *) malloc (length);
     
-    country = strncpy(country, gir->country_code, length);
+    country = strncpy(country, _mk_NA(gir->city), length);
     
     GeoIPRecord_delete(gir);
     
@@ -383,7 +413,7 @@ static char *IPCity ( char *host ) {
     char *city;
     uint32_t length;
 
-    gi = GeoIP_open(dat, GEOIP_INDEX_CACHE);
+    gi = GeoIP_open(geodat, GEOIP_INDEX_CACHE);
     
     gir = GeoIP_record_by_name(gi, host);
 
@@ -391,11 +421,11 @@ static char *IPCity ( char *host ) {
         return NULL;
     }
     
-    length = sizeof(char) * strlen(gir->city) + 1;
+    length = sizeof(char) * strlen(_mk_NA(gir->city)) + 1;
     
     city = (char *) malloc (length);
     
-    city = strncpy(city, gir->city, length);
+    city = strncpy(city, _mk_NA(gir->city), length);
     
     GeoIPRecord_delete(gir);
     
@@ -403,3 +433,8 @@ static char *IPCity ( char *host ) {
     
     return city;
 }
+
+static const char * _mk_NA( const char * p ){
+    return p ? p : "N/A";
+}
+
