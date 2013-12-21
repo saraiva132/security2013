@@ -198,10 +198,7 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 						sqlite3_expire_acc(db,(char *)pUsername);
 					}
 				}
-				if(pam_get_item(pamh,PAM_RHOST,(const void**)&oi) == PAM_SUCCESS)
-				{
-					printf("%d",PAM_RHOST);
-				}
+			
 				result = PAM_SUCCESS;
 			}
 		}
@@ -219,7 +216,7 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
         const char* pUsername;
         char *crypt_password, *password;
         int result;
-        
+        char *oi;
         /*SQlite variables*/
         sqlite3 *db;
         sqlite3_stmt    *res;
@@ -229,7 +226,10 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
          printf("Welcome %s\n", pUsername);
 		 db = pam_sqlite3_open();
          res = sqlite3_get_user(db,(char*)pUsername);
-        
+        	if(pam_get_item(pamh,PAM_RHOST,(const void**)&oi) == PAM_SUCCESS)
+				{
+					printf("IP = %s",oi);
+				}
 		   if(sqlite3_step(res) == SQLITE_ROW)
 		   {   	 
 			   	result = pam_get_authtok(pamh, PAM_AUTHTOK,(const char **)&password, NULL);

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config>
+	<permited>
+		<user>simon</user>
+		<user>pedro</user>
+	</permited>
+	<pin>
+		<length>4</length>
+		<days>1</days>
+	</pin>
+	<max>3</max>
+	<salt>
+		<length>16</length>
+		<algorithm>6</algorithm>
+	</salt>
+</config>
