@@ -25,5 +25,7 @@ $stmt->execute();
 //$pid = shell_exec('ps aux | grep ' . $_POST['deleteList'] . ' | cut -d \' \' -f3 | head -n1');
 //shell_exec('kill ' . $pid);
 //shell_exec('rm -r /home/' . $_POST['deleteList'] . '/');
+$_SESSION['error'] = TRUE;
+$_SESSION['error_log'] = 'Deleted account ' . $_POST['deleteList'] . '.';
 redirect('../secure/accounts.php');
 ?>

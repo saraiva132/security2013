@@ -41,7 +41,7 @@ require_once '../theme/menu.php';
 	<?php
 	$result = $db->query($query);
 	$rowsGEO = 0;
-	$listGEO = '<select name = "geoList">';
+	$listGEO = '<select name = "deleteGeoList">';
 	while ($row = $result->fetchArray()) {
 		$rowsGEO++;
 		$value = $row['account'] . ', ' . $row['country'];
@@ -56,18 +56,13 @@ require_once '../theme/menu.php';
 			<h3>Remove Permission</h3>
 			<form>
 			' . $listGEO . '
-				<input type="submit" name="delete" id="delete" value="Delete" formmethod="post" formaction="delete_geopermission.php"/>
+				<input type="submit" name="deletegeo" id="deletegeo" value="Delete" formmethod="post" formaction="delete_geopermission.php"/>
 			</form>
 		';
 	}
-	if (isset($_SESSION['error'])) {
-		echo '<p>' . $_SESSION['error_log'] . '</p>';
-		unset($_SESSION['error']);
-		unset($_SESSION['error_log']);
-	}
 	$query = "SELECT passwd.username as account FROM passwd JOIN useraccounts ON passwd.username = useraccounts.account WHERE useraccounts.username = '" . $_SESSION['username'] . "'";
 	$result = $db->query($query);
-	$listACCOUNT = '<select name = "accountList">';
+	$listACCOUNT = '<select name = "addGeoList">';
 	for($idx = 0; $row = $result->fetchArray(); $idx++) {
 		$listACCOUNT .= '<option value = "' . $row['account'] . '">' . $row['account'] . '</option>';
 	}
@@ -84,13 +79,18 @@ require_once '../theme/menu.php';
 				</div>
 				<div class="field_container">
 					<label for="account">City</label>
-					<input type="text" name="city" pattern="[ a-zA-Z]{4,24}" required>
+					<input type="text" name="city" pattern="[ a-zA-Z]{4,24}">
 				</div>
 				<p>
 					<input type="submit" name="addgeo" id="addgeo" value="Add" formmethod="post" formaction="add_geopermission.php"/>
 				</p>
 			</form>
 		';
+	}
+	if (isset($_SESSION['error'])) {
+		echo '<br /><p>' . $_SESSION['error_log'] . '</p>';
+		unset($_SESSION['error']);
+		unset($_SESSION['error_log']);
 	}
 	?>
 </div>

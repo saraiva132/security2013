@@ -29,5 +29,7 @@ $_SESSION['pin'] = $pin;
 $_SESSION['account'] = $_POST['renewList'];
 $_SESSION['has_pin'] = TRUE;
 $_SESSION['account_state'] = 'Renewed';
+$_SESSION['error'] = TRUE;
+$_SESSION['error_log'] = 'Account ' . $_POST['deleteList'] . ' renewed.';
 redirect('../secure/account.php');
 ?>
