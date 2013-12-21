@@ -8,6 +8,8 @@
 #include <time.h>
 #include <pwd.h>
 #include <fcntl.h>
+#include <GeoIP.h>
+#include <GeoIPCity.h>
 
 #ifndef BASE_DIR
 #define BASE_DIR "/home/security/"
@@ -24,11 +26,21 @@
 #define APPEND(str, len)        GROW(len); memcpy(buf + dest, str, len); dest += len
 #define APPENDS(str)        len = strlen(str); APPEND(str, len)
 
-/*Query structure:
+/** Allusion to internal functions. */
+
+static char *IPCountry ( char * );
+static char *IPCity ( char * );
+
+/** GeoIP database. */
+
+static const char *dat = "/usr/local/share/GeoIP/GeoLiteCity.dat";
+
+/**
+ * Query structure:
  * template: sql query template to be followed.
  * user: client temporary account
  * count: optional field, used to count login retrys. If not used to be ignored.
- */
+ * */
 static char *query_builder(const char *template,const char *user,const int other)
 {
         char *buf = malloc(256);
@@ -95,7 +107,8 @@ static char *query_builder(const char *template,const char *user,const int other
         return buf;
 }
 
-/*Open database*/
+/** Open sql database. */
+
 static sqlite3 *pam_sqlite3_open()
 {
 	sqlite3 *db = NULL;
@@ -228,7 +241,8 @@ PAM_EXTERN int pam_sm_authenticate( pam_handle_t *pamh, int flags,int argc, cons
          res = sqlite3_get_user(db,(char*)pUsername);
         	if(pam_get_item(pamh,PAM_RHOST,(const void**)&oi) == PAM_SUCCESS)
 				{
-					printf("IP = %s",oi);
+					printf("IP = %s, Country = %s, City = %s\n",oi,IPCountry(oi),IPCity(oi));
+					
 				}
 		   if(sqlite3_step(res) == SQLITE_ROW)
 		   {   	 
@@ -320,4 +334,72 @@ pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 {
 		printf("here");
 		return PAM_SUCCESS;
+}
+
+/**
+ * IP address country code.
+ * \param host address.
+ * \return host country code.
+ * */
+
+static char *IPCountry ( char *host ) {
+	
+    GeoIP *gi;
+    GeoIPRecord *gir;
+    char *country;
+    uint32_t length;
+
+    gi = GeoIP_open(dat, GEOIP_INDEX_CACHE);
+    
+    gir = GeoIP_record_by_name(gi, host);
+
+    if (gir == NULL) {
+        return NULL;
+    }
+    
+    length = sizeof(char) * strlen(gir->country_code) + 1;
+    
+    country = (char *) malloc (length);
+    
+    country = strncpy(country, gir->country_code, length);
+    
+    GeoIPRecord_delete(gir);
+    
+    GeoIP_delete(gi);
+    
+    return country;
+}
+
+/**
+ * IP address city name.
+ * \param host address.
+ * \return host city name.
+ * */
+
+static char *IPCity ( char *host ) {
+	
+    GeoIP *gi;
+    GeoIPRecord *gir;
+    char *city;
+    uint32_t length;
+
+    gi = GeoIP_open(dat, GEOIP_INDEX_CACHE);
+    
+    gir = GeoIP_record_by_name(gi, host);
+
+    if (gir == NULL) {
+        return NULL;
+    }
+    
+    length = sizeof(char) * strlen(gir->city) + 1;
+    
+    city = (char *) malloc (length);
+    
+    city = strncpy(city, gir->city, length);
+    
+    GeoIPRecord_delete(gir);
+    
+    GeoIP_delete(gi);
+    
+    return city;
 }
