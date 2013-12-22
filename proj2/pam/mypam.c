@@ -34,6 +34,7 @@ static char *IPCity ( char * );
 /** GeoIP database. */
 
 static const char *geodat = "/usr/local/share/GeoIP/GeoLiteCity.dat";
+const char * na = "N/A";
 
 /**Linux users database. */
 
@@ -240,31 +241,23 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 					
 					else
 					{
-						char *country;
-						char *city;	
+						char *country = IPCountry(host);
+						char *city = IPCity(host);
 						const char *sqlcountry;
 						const char *sqlcity;
-						result = PAM_SUCCESS;
 						do
 						{
 							printf("Im here 5\n");
-							FILE *file; 
-							file = fopen("/tmp/file.txt","a+"); 
-							fprintf(file,"%s \n",host); /*writes*/ 
-							fclose(file); /*done!*/ 		
-							/*country = IPCountry(host);
 							sqlcountry = sqlite3_column_text(des, 0);
-							city = IPCity(host);
-							sqlcity = sqlite3_column_text(des,1);
-							//printf("host = %s\ncountry = %s\nsqlcountry=%s\ncity=%s\nsqlcity=%s\n",host,country,sqlcountry,city,sqlcity);
-							if (strcmp("PT", sqlcountry) == 0)
+							sqlcity = sqlite3_column_text(des,1);					    
+							if (strcmp(country, sqlcountry) == 0)
 							{
-								if((strcmp("N/A", sqlcity) == 0) || (strcmp(city, sqlcity) == 0))
+								if((strcmp(city, sqlcity) == 0) || (strcmp("N/A", sqlcity) == 0))
 								{
 									result = PAM_SUCCESS;
 									break;
 								}
-							}*/
+							}
 						}
 						while(sqlite3_step(des) == SQLITE_ROW);
 					}
@@ -393,7 +386,7 @@ pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 /** String process. */
 
 static const char * _mk_NA( const char * p ){
-    return p ? p : "N/A";
+    return p ? p : na;
 }
 
 
@@ -413,16 +406,16 @@ static char *IPCountry ( char *host ) {
     gi = GeoIP_open(geodat, GEOIP_INDEX_CACHE);
     
     gir = GeoIP_record_by_name(gi, host);
-
+	
     if (gir == NULL) {
         return NULL;
     }
-    
-    length = sizeof(char) * strlen(_mk_NA(gir->city)) + 1;
+
+    length = sizeof(char) * strlen(_mk_NA(gir-> country_code)) + 1;
     
     country = (char *) malloc (length);
     
-    country = strncpy(country, _mk_NA(gir->city), length);
+    country = strncpy(country,_mk_NA(gir-> country_code), length);
     
     GeoIPRecord_delete(gir);
     
@@ -445,19 +438,17 @@ static char *IPCity ( char *host ) {
     uint32_t length;
 
     gi = GeoIP_open(geodat, GEOIP_INDEX_CACHE);
-    
+   
     gir = GeoIP_record_by_name(gi, host);
 
     if (gir == NULL) {
         return NULL;
     }
-    
     length = sizeof(char) * strlen(_mk_NA(gir->city)) + 1;
-    
     city = (char *) malloc (length);
     
     city = strncpy(city, _mk_NA(gir->city), length);
-    
+      
     GeoIPRecord_delete(gir);
     
     GeoIP_delete(gi);
