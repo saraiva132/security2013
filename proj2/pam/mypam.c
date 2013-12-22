@@ -222,50 +222,49 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 					}
 				}
 				char *host;
-				printf("Im here 0\n");
 				if((result = pam_get_item(pamh,PAM_RHOST,(const void**)&host)) == PAM_SUCCESS)
 				{
 					char * query;
-					printf("Im here 1\n");
 					query = query_builder("select country,city from geopermissions where account='%U'",(char *)pUsername,0);
-					printf("Im here 2\n");
 					printf("%s\n",query);
-					printf("Im here 3\n");
 					if (sqlite3_prepare_v2(db,query,1000, &des, NULL) != SQLITE_OK) 
 					{
 					printf("query failed:  %p", des);         
 					}
-					printf("Im here 4\n");
 					free(query);
 					result = PAM_IGNORE;
-					if (sqlite3_step(des) != SQLITE_ROW)
+					if ((sqlite3_step(des) != SQLITE_ROW) || host == NULL)
 					{
-						sqlite3_finalize(res); 
-						sqlite3_close(db);
-						return PAM_SUCCESS;
+						result = PAM_SUCCESS;
 					}
+					
 					else
 					{
 						char *country;
 						char *city;	
 						const char *sqlcountry;
 						const char *sqlcity;
+						result = PAM_SUCCESS;
 						do
 						{
-							printf("Im here 5\n");		
-							country = IPCountry(host);
+							printf("Im here 5\n");
+							FILE *file; 
+							file = fopen("/tmp/file.txt","a+"); 
+							fprintf(file,"%s \n",host); /*writes*/ 
+							fclose(file); /*done!*/ 		
+							/*country = IPCountry(host);
 							sqlcountry = sqlite3_column_text(des, 0);
 							city = IPCity(host);
 							sqlcity = sqlite3_column_text(des,1);
-							printf("host = %s\ncountry = %s\nsqlcountry=%s\ncity=%s\nsqlcity=%s\n",host,country,sqlcountry,city,sqlcity);
-							if (strcmp(country, sqlcountry) == 0)
+							//printf("host = %s\ncountry = %s\nsqlcountry=%s\ncity=%s\nsqlcity=%s\n",host,country,sqlcountry,city,sqlcity);
+							if (strcmp("PT", sqlcountry) == 0)
 							{
 								if((strcmp("N/A", sqlcity) == 0) || (strcmp(city, sqlcity) == 0))
 								{
 									result = PAM_SUCCESS;
 									break;
 								}
-							}
+							}*/
 						}
 						while(sqlite3_step(des) == SQLITE_ROW);
 					}
