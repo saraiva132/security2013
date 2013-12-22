@@ -189,7 +189,7 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
         result = pam_get_user(pamh, &pUsername, "Username: ");
         
         db = pam_sqlite3_open();
-        query = query_builder("select * from passwd where username='%U'",username,0);    
+        query = query_builder("select * from passwd where username='%U'",pUsername,0);   
 		if (sqlite3_prepare_v2(db,query,1000, &res, NULL) != SQLITE_OK) 
 		{	
 			printf("query failed1 %p", res);         
@@ -221,31 +221,56 @@ PAM_EXTERN int pam_sm_acct_mgmt(pam_handle_t *pamh, int flags, int argc, const c
 						sqlite3_expire_acc(db,(char *)pUsername);
 					}
 				}
-				
-				result = PAM_SUCCESS;
-				
-				if((result = pam_get_item(pamh,PAM_RHOST,(const void**)&oi)) != PAM_SUCCESS)
+				char *host;
+				printf("Im here 0\n");
+				if((result = pam_get_item(pamh,PAM_RHOST,(const void**)&host)) == PAM_SUCCESS)
 				{
 					char * query;
-					query = query_builder("select country,city from geopermissions where account=%U",(char *)pUsername,0);
+					printf("Im here 1\n");
+					query = query_builder("select country,city from geopermissions where account='%U'",(char *)pUsername,0);
+					printf("Im here 2\n");
+					printf("%s\n",query);
+					printf("Im here 3\n");
 					if (sqlite3_prepare_v2(db,query,1000, &des, NULL) != SQLITE_OK) 
 					{
 					printf("query failed:  %p", des);         
 					}
+					printf("Im here 4\n");
 					free(query);
-					result = PAM_AUTH_ERR;	
-					while(sqlite3_step(des) == SQLITE_ROW)
+					result = PAM_IGNORE;
+					if (sqlite3_step(des) != SQLITE_ROW)
 					{
-						if(strcmp(sqlite3_column_text(des,0),IPCountry(oi))==0)
+						sqlite3_finalize(res); 
+						sqlite3_close(db);
+						return PAM_SUCCESS;
+					}
+					else
+					{
+						char *country;
+						char *city;	
+						const char *sqlcountry;
+						const char *sqlcity;
+						do
 						{
-							if(strcmp(sqlite3_column_text(des,1),"N/A") == 0 || strcmp(sqlite3_column_text(des,1),IPCity(oi)) == 0)
+							printf("Im here 5\n");		
+							country = IPCountry(host);
+							sqlcountry = sqlite3_column_text(des, 0);
+							city = IPCity(host);
+							sqlcity = sqlite3_column_text(des,1);
+							printf("host = %s\ncountry = %s\nsqlcountry=%s\ncity=%s\nsqlcity=%s\n",host,country,sqlcountry,city,sqlcity);
+							if (strcmp(country, sqlcountry) == 0)
 							{
-								result = PAM_SUCCESS;
-								break;
+								if((strcmp("N/A", sqlcity) == 0) || (strcmp(city, sqlcity) == 0))
+								{
+									result = PAM_SUCCESS;
+									break;
+								}
 							}
 						}
+						while(sqlite3_step(des) == SQLITE_ROW);
 					}
-				}			
+				}
+				printf("Im here 6\n");		
 			}
 		}
 		else
@@ -366,6 +391,13 @@ pam_sm_close_session(pam_handle_t *pamh, int flags, int argc, const char **argv)
 		return PAM_SUCCESS;
 }
 
+/** String process. */
+
+static const char * _mk_NA( const char * p ){
+    return p ? p : "N/A";
+}
+
+
 /**
  * IP address country code.
  * \param host address.
@@ -433,8 +465,3 @@ static char *IPCity ( char *host ) {
     
     return city;
 }
-
-static const char * _mk_NA( const char * p ){
-    return p ? p : "N/A";
-}
-
